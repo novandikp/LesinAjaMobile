@@ -24,9 +24,9 @@ type FormDataType = {
   wali: string;
   pekerjaan: string;
   idprovinsi: string;
-  // idkabupaten: string;
-  // idkecamatan: string;
-  // iddesa: string;
+  idkabupaten: string;
+  idkecamatan: string;
+  iddesa: string;
   alamat: string;
   telp: string;
 };
@@ -52,7 +52,6 @@ export const Account: FC<ScreenProps> = () => {
     desa: '',
   });
   const [isLoading, setIsLoading] = useState(true);
-
   useEffect(() => {
     const getInitialData = async () => {
       const provinsi = await getListDaerah({type: 'provinsi'});
@@ -62,7 +61,6 @@ export const Account: FC<ScreenProps> = () => {
       // console.log(data);
 
       setIsLoading(false);
-      console.log(provinsi);
     };
 
     getInitialData();
@@ -73,6 +71,7 @@ export const Account: FC<ScreenProps> = () => {
   }, []);
 
   const onSubmit: SubmitHandler<FormDataType> = async data => {
+    //TODO:Update profil wali
     console.log(data);
   };
 
@@ -139,7 +138,15 @@ export const Account: FC<ScreenProps> = () => {
                       value={value}
                       error={!!errors.idprovinsi}
                       errorMessage="Harap pilih provinsi tempat tinggal Anda"
-                      onSelect={item => onChange(item.name)}
+                      onSelect={async item => {
+                        onChange(item.name);
+                        const kota = await getListDaerah({
+                          type: 'kota',
+                          idParent: item.id,
+                        });
+                        setListDaerah(prev => ({...prev, kota}));
+                        // console.log(kota);
+                      }}
                       listData={listDaerah.provinsi}
                       keyMenuTitle="name"
                     />
@@ -149,12 +156,94 @@ export const Account: FC<ScreenProps> = () => {
                 />
               )}
 
+              {/* kota */}
+
+              {listDaerah.kota && (
+                <Controller
+                  control={control}
+                  rules={{required: true}}
+                  render={({field: {onChange, value}}) => (
+                    <InputChoice
+                      label="Domisili - Kota"
+                      value={value}
+                      error={!!errors.idkabupaten}
+                      errorMessage="Harap pilih kota/kabupaten tempat tinggal Anda"
+                      onSelect={async item => {
+                        onChange(item.name);
+                        const kecamatan = await getListDaerah({
+                          type: 'kecamatan',
+                          idParent: item.id,
+                        });
+                        setListDaerah(prev => ({...prev, kecamatan}));
+                      }}
+                      listData={listDaerah.kota}
+                      keyMenuTitle="name"
+                    />
+                  )}
+                  name="idkabupaten"
+                  defaultValue={''}
+                />
+              )}
+              {/* kecamatan */}
+
+              {listDaerah.kecamatan && (
+                <Controller
+                  control={control}
+                  rules={{required: true}}
+                  render={({field: {onChange, value}}) => (
+                    <InputChoice
+                      label="Domisili - Kecamatan"
+                      value={value}
+                      error={!!errors.idkecamatan}
+                      errorMessage="Harap pilih kecamatan tempat tinggal Anda"
+                      onSelect={async item => {
+                        onChange(item.name);
+                        const desa = await getListDaerah({
+                          type: 'desa',
+                          idParent: item.id,
+                        });
+                        setListDaerah(prev => ({...prev, desa}));
+                      }}
+                      listData={listDaerah.kecamatan}
+                      keyMenuTitle="name"
+                    />
+                  )}
+                  name="idkecamatan"
+                  defaultValue={''}
+                />
+              )}
+
+              {/* kecamatan */}
+
+              {listDaerah.kecamatan && (
+                <Controller
+                  control={control}
+                  rules={{required: true}}
+                  render={({field: {onChange, value}}) => (
+                    <InputChoice
+                      label="Domisili - Kelurahan"
+                      value={value}
+                      error={!!errors.iddesa}
+                      errorMessage="Harap pilih kecamatan tempat tinggal Anda"
+                      onSelect={item => {
+                        onChange(item.name);
+                      }}
+                      listData={listDaerah.desa}
+                      keyMenuTitle="name"
+                    />
+                  )}
+                  name="iddesa"
+                  defaultValue={''}
+                />
+              )}
               {/* Alamat */}
+              {/* //TODO:change inputpassword text to text */}
               <Controller
                 control={control}
                 rules={{required: true}}
                 render={({field: {onChange, onBlur, value}}) => (
                   <InputText
+                    // secureTextEntry={true}
                     label="Alamat lengkap Rumah"
                     placeholder="Contoh: jalan, RT, RW"
                     onBlur={onBlur}
@@ -162,6 +251,7 @@ export const Account: FC<ScreenProps> = () => {
                     value={value}
                     error={!!errors.alamat}
                     errorMessage="Alamat lengkap rumah harus diisi"
+                    t
                   />
                 )}
                 name="alamat"
