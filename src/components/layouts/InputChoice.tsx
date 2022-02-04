@@ -70,8 +70,8 @@ export const InputChoice: FC<ComponentProps> = props => {
       </Portal>
 
       <InputText
-        {...props}
         value={value}
+        {...props}
         onPressButton={() => setModalVisible(true)}
         errorMessage={errorMessage}
       />

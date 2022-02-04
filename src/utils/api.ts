@@ -36,12 +36,10 @@ export const apiPost = async ({
 }: ApiPostFuncType): Promise<ApiPostReturnType> => {
   try {
     const loginToken = await getLocalStorage(lsKey.userToken);
-
     const {ok, data} = await api.post(url, payload, {
       headers: {Authorization: loginToken},
       cancelToken: source.token,
     });
-
     // If success
     if (ok) {
       if (isLogin) {

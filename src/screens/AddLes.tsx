@@ -1,4 +1,4 @@
-import React, {FC} from 'react';
+import React, {FC, useEffect, useState} from 'react';
 import {
   ButtonFormSubmit,
   CardKeyValue,
@@ -24,6 +24,7 @@ import {
 import {Button, Text, TextInput, RadioButton, Card} from 'react-native-paper';
 import {StackScreenProps} from '@react-navigation/stack';
 import {AppStackParamList} from '@routes/RouteTypes';
+import {apiPos, apiGet} from '@utils';
 
 type FormDataType = {
   idpaket: number;
@@ -39,8 +40,11 @@ export const AddLes: FC<ScreenProps> = ({navigation}) => {
     handleSubmit,
     formState: {errors},
   } = useForm<FormDataType>({mode: 'onChange'});
-
   const onSubmit = async (data: object) => {
+    const {success} = await apiPost({
+      url: 'les/daftar',
+      payload: data,
+    });
     console.log(data);
   };
 

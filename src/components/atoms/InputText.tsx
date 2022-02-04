@@ -9,10 +9,11 @@ type ComponentProps = InputProps & {
   errorMessage?: string;
   onPressButton?: () => void;
   passwordMode?: boolean;
+  typeMode?: boolean;
 };
 export const InputText: FC<ComponentProps> = props => {
   const [showPassword, setShowPassword] = useState(false);
-  const {errorMessage, error, onPressButton, passwordMode} = props;
+  const {errorMessage, error, onPressButton, passwordMode, typeMode} = props;
 
   // Change view with button, and make textinput disabled
   if (onPressButton) {
@@ -38,8 +39,9 @@ export const InputText: FC<ComponentProps> = props => {
     <View style={styles.container}>
       <TextInput
         {...props}
+        secureTextEntry={passwordMode ? !showPassword : false}
+        // secureTextEntry={!showPassword}//!false==true
         style={styles.textInputStyle}
-        secureTextEntry={!showPassword}
         right={
           passwordMode && (
             <TextInput.Icon

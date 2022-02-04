@@ -17,7 +17,7 @@ import {
 } from 'react-native';
 import {StackScreenProps} from '@react-navigation/stack';
 import {AppStackParamList} from '@routes/RouteTypes';
-import {apiGet, cancelApiRequest} from '@utils';
+import {apiGet, cancelApiRequest, apiPost} from '@utils';
 import {getListDaerah} from '@utils/getListData';
 
 type FormDataType = {
@@ -52,29 +52,59 @@ export const Account: FC<ScreenProps> = () => {
     desa: '',
   });
   const [isLoading, setIsLoading] = useState(true);
+  const [oldData, setOldData] = useState({
+    wali: '',
+    telp: '',
+    idprovinsi: '',
+    alamat: '',
+    pekerjaan: '',
+  });
   useEffect(() => {
     const getInitialData = async () => {
       const provinsi = await getListDaerah({type: 'provinsi'});
       setListDaerah(prev => ({...prev, provinsi}));
 
-      // const {data} = await apiGet({url: 'wali/profile'});
-      // console.log(data);
-
+      const OldData = await await apiGet({url: 'wali/profile'});
+      setOldData(OldData.data);
       setIsLoading(false);
     };
 
     getInitialData();
-
     return () => {
       // cancelApiRequest();
     };
   }, []);
-
   const onSubmit: SubmitHandler<FormDataType> = async data => {
-    //TODO:Update profil wali
+    console.log('on submit');
+    listDaerah.provinsi.find((i: any) =>
+      i.name == data.idprovinsi ? (data.idprovinsi = i.id) : null,
+    );
+    listDaerah.kota.find((i: any) => {
+      i.name == data.idkabupaten ? (data.idkabupaten = i.id) : null;
+    });
+    listDaerah.kecamatan.find((i: any) => {
+      i.name == data.idkecamatan ? (data.idkecamatan = i.id) : null;
+    });
+    listDaerah.desa.find((i: any) => {
+      i.name == data.iddesa ? (data.iddesa = i.id) : null;
+    });
+    console.log('new data');
     console.log(data);
+    const {success} = await apiPost({
+      url: '/wali/profile/',
+      payload: {
+        wali: data.wali,
+        telp: data.telp,
+        alamat: data.alamat,
+        idprovinsi: data.idprovinsi,
+        idkabupaten: data.idkabupaten,
+        idkecamatan: data.idkecamatan,
+        iddesa: data.iddesa,
+        pekerjaan: data.pekerjaan,
+      },
+    });
+    console.log(success);
   };
-
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar backgroundColor={color.bg_grey} barStyle="dark-content" />
@@ -104,7 +134,8 @@ export const Account: FC<ScreenProps> = () => {
                   />
                 )}
                 name="wali"
-                defaultValue=""
+                defaultValue={oldData.wali}
+                // defaultValue=""
               />
 
               {/* No telp */}
@@ -124,7 +155,8 @@ export const Account: FC<ScreenProps> = () => {
                   />
                 )}
                 name="telp"
-                defaultValue=""
+                // defaultValue=""
+                defaultValue={oldData.telp}
               />
 
               {/* Provinsi */}
@@ -139,20 +171,25 @@ export const Account: FC<ScreenProps> = () => {
                       error={!!errors.idprovinsi}
                       errorMessage="Harap pilih provinsi tempat tinggal Anda"
                       onSelect={async item => {
-                        onChange(item.name);
-                        const kota = await getListDaerah({
-                          type: 'kota',
-                          idParent: item.id,
-                        });
-                        setListDaerah(prev => ({...prev, kota}));
-                        // console.log(kota);
+                        if (onChange) {
+                          const kota = await getListDaerah({
+                            type: 'kota',
+                            idParent: item.id,
+                          });
+                          setListDaerah(prev => ({...prev, kota}));
+                          onChange(item.name);
+                        }
                       }}
                       listData={listDaerah.provinsi}
                       keyMenuTitle="name"
                     />
                   )}
                   name="idprovinsi"
-                  defaultValue={''}
+                  defaultValue={
+                    listDaerah.provinsi.find(
+                      (i: any) => i.id == oldData.idprovinsi,
+                    )?.name
+                  }
                 />
               )}
 
@@ -169,12 +206,12 @@ export const Account: FC<ScreenProps> = () => {
                       error={!!errors.idkabupaten}
                       errorMessage="Harap pilih kota/kabupaten tempat tinggal Anda"
                       onSelect={async item => {
-                        onChange(item.name);
                         const kecamatan = await getListDaerah({
                           type: 'kecamatan',
                           idParent: item.id,
                         });
                         setListDaerah(prev => ({...prev, kecamatan}));
+                        onChange(item.name);
                       }}
                       listData={listDaerah.kota}
                       keyMenuTitle="name"
@@ -237,13 +274,11 @@ export const Account: FC<ScreenProps> = () => {
                 />
               )}
               {/* Alamat */}
-              {/* //TODO:change inputpassword text to text */}
               <Controller
                 control={control}
                 rules={{required: true}}
                 render={({field: {onChange, onBlur, value}}) => (
                   <InputText
-                    // secureTextEntry={true}
                     label="Alamat lengkap Rumah"
                     placeholder="Contoh: jalan, RT, RW"
                     onBlur={onBlur}
@@ -251,11 +286,10 @@ export const Account: FC<ScreenProps> = () => {
                     value={value}
                     error={!!errors.alamat}
                     errorMessage="Alamat lengkap rumah harus diisi"
-                    t
                   />
                 )}
                 name="alamat"
-                defaultValue=""
+                defaultValue={oldData.alamat}
               />
 
               {/* Pekerjaan */}
@@ -274,7 +308,7 @@ export const Account: FC<ScreenProps> = () => {
                   />
                 )}
                 name="pekerjaan"
-                defaultValue=""
+                defaultValue={oldData.pekerjaan}
               />
             </View>
           </ScrollView>

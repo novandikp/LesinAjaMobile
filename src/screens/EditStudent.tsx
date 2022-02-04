@@ -33,7 +33,6 @@ export const EditStudent: FC<ScreenProps> = ({
   navigation: {navigate},
 }) => {
   const siswa = route.params?.item;
-
   const {
     control,
     handleSubmit,
@@ -42,12 +41,22 @@ export const EditStudent: FC<ScreenProps> = ({
   } = useForm<FormDataType>({mode: 'onChange'});
 
   const onSubmit: SubmitHandler<FormDataType> = async data => {
-    const {success} = await apiPost({
-      url: 'siswa',
-      payload: data,
-    });
-    if (success) {
-      navigate('ListStudents');
+    if (siswa != null) {
+      const {success} = await apiPost({
+        url: 'siswa/' + siswa.idsiswa,
+        payload: data,
+      });
+      if (success) {
+        navigate('ListStudents');
+      }
+    } else {
+      const {success} = await apiPost({
+        url: 'siswa',
+        payload: data,
+      });
+      if (success) {
+        navigate('ListStudents');
+      }
     }
   };
 
@@ -117,7 +126,15 @@ export const EditStudent: FC<ScreenProps> = ({
               />
             )}
             name="jenjang"
-            defaultValue={siswa && siswa.jenjang}
+            // siswa.jenjang dan sisswa.kelas
+            defaultValue={() => {
+              if (siswa != null) {
+                let index = listJenjangKelas.findIndex(
+                  i => i.kelas == siswa?.kelas && i.jenjang == siswa?.jenjang,
+                );
+                return listJenjangKelas[index].name;
+              }
+            }}
           />
           {/* Sekolah */}
           {/* <Controller
