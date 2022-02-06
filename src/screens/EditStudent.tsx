@@ -127,14 +127,7 @@ export const EditStudent: FC<ScreenProps> = ({
             )}
             name="jenjang"
             // siswa.jenjang dan sisswa.kelas
-            defaultValue={() => {
-              if (siswa != null) {
-                let index = listJenjangKelas.findIndex(
-                  i => i.kelas == siswa?.kelas && i.jenjang == siswa?.jenjang,
-                );
-                return listJenjangKelas[index].name;
-              }
-            }}
+            defaultValue={siswa && siswa?.jenjang}
           />
           {/* Sekolah */}
           {/* <Controller

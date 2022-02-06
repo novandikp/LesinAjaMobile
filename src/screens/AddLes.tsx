@@ -24,7 +24,8 @@ import {
 import {Button, Text, TextInput, RadioButton, Card} from 'react-native-paper';
 import {StackScreenProps} from '@react-navigation/stack';
 import {AppStackParamList} from '@routes/RouteTypes';
-import {apiPos, apiGet} from '@utils';
+import {apiPost, apiGet} from '@utils';
+import {getListLest} from '@utils/getListData';
 
 type FormDataType = {
   idpaket: number;
@@ -35,17 +36,30 @@ type FormDataType = {
 };
 type ScreenProps = StackScreenProps<AppStackParamList>;
 export const AddLes: FC<ScreenProps> = ({navigation}) => {
+  const [listLes, setListLes] = useState([]);
+  const [biaya, setBiaya] = useState('');
   const {
     control,
     handleSubmit,
     formState: {errors},
   } = useForm<FormDataType>({mode: 'onChange'});
+  useEffect(() => {
+    const getInitialData = async () => {
+      const les = await getListLest();
+      setListLes(les);
+    };
+
+    getInitialData();
+    return () => {
+      // cancelApiRequest();
+    };
+  }, []);
   const onSubmit = async (data: object) => {
     const {success} = await apiPost({
       url: 'les/daftar',
       payload: data,
     });
-    console.log(data);
+    console.log(success);
   };
 
   return (
@@ -77,24 +91,29 @@ export const AddLes: FC<ScreenProps> = ({navigation}) => {
           /> */}
 
           {/* Pilihan les */}
-          <Controller
-            control={control}
-            rules={{required: true}}
-            render={({field: {onChange, value}}) => (
-              <InputChoice
-                label="Pilihan Les"
-                value={value}
-                error={!!errors.pilihanles}
-                errorMessage="Harap pilih les yang akan diikuti"
-                onSelect={item => onChange(item.nama)}
-                listData={master_pilihanles}
-                keyMenuTitle="nama"
-                keyMenuDescription="harga"
-              />
-            )}
-            name="pilihanles"
-            defaultValue={''}
-          />
+          {listLes && (
+            <Controller
+              control={control}
+              rules={{required: true}}
+              render={({field: {onChange, value}}) => (
+                <InputChoice
+                  label="Pilihan Les"
+                  value={value.toString()}
+                  error={!!errors.pilihanles}
+                  errorMessage="Harap pilih les yang akan diikuti"
+                  onSelect={item => {
+                    onChange(item.paket);
+                    setBiaya(item.biaya);
+                  }}
+                  listData={listLes}
+                  keyMenuTitle="paket"
+                  keyMenuDescription="biaya"
+                />
+              )}
+              name="pilihanles"
+              defaultValue={''}
+            />
+          )}
 
           {/* Jadwal Les Rutin */}
           {/* <Controller
@@ -140,7 +159,7 @@ export const AddLes: FC<ScreenProps> = ({navigation}) => {
 
           {/* Total Price */}
           <TotalPrice
-            hargaLes="Rp 200.000"
+            hargaLes={biaya}
             hargaDaftar="Rp 150.000"
             total="Rp 350.000"
           />

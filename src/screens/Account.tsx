@@ -64,7 +64,7 @@ export const Account: FC<ScreenProps> = () => {
       const provinsi = await getListDaerah({type: 'provinsi'});
       setListDaerah(prev => ({...prev, provinsi}));
 
-      const OldData = await await apiGet({url: 'wali/profile'});
+      const OldData = await apiGet({url: 'wali/profile'});
       setOldData(OldData.data);
       setIsLoading(false);
     };
@@ -75,7 +75,6 @@ export const Account: FC<ScreenProps> = () => {
     };
   }, []);
   const onSubmit: SubmitHandler<FormDataType> = async data => {
-    console.log('on submit');
     listDaerah.provinsi.find((i: any) =>
       i.name == data.idprovinsi ? (data.idprovinsi = i.id) : null,
     );
@@ -88,8 +87,6 @@ export const Account: FC<ScreenProps> = () => {
     listDaerah.desa.find((i: any) => {
       i.name == data.iddesa ? (data.iddesa = i.id) : null;
     });
-    console.log('new data');
-    console.log(data);
     const {success} = await apiPost({
       url: '/wali/profile/',
       payload: {

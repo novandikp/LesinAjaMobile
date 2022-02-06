@@ -15,3 +15,8 @@ export const getListDaerah = async ({type, idParent}: GetListDaerahParams) => {
 
   return data;
 };
+export const getListLest = async () => {
+  let url = `paket?page=1&paket&orderBy=biaya&sort=ASC`;
+  const {data} = await apiGet({url});
+  return data;
+};
