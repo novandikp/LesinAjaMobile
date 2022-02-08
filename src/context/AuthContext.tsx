@@ -2,7 +2,7 @@ import {lsKey} from '@constants';
 import {apiPost, clearLocalStorage, setLocalStorage} from '@utils';
 import React, {createContext, useCallback, useReducer} from 'react';
 import {FC} from 'react';
-
+import {GoogleSignin} from '@react-native-google-signin/google-signin';
 // Types
 type ContextType = {
   state: {
@@ -95,6 +95,8 @@ export const AuthProvider: FC = ({children}) => {
 
   const logout = async () => {
     await clearLocalStorage();
+    await GoogleSignin.revokeAccess();
+    await GoogleSignin.signOut();
     setUserRole('', false);
   };
 

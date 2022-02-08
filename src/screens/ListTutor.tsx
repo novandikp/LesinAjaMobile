@@ -1,4 +1,5 @@
-import React, {FC} from 'react';
+import React, {FC, useState, useEffect} from 'react';
+
 import {Header, OneLineInfo, CardKeyValue} from '@components';
 import {color, dimens} from '@constants';
 import {SafeAreaView, StatusBar, StyleSheet, ScrollView} from 'react-native';
@@ -7,6 +8,7 @@ import {StackScreenProps} from '@react-navigation/stack';
 import {CompositeScreenProps} from '@react-navigation/native';
 import {MaterialBottomTabScreenProps} from '@react-navigation/material-bottom-tabs';
 import {Card} from 'react-native-paper';
+import {apiGet} from '@utils';
 
 type ScreenProps = CompositeScreenProps<
   MaterialBottomTabScreenProps<AdminDrawerParamList, 'ListTutor'>,
@@ -14,32 +16,46 @@ type ScreenProps = CompositeScreenProps<
 >;
 
 export const ListTutor: FC<ScreenProps> = ({navigation}) => {
-  const tutorList = [
-    {
-      nama: 'Nico Prakoso',
-      email: 'nico@null.net',
-      nomorWhatsApp: '089778889331',
-      alamat: 'bojong kidul',
-    },
-    {
-      nama: 'Akbar Wibowo',
-      email: 'akbar@void.net',
-      nomorWhatsApp: '089778889331',
-      alamat: 'bojong lor',
-    },
-    {
-      nama: 'Prasetyo',
-      email: 'pras@lewd.net',
-      nomorWhatsApp: '089778889331',
-      alamat: 'bojong utara',
-    },
-    {
-      nama: 'Wendy Akbar',
-      email: 'wendy@mock.net',
-      nomorWhatsApp: '089778889331',
-      alamat: 'bojong tenggara',
-    },
-  ];
+  // const tutorList = [
+  //   {
+  //     nama: 'Nico Prakoso',
+  //     email: 'nico@null.net',
+  //     nomorWhatsApp: '089778889331',
+  //     alamat: 'bojong kidul',
+  //   },
+  //   {
+  //     nama: 'Akbar Wibowo',
+  //     email: 'akbar@void.net',
+  //     nomorWhatsApp: '089778889331',
+  //     alamat: 'bojong lor',
+  //   },
+  //   {
+  //     nama: 'Prasetyo',
+  //     email: 'pras@lewd.net',
+  //     nomorWhatsApp: '089778889331',
+  //     alamat: 'bojong utara',
+  //   },
+  //   {
+  //     nama: 'Wendy Akbar',
+  //     email: 'wendy@mock.net',
+  //     nomorWhatsApp: '089778889331',
+  //     alamat: 'bojong tenggara',
+  //   },
+  // ];
+  const [tutorList, setTutorList] = useState([]);
+  useEffect(() => {
+    const getInitialData = async () => {
+      const tutor = await apiGet({
+        url: 'admin/guru?page=1&guru=Budi&orderBy=guru&sort=ASC',
+      });
+      setTutorList(tutor.data);
+    };
+
+    getInitialData();
+    return () => {
+      // cancelApiRequest();
+    };
+  }, []);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -60,11 +76,11 @@ export const ListTutor: FC<ScreenProps> = ({navigation}) => {
               key={index}
               style={{marginTop: dimens.standard}}
               onPress={() => navigation.navigate('DetailTutor')}>
-              <Card.Title title={item.nama} />
+              <Card.Title title={item.guru} />
               <Card.Content>
-                <CardKeyValue keyName="Nama" value={item.nama} />
+                <CardKeyValue keyName="Nama" value={item.guru} />
                 <CardKeyValue keyName="Email" value={item.email} />
-                <CardKeyValue keyName="Nomor WA" value={item.nomorWhatsApp} />
+                <CardKeyValue keyName="Nomor WA" value={item.telp} />
                 <CardKeyValue keyName="Alamat" value={item.alamat} />
               </Card.Content>
             </Card>

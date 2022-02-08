@@ -42,6 +42,10 @@ export const apiPost = async ({
     });
     // If success
     if (ok) {
+      if (data.data.posisi == 'Admin') {
+        setLocalStorage(lsKey.userToken, data.data.token);
+      }
+
       if (isLogin) {
         setLocalStorage(lsKey.userToken, data.data.token);
       }
@@ -61,12 +65,10 @@ export const apiGet = async ({
 }: ApiGetFuncType): Promise<ApiPostReturnType> => {
   try {
     const loginToken = await getLocalStorage(lsKey.userToken);
-
     const {ok, data} = await api.get(url, params, {
       headers: {Authorization: loginToken},
       cancelToken: source.token,
     });
-
     // If success
     if (ok) {
       return {success: true, data: data.data};

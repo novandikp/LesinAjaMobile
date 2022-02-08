@@ -37,52 +37,52 @@ type LesType = {
   menungguTutor: boolean;
 };
 
-const lesItems: LesType[] = [
-  {
-    namaLes: 'Mengaji kelas 3 SD',
-    totalPertemuan: 8,
-    pertemuanSelesai: 6,
-    tglMulai: 1629698756,
-    tglSelesai: 1631403073,
-    siswa: 'Andi Rayka',
-    tutor: 'Udin Harun',
-    sudahBayar: true,
-    menungguTutor: false,
-  },
-  {
-    namaLes: 'Mengaji kelas 1 SD',
-    totalPertemuan: 4,
-    pertemuanSelesai: null,
-    tglMulai: null,
-    tglSelesai: null,
-    siswa: 'Andi Rayka',
-    tutor: 'Udin Harun',
-    sudahBayar: false,
-    menungguTutor: false,
-  },
-  {
-    namaLes: 'Mengaji kelas 2 SD',
-    totalPertemuan: 12,
-    pertemuanSelesai: null,
-    tglMulai: null,
-    tglSelesai: null,
-    siswa: 'Andi Rayka',
-    tutor: null,
-    sudahBayar: false,
-    menungguTutor: false,
-  },
-  {
-    namaLes: 'Mengaji kelas 6 SD',
-    totalPertemuan: 12,
-    pertemuanSelesai: null,
-    tglMulai: null,
-    tglSelesai: null,
-    siswa: 'Andi Rayka',
-    tutor: null,
-    sudahBayar: false,
-    menungguTutor: true,
-  },
-];
+// const lesItems: LesType[] = [
+//   {
+//     namaLes: 'Mengaji kelas 3 SD',
+//     totalPertemuan: 8,
+//     pertemuanSelesai: 6,
+//     tglMulai: 1629698756,
+//     tglSelesai: 1631403073,
+//     siswa: 'Andi Rayka',
+//     tutor: 'Udin Harun',
+//     sudahBayar: true,
+//     menungguTutor: false,
+//   },
+//   {
+//     namaLes: 'Mengaji kelas 1 SD',
+//     totalPertemuan: 4,
+//     pertemuanSelesai: null,
+//     tglMulai: null,
+//     tglSelesai: null,
+//     siswa: 'Andi Rayka',
+//     tutor: 'Udin Harun',
+//     sudahBayar: false,
+//     menungguTutor: false,
+//   },
+//   {
+//     namaLes: 'Mengaji kelas 2 SD',
+//     totalPertemuan: 12,
+//     pertemuanSelesai: null,
+//     tglMulai: null,
+//     tglSelesai: null,
+//     siswa: 'Andi Rayka',
+//     tutor: null,
+//     sudahBayar: false,
+//     menungguTutor: false,
+//   },
+//   {
+//     namaLes: 'Mengaji kelas 6 SD',
+//     totalPertemuan: 12,
+//     pertemuanSelesai: null,
+//     tglMulai: null,
+//     tglSelesai: null,
+//     siswa: 'Andi Rayka',
+//     tutor: null,
+//     sudahBayar: false,
+//     menungguTutor: true,
+//   },
+// ];
 
 type ScreenProps = CompositeScreenProps<
   MaterialBottomTabScreenProps<MainTabParamList, 'Les'>,
@@ -99,17 +99,21 @@ export const Les: FC<ScreenProps> = ({navigation}) => {
     let isActive = true;
 
     const getInitialData = async () => {
-      const {data}: {data: any} = await apiGet({
-        url: 'les/histori',
-        params: {
-          orderBy: 'siswa',
-          sort: 'desc',
-          page: 1,
-        },
+      const data = await apiGet({
+        url: '/les/histori?status&cari&orderBy=siswa&sort=desc&page=1',
       });
+      
+      // const {data}: {data: any} = await apiGet({
+      //   url: 'les/histori',
+      //   params: {
+      //     orderBy: 'siswa',
+      //     sort: 'desc',
+      //     page: 1,
+      //   },
+      // });
 
       if (isActive) {
-        setListData(data);
+        setListData(data.data);
         setIsLoading(false);
         setIsRefreshing(false);
       }
@@ -118,12 +122,10 @@ export const Les: FC<ScreenProps> = ({navigation}) => {
     if (isRefreshing || isLoading || isFocus) {
       getInitialData();
     }
-
     return () => {
       isActive = false;
     };
   }, [isRefreshing, isLoading, isFocus]);
-
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar backgroundColor={color.bg_grey} barStyle="dark-content" />
@@ -140,13 +142,12 @@ export const Les: FC<ScreenProps> = ({navigation}) => {
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         {isLoading || isRefreshing ? (
           <SkeletonLoading />
-        ) : listData || listData.length < 1 ? (
+        ) : listData.length < 1 ? (
           <EmptyData />
         ) : (
           <>
             <OneLineInfo info="Klik item untuk melihat detail" />
-
-            {lesItems.map((item, index) => {
+            {listData.map((item, index) => {
               return (
                 <StudentItem
                   key={index}
@@ -203,7 +204,7 @@ const StudentItem: FC<{item: LesType; onPress: () => void}> = ({
     <Card style={{marginTop: dimens.standard}} onPress={onPress}>
       <Card.Title
         title={item.namaLes}
-        subtitle={`${jmlhPertemuanSelesai}${item.totalPertemuan} Pertemuan`}
+        subtitle={`${jmlhPertemuanSelesai}${item.jumlah_pertemuan} Pertemuan`}
       />
 
       <Card.Content>

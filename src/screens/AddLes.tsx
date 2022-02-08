@@ -9,9 +9,9 @@ import {
 import {
   color,
   dimens,
-  master_pilihanles,
-  master_siswa,
-  PilihanLesType,
+  // master_pilihanles,
+  // master_siswa,
+  // PilihanLesType,
 } from '@constants';
 import {Controller, useForm} from 'react-hook-form';
 import {
@@ -21,7 +21,10 @@ import {
   View,
   ScrollView,
 } from 'react-native';
-import {Button, Text, TextInput, RadioButton, Card} from 'react-native-paper';
+import {
+  //Button, Text, TextInput, RadioButton,
+  Card,
+} from 'react-native-paper';
 import {StackScreenProps} from '@react-navigation/stack';
 import {AppStackParamList} from '@routes/RouteTypes';
 import {apiPost, apiGet} from '@utils';
@@ -37,6 +40,7 @@ type FormDataType = {
 type ScreenProps = StackScreenProps<AppStackParamList>;
 export const AddLes: FC<ScreenProps> = ({navigation}) => {
   const [listLes, setListLes] = useState([]);
+  const [listMurid, setListMurid] = useState([]);
   const [biaya, setBiaya] = useState('');
   const {
     control,
@@ -46,6 +50,10 @@ export const AddLes: FC<ScreenProps> = ({navigation}) => {
   useEffect(() => {
     const getInitialData = async () => {
       const les = await getListLest();
+      const murid = await apiGet({
+        url: 'siswa/my?page=1&siswa=&orderBy=siswa&sort=ASC',
+      });
+      setListMurid(murid.data);
       setListLes(les);
     };
 
@@ -55,6 +63,13 @@ export const AddLes: FC<ScreenProps> = ({navigation}) => {
     };
   }, []);
   const onSubmit = async (data: object) => {
+    listLes.find((i: any) =>
+      i.paket == data.idpaket ? (data.idpaket = i.idpaket) : null,
+    );
+    listMurid.find((i: any) =>
+      i.siswa == data.idsiswa ? (data.idsiswa = i.idsiswa) : null,
+    );
+    console.log(data);
     const {success} = await apiPost({
       url: 'les/daftar',
       payload: data,
@@ -89,7 +104,29 @@ export const AddLes: FC<ScreenProps> = ({navigation}) => {
             name="siswa"
             defaultValue={''}
           /> */}
-
+          {/* pilih siswa */}
+          {listMurid && (
+            <Controller
+              control={control}
+              rules={{required: true}}
+              render={({field: {onChange, value}}) => (
+                <InputChoice
+                  label="Pilih Murid"
+                  value={value.toString()}
+                  error={!!errors.idsiswa}
+                  errorMessage="Harap pilih murid yang akan diikuti"
+                  onSelect={item => {
+                    onChange(item.siswa);
+                  }}
+                  listData={listMurid}
+                  keyMenuTitle="siswa"
+                  keyMenuDescription={'jenjang'}
+                />
+              )}
+              name="idsiswa"
+              defaultValue={''}
+            />
+          )}
           {/* Pilihan les */}
           {listLes && (
             <Controller
@@ -110,7 +147,7 @@ export const AddLes: FC<ScreenProps> = ({navigation}) => {
                   keyMenuDescription="biaya"
                 />
               )}
-              name="pilihanles"
+              name="idpaket"
               defaultValue={''}
             />
           )}
