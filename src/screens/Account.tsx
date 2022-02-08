@@ -17,7 +17,7 @@ import {
 } from 'react-native';
 import {StackScreenProps} from '@react-navigation/stack';
 import {AppStackParamList} from '@routes/RouteTypes';
-import {apiGet, cancelApiRequest, apiPost} from '@utils';
+import {apiGet, apiPost} from '@utils';
 import {getListDaerah} from '@utils/getListData';
 
 type FormDataType = {
@@ -45,12 +45,12 @@ export const Account: FC<ScreenProps> = () => {
     kecamatan: [],
     desa: [],
   });
-  const [selectedDaerah, setSelectedDaerah] = useState({
-    provinsi: '',
-    kota: '',
-    kecamatan: '',
-    desa: '',
-  });
+  // const [selectedDaerah, setSelectedDaerah] = useState({
+  //   provinsi: '',
+  //   kota: '',
+  //   kecamatan: '',
+  //   desa: '',
+  // });
   const [isLoading, setIsLoading] = useState(true);
   const [oldData, setOldData] = useState({
     wali: '',
@@ -131,7 +131,7 @@ export const Account: FC<ScreenProps> = () => {
                   />
                 )}
                 name="wali"
-                defaultValue={oldData.wali}
+                defaultValue={oldData == null ? ' ' : oldData.wali}
                 // defaultValue=""
               />
 
@@ -153,7 +153,7 @@ export const Account: FC<ScreenProps> = () => {
                 )}
                 name="telp"
                 // defaultValue=""
-                defaultValue={oldData.telp}
+                defaultValue={oldData == null ? ' ' : oldData.telp}
               />
 
               {/* Provinsi */}
@@ -183,9 +183,11 @@ export const Account: FC<ScreenProps> = () => {
                   )}
                   name="idprovinsi"
                   defaultValue={
-                    listDaerah.provinsi.find(
-                      (i: any) => i.id == oldData.idprovinsi,
-                    )?.name
+                    oldData != null
+                      ? listDaerah.provinsi.find(
+                          (i: any) => i.id == oldData.idprovinsi,
+                        )?.name
+                      : ''
                   }
                 />
               )}
@@ -247,9 +249,9 @@ export const Account: FC<ScreenProps> = () => {
                 />
               )}
 
-              {/* kecamatan */}
+              {/* desa */}
 
-              {listDaerah.kecamatan && (
+              {listDaerah.desa && (
                 <Controller
                   control={control}
                   rules={{required: true}}
@@ -286,7 +288,7 @@ export const Account: FC<ScreenProps> = () => {
                   />
                 )}
                 name="alamat"
-                defaultValue={oldData.alamat}
+                defaultValue={oldData == null ? ' ' : oldData.alamat}
               />
 
               {/* Pekerjaan */}
@@ -305,7 +307,7 @@ export const Account: FC<ScreenProps> = () => {
                   />
                 )}
                 name="pekerjaan"
-                defaultValue={oldData.pekerjaan}
+                defaultValue={oldData == null ? ' ' : oldData.pekerjaan}
               />
             </View>
           </ScrollView>
