@@ -13,6 +13,7 @@ import {
   // master_siswa,
   // PilihanLesType,
 } from '@constants';
+import {TextInput} from 'react-native-paper';
 import {Controller, useForm} from 'react-hook-form';
 import {
   SafeAreaView,
@@ -27,21 +28,29 @@ import {
 } from 'react-native-paper';
 import {StackScreenProps} from '@react-navigation/stack';
 import {AppStackParamList} from '@routes/RouteTypes';
-import {apiPost, apiGet} from '@utils';
+import {apiGet} from '@utils';
 import {getListLest} from '@utils/getListData';
+import DatePicker from 'react-native-date-picker';
+import {unstable_batchedUpdates} from 'react-native';
 
 type FormDataType = {
-  idpaket: number;
-  idsiswa: number;
+  idpaket: string;
+  idsiswa: string;
   tglles: string; // 2021-09-01
   jamles: string;
   hari: string; // SENIN,SELASA,RABU,JUMAT
+  preferensiTutor: string;
 };
 type ScreenProps = StackScreenProps<AppStackParamList>;
 export const AddLes: FC<ScreenProps> = ({navigation}) => {
   const [listLes, setListLes] = useState([]);
   const [listMurid, setListMurid] = useState([]);
   const [biaya, setBiaya] = useState('');
+  const [Open, setOpen] = useState(false);
+  const [date, setDate] = useState(new Date());
+  const [time, setTime] = useState(new Date());
+  const [openTime, setOpenTime] = useState(false);
+
   const {
     control,
     handleSubmit,
@@ -64,17 +73,17 @@ export const AddLes: FC<ScreenProps> = ({navigation}) => {
   }, []);
   const onSubmit = async (data: object) => {
     listLes.find((i: any) =>
-      i.paket == data.idpaket ? (data.idpaket = i.idpaket) : null,
+      i.paket == data.idpaket ? (data.idpaket = Number(i.idpaket)) : null,
     );
     listMurid.find((i: any) =>
-      i.siswa == data.idsiswa ? (data.idsiswa = i.idsiswa) : null,
+      i.siswa == data.idsiswa ? (data.idsiswa = Number(i.idsiswa)) : null,
     );
     console.log(data);
-    const {success} = await apiPost({
-      url: 'les/daftar',
-      payload: data,
-    });
-    console.log(success);
+    // const {success} = await apiPost({
+    //   url: 'les/daftar',
+    //   payload: data,
+    // });
+    // console.log(success);
   };
 
   return (
@@ -112,7 +121,7 @@ export const AddLes: FC<ScreenProps> = ({navigation}) => {
               render={({field: {onChange, value}}) => (
                 <InputChoice
                   label="Pilih Murid"
-                  value={value.toString()}
+                  value={value}
                   error={!!errors.idsiswa}
                   errorMessage="Harap pilih murid yang akan diikuti"
                   onSelect={item => {
@@ -124,7 +133,6 @@ export const AddLes: FC<ScreenProps> = ({navigation}) => {
                 />
               )}
               name="idsiswa"
-              defaultValue={''}
             />
           )}
           {/* Pilihan les */}
@@ -135,7 +143,7 @@ export const AddLes: FC<ScreenProps> = ({navigation}) => {
               render={({field: {onChange, value}}) => (
                 <InputChoice
                   label="Pilihan Les"
-                  value={value.toString()}
+                  value={value}
                   error={!!errors.pilihanles}
                   errorMessage="Harap pilih les yang akan diikuti"
                   onSelect={item => {
@@ -148,28 +156,100 @@ export const AddLes: FC<ScreenProps> = ({navigation}) => {
                 />
               )}
               name="idpaket"
-              defaultValue={''}
             />
           )}
-
-          {/* Jadwal Les Rutin */}
+          {/* Jadwal les */}
+          <Controller
+            control={control}
+            rules={{required: true}}
+            render={({field: {onChange}}) => (
+              <View>
+                <DatePicker
+                  modal
+                  open={Open}
+                  date={date}
+                  mode="date"
+                  textColor={color.grey_5}
+                  onConfirm={Date => {
+                    unstable_batchedUpdates(() => {
+                      onChange(Date.toISOString().slice(0, 10));
+                      setDate(Date);
+                      setOpen(false);
+                    });
+                  }}
+                  onCancel={() => {
+                    setOpen(false);
+                  }}
+                />
+                <TextInput
+                  style={{backgroundColor: 'white', marginBottom: 10}}
+                  placeholder="Piih Tanggal Les"
+                  value={date.toISOString().slice(0, 10)}
+                  editable={false}
+                  selectTextOnFocus={false}
+                  right={
+                    <TextInput.Icon
+                      name="calendar"
+                      onPress={() => {
+                        setOpen(true);
+                      }}
+                    />
+                  }
+                />
+              </View>
+            )}
+            name="tglles"
+          />
+          {/* Input Time */}
+          <Controller
+            control={control}
+            rules={{required: true}}
+            render={({field: {onChange}}) => (
+              <View>
+                <DatePicker
+                  modal
+                  title={'Pilih Jam Les'}
+                  open={openTime}
+                  date={time}
+                  mode="time"
+                  textColor={color.grey_5}
+                  onConfirm={Time => {
+                    unstable_batchedUpdates(() => {
+                      onChange(Time.toISOString());
+                      setTime(Time);
+                      setOpenTime(false);
+                    });
+                  }}
+                  onCancel={() => {
+                    setOpenTime(false);
+                  }}
+                />
+                <TextInput
+                  style={{backgroundColor: 'white', marginBottom: 10}}
+                  placeholder="Piih Jam Les"
+                  value={time.getHours() + ':' + time.getMinutes()}
+                  editable={false}
+                  selectTextOnFocus={false}
+                  right={
+                    <TextInput.Icon
+                      name="clock"
+                      onPress={() => {
+                        setOpenTime(true);
+                      }}
+                    />
+                  }
+                />
+              </View>
+            )}
+            name="jamles"
+          />
+          {/* hari */}
           {/* <Controller
             control={control}
             rules={{required: true}}
             render={({field: {onChange, value}}) => (
-              <InputChoice
-                label="Jadwal Les Rutin"
-                value="Pilih jadwal les rutin"
-                error={!!errors.pilihanles}
-                errorMessage="Harap pilih les yang akan diikuti"
-                onSelect={item => onChange(item.nama)}
-                listData={master_pilihanles}
-                keyMenuTitle="nama"
-                keyMenuDescription="harga"
-              />
-            )}
-            name="pilihanles"
-            defaultValue={''}
+            )
+                
           /> */}
 
           {/* Jenis kelamin tutor */}

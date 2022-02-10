@@ -102,16 +102,6 @@ export const Les: FC<ScreenProps> = ({navigation}) => {
       const data = await apiGet({
         url: '/les/histori?status&cari&orderBy=siswa&sort=desc&page=1',
       });
-      
-      // const {data}: {data: any} = await apiGet({
-      //   url: 'les/histori',
-      //   params: {
-      //     orderBy: 'siswa',
-      //     sort: 'desc',
-      //     page: 1,
-      //   },
-      // });
-
       if (isActive) {
         setListData(data.data);
         setIsLoading(false);
@@ -153,7 +143,7 @@ export const Les: FC<ScreenProps> = ({navigation}) => {
                   key={index}
                   item={item}
                   onPress={() => {
-                    navigation.navigate('DetailLes');
+                    navigation.navigate('DetailLes', {item});
                   }}
                 />
               );

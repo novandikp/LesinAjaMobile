@@ -17,8 +17,8 @@ import {
 } from 'react-native';
 import {StackScreenProps} from '@react-navigation/stack';
 import {AppStackParamList} from '@routes/RouteTypes';
-import {apiPost, wait} from '@utils';
-import {Snackbar} from 'react-native-paper';
+import {apiPost} from '@utils';
+// import {Snackbar} from 'react-native-paper';
 
 type FormDataType = {
   siswa: string;

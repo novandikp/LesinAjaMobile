@@ -45,12 +45,12 @@ export const Account: FC<ScreenProps> = () => {
     kecamatan: [],
     desa: [],
   });
-  // const [selectedDaerah, setSelectedDaerah] = useState({
-  //   provinsi: '',
-  //   kota: '',
-  //   kecamatan: '',
-  //   desa: '',
-  // });
+  const [selectedDaerah, setSelectedDaerah] = useState({
+    provinsi: '',
+    kota: '',
+    kecamatan: '',
+    desa: '',
+  });
   const [isLoading, setIsLoading] = useState(true);
   const [oldData, setOldData] = useState({
     wali: '',
@@ -58,6 +58,9 @@ export const Account: FC<ScreenProps> = () => {
     idprovinsi: '',
     alamat: '',
     pekerjaan: '',
+    idkabupaten: '',
+    idkecamatan: '',
+    iddesa: '',
   });
   useEffect(() => {
     const getInitialData = async () => {
@@ -65,6 +68,43 @@ export const Account: FC<ScreenProps> = () => {
       setListDaerah(prev => ({...prev, provinsi}));
 
       const OldData = await apiGet({url: 'wali/profile'});
+      console.log(OldData.data);
+      // if (OldData.data != '' || OldData.data != null) {
+      //   let kota = await getListDaerah({
+      //     type: 'kota',
+      //     idParent: OldData.data.idprovinsi,
+      //   });
+      //   let kecamatan = await getListDaerah({
+      //     type: 'kecamatan',
+      //     idParent: OldData.data.idkabupaten,
+      //   });
+      //   let desa = await getListDaerah({
+      //     type: 'desa',
+      //     idParent: OldData.data.idkecamatan,
+      //   });
+      //   setListDaerah(prev => ({...prev, kota}));
+      //   setListDaerah(prev => ({...prev, kecamatan}));
+      //   setListDaerah(prev => ({...prev, desa}));
+      //   let defaultProvinsi = await listDaerah.provinsi.find(
+      //     (i: any) => i.id == OldData.data.idprovinsi,
+      //   )?.name;
+      //   let defaultKota = await listDaerah.kota.find(
+      //     (i: any) => i.id == OldData.data.idkabupaten,
+      //   )?.name;
+      //   let defaultKecamatan = await listDaerah.kecamatan.find(
+      //     (i: any) => i.id == OldData.data.idkecamatan,
+      //   )?.name;
+      //   let defaultDesa = await listDaerah.desa.find(
+      //     (i: any) => i.id == OldData.data.iddesa,
+      //   )?.name;
+      //   await setSelectedDaerah({
+      //     provinsi: defaultProvinsi,
+      //     kota: defaultKota,
+      //     kecamatan: defaultKecamatan,
+      //     desa: defaultDesa,
+      //   });
+      //   console.log(selectedDaerah.desa);
+      // }
       setOldData(OldData.data);
       setIsLoading(false);
     };
@@ -74,7 +114,9 @@ export const Account: FC<ScreenProps> = () => {
       // cancelApiRequest();
     };
   }, []);
+
   const onSubmit: SubmitHandler<FormDataType> = async data => {
+    console.log(data.iddesa);
     listDaerah.provinsi.find((i: any) =>
       i.name == data.idprovinsi ? (data.idprovinsi = i.id) : null,
     );
@@ -89,16 +131,7 @@ export const Account: FC<ScreenProps> = () => {
     });
     const {success} = await apiPost({
       url: '/wali/profile/',
-      payload: {
-        wali: data.wali,
-        telp: data.telp,
-        alamat: data.alamat,
-        idprovinsi: data.idprovinsi,
-        idkabupaten: data.idkabupaten,
-        idkecamatan: data.idkecamatan,
-        iddesa: data.iddesa,
-        pekerjaan: data.pekerjaan,
-      },
+      payload: data,
     });
     console.log(success);
   };
@@ -164,7 +197,7 @@ export const Account: FC<ScreenProps> = () => {
                   render={({field: {onChange, value}}) => (
                     <InputChoice
                       label="Domisili - Provinsi"
-                      value={value}
+                      value={selectedDaerah.provinsi}
                       error={!!errors.idprovinsi}
                       errorMessage="Harap pilih provinsi tempat tinggal Anda"
                       onSelect={async item => {
@@ -172,6 +205,12 @@ export const Account: FC<ScreenProps> = () => {
                           const kota = await getListDaerah({
                             type: 'kota',
                             idParent: item.id,
+                          });
+                          setSelectedDaerah({
+                            provinsi: item.name,
+                            kota: '',
+                            kecamatan: '',
+                            desa: '',
                           });
                           setListDaerah(prev => ({...prev, kota}));
                           onChange(item.name);
@@ -201,10 +240,16 @@ export const Account: FC<ScreenProps> = () => {
                   render={({field: {onChange, value}}) => (
                     <InputChoice
                       label="Domisili - Kota"
-                      value={value}
+                      value={selectedDaerah.kota}
                       error={!!errors.idkabupaten}
                       errorMessage="Harap pilih kota/kabupaten tempat tinggal Anda"
                       onSelect={async item => {
+                        setSelectedDaerah({
+                          provinsi: selectedDaerah.provinsi,
+                          kota: item.name,
+                          kecamatan: '',
+                          desa: '',
+                        });
                         const kecamatan = await getListDaerah({
                           type: 'kecamatan',
                           idParent: item.id,
@@ -218,6 +263,8 @@ export const Account: FC<ScreenProps> = () => {
                   )}
                   name="idkabupaten"
                   defaultValue={''}
+
+                  // }
                 />
               )}
               {/* kecamatan */}
@@ -229,10 +276,16 @@ export const Account: FC<ScreenProps> = () => {
                   render={({field: {onChange, value}}) => (
                     <InputChoice
                       label="Domisili - Kecamatan"
-                      value={value}
+                      value={selectedDaerah.kecamatan}
                       error={!!errors.idkecamatan}
                       errorMessage="Harap pilih kecamatan tempat tinggal Anda"
                       onSelect={async item => {
+                        setSelectedDaerah({
+                          provinsi: selectedDaerah.provinsi,
+                          kota: selectedDaerah.kota,
+                          kecamatan: item.name,
+                          desa: '',
+                        });
                         onChange(item.name);
                         const desa = await getListDaerah({
                           type: 'desa',
@@ -258,10 +311,16 @@ export const Account: FC<ScreenProps> = () => {
                   render={({field: {onChange, value}}) => (
                     <InputChoice
                       label="Domisili - Kelurahan"
-                      value={value}
+                      value={selectedDaerah.desa}
                       error={!!errors.iddesa}
                       errorMessage="Harap pilih kecamatan tempat tinggal Anda"
                       onSelect={item => {
+                        setSelectedDaerah({
+                          provinsi: selectedDaerah.provinsi,
+                          kota: selectedDaerah.kota,
+                          kecamatan: selectedDaerah.kecamatan,
+                          desa: item.name,
+                        });
                         onChange(item.name);
                       }}
                       listData={listDaerah.desa}
