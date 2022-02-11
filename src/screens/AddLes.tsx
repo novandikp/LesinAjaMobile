@@ -20,7 +20,7 @@ import {
   StatusBar,
   StyleSheet,
   View,
-  ScrollView,
+  // ScrollView,
 } from 'react-native';
 import {
   //Button, Text, TextInput, RadioButton,
@@ -28,11 +28,12 @@ import {
 } from 'react-native-paper';
 import {StackScreenProps} from '@react-navigation/stack';
 import {AppStackParamList} from '@routes/RouteTypes';
-import {apiGet} from '@utils';
+import {apiGet, apiPost} from '@utils';
 import {getListLest} from '@utils/getListData';
 import DatePicker from 'react-native-date-picker';
 import {unstable_batchedUpdates} from 'react-native';
-
+import MultiSelect from 'react-native-multiple-select';
+// react-native-multiple-select
 type FormDataType = {
   idpaket: string;
   idsiswa: string;
@@ -45,12 +46,20 @@ type ScreenProps = StackScreenProps<AppStackParamList>;
 export const AddLes: FC<ScreenProps> = ({navigation}) => {
   const [listLes, setListLes] = useState([]);
   const [listMurid, setListMurid] = useState([]);
-  const [biaya, setBiaya] = useState('');
   const [Open, setOpen] = useState(false);
   const [date, setDate] = useState(new Date());
   const [time, setTime] = useState(new Date());
   const [openTime, setOpenTime] = useState(false);
-
+  const [selectedDays, setSelectedDays] = useState([]);
+  const Days = [
+    {id: '00', name: 'MINGGU'},
+    {id: '01', name: 'SENIN'},
+    {id: '02', name: 'SELASA'},
+    {id: '03', name: 'RABU'},
+    {id: '04', name: 'KAMIS'},
+    {id: '05', name: 'JUMAT'},
+    {id: '06', name: 'SABTU'},
+  ];
   const {
     control,
     handleSubmit,
@@ -72,18 +81,22 @@ export const AddLes: FC<ScreenProps> = ({navigation}) => {
     };
   }, []);
   const onSubmit = async (data: object) => {
+    // console.log(data)
+    data.hari = selectedDays;
+    data.jamles = time.getHours() + ':' + time.getMinutes();
     listLes.find((i: any) =>
       i.paket == data.idpaket ? (data.idpaket = Number(i.idpaket)) : null,
     );
     listMurid.find((i: any) =>
       i.siswa == data.idsiswa ? (data.idsiswa = Number(i.idsiswa)) : null,
     );
+    // console.log(data.tglles);
     console.log(data);
-    // const {success} = await apiPost({
-    //   url: 'les/daftar',
-    //   payload: data,
-    // });
-    // console.log(success);
+    const {success} = await apiPost({
+      url: 'les/daftar',
+      payload: data,
+    });
+    console.log(success);
   };
 
   return (
@@ -92,7 +105,9 @@ export const AddLes: FC<ScreenProps> = ({navigation}) => {
 
       <Header title="Tambah Les Baru" />
 
-      <ScrollView contentContainerStyle={{flexGrow: 1}}>
+      <SafeAreaView
+        //  contentContainerStyle={{flexGrow: 1}}
+        style={{flex: 1}}>
         <View style={{flex: 1, padding: dimens.standard}}>
           {/* Siswa */}
           {/* <Controller
@@ -148,7 +163,7 @@ export const AddLes: FC<ScreenProps> = ({navigation}) => {
                   errorMessage="Harap pilih les yang akan diikuti"
                   onSelect={item => {
                     onChange(item.paket);
-                    setBiaya(item.biaya);
+                    // setBiaya(item.biaya);
                   }}
                   listData={listLes}
                   keyMenuTitle="paket"
@@ -244,13 +259,23 @@ export const AddLes: FC<ScreenProps> = ({navigation}) => {
             name="jamles"
           />
           {/* hari */}
-          {/* <Controller
+          <Controller
             control={control}
             rules={{required: true}}
-            render={({field: {onChange, value}}) => (
-            )
-                
-          /> */}
+            render={({field: {onChange}}) => (
+              <MultiSelect
+                items={Days}
+                uniqueKey="name"
+                onSelectedItemsChange={(item: any) => {
+                  setSelectedDays(item);
+                  onChange(selectedDays);
+                }}
+                selectedItems={selectedDays}
+                selectText="Pilih Hari Les"
+              />
+            )}
+            name="hari"
+          />
 
           {/* Jenis kelamin tutor */}
           <Controller
@@ -276,12 +301,12 @@ export const AddLes: FC<ScreenProps> = ({navigation}) => {
 
           {/* Total Price */}
           <TotalPrice
-            hargaLes={biaya}
+            hargaLes="Rp 100.000"
             hargaDaftar="Rp 150.000"
             total="Rp 350.000"
           />
         </View>
-      </ScrollView>
+      </SafeAreaView>
 
       {/* Submit button */}
       <ButtonFormSubmit text="Kirim" onPress={handleSubmit(onSubmit)} />
