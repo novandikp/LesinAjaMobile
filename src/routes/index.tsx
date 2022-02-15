@@ -15,6 +15,7 @@ import {
   DetailListMaster,
   EditListMaster,
   EditListLes,
+  AccountTutor,
 } from '@screens';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
@@ -96,7 +97,7 @@ const AppRouter: FC = () => {
             <AppStack.Screen name="DetailLesTutor" component={DetailLesTutor} />
             <AppStack.Screen name="DetailLowongan" component={DetailLowongan} />
             <AppStack.Screen name="DetailPresensi" component={DetailPresensi} />
-            <AppStack.Screen name="Account" component={Account} />
+            <AppStack.Screen name="AccountTutor" component={AccountTutor} />
           </>
         )}
       </AppStack.Navigator>

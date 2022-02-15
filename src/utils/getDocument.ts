@@ -16,3 +16,18 @@ export const getSingleDocument = async () => {
     }
   }
 };
+export const getSingleDocumentPDF = async () => {
+  try {
+    const [res]: any = await DocumentPicker.pick({
+      type: [DocumentPicker.types.pdf],
+    });
+
+    return res;
+  } catch (err) {
+    if (DocumentPicker.isCancel(err)) {
+      // User cancelled the picker, exit any dialogs or menus and move on
+    } else {
+      throw err;
+    }
+  }
+};

@@ -37,7 +37,12 @@ export const Settings: FC<ScreenProps> = ({navigation}) => {
             contentStyle={styles.settingsItem}
             labelStyle={styles.settingsText}
             onPress={() => {
-              navigation.navigate('Account');
+              // console.log(userRole);
+              if (userRole == 'tutor') {
+                navigation.navigate('AccountTutor');
+              } else if (userRole == 'parent') {
+                navigation.navigate('Account');
+              }
             }}>
             Ubah Data Pribadi
           </Button>
