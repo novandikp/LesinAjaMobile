@@ -1,29 +1,73 @@
-import React, {FC, useState} from 'react';
+import React, {FC, useState, useEffect} from 'react';
 import {CardKeyValue, Gap, Header, NestedCard} from '@components';
 import {color, dimens} from '@constants';
-import {SafeAreaView, StatusBar, StyleSheet, ScrollView} from 'react-native';
+import {
+  SafeAreaView,
+  StatusBar,
+  StyleSheet,
+  ScrollView,
+  Platform,
+} from 'react-native';
 import {Avatar, Button, Card, Subheading} from 'react-native-paper';
 import {StackScreenProps} from '@react-navigation/stack';
 import {AppStackParamList} from '@routes/RouteTypes';
-import {getSingleDocument} from '@utils';
+import {getSingleDocument, apiGet, apiPostFile} from '@utils';
 
 type ScreenProps = StackScreenProps<AppStackParamList, 'DetailLes'>;
-export const DetailLes: FC<ScreenProps> = ({navigation}) => {
+export const DetailLes: FC<ScreenProps> = ({navigation, route}) => {
+  const {data}: any = route.params;
+  let id = data.idles;
+  const bayar = data.biaya;
   const [buktiBayar, setBuktiBayar] = useState({
     path: '',
   });
-
+  const [images, setImages] = useState(null);
   const onPressUploadBuktiBayar = async () => {
     if (buktiBayar.path === '') {
       const res = await getSingleDocument();
       if (res) {
+        const item = new FormData();
         setBuktiBayar(prev => ({...prev, path: res.uri}));
+        setImages(res);
+        console.log(res);
+        item.append('idles', id.toString());
+        item.append('jumlahbayar', bayar.toString());
+        item.append('tglbayar', new Date().toISOString().slice(0, 10));
+        item.append('bukti[0][file]', {
+          uri:
+            Platform.OS === 'ios' ? res?.uri.replace('file://', '') : res?.uri,
+          type: res.type,
+          name: res.name,
+        });
+        const {success} = await apiPostFile({
+          url: 'bayar',
+          payload: item._parts,
+        });
+        // console.log(success);
+        if (success) {
+          navigation.navigate('Les');
+        }
       }
     } else {
-      // Upload
+      const gbr = images;
     }
   };
+  const [detailLes, setDetailLes] = useState<any>([]);
+  const [listApplyingTutor, setListApplyingTutor] = useState<any>([]);
+  useEffect(() => {
+    const getInitialData = async () => {
+      const applyingTutor = await apiGet({
+        url: '/lowongan/pelamar/' + id,
+      });
+      setListApplyingTutor(applyingTutor.data);
+      setDetailLes(data);
+    };
+    getInitialData();
 
+    return () => {
+      // isActive = false;
+    };
+  }, []);
   const coursePresenceList = [
     {
       tanggal: 'Kamis, 02 September 2021',
@@ -49,20 +93,20 @@ export const DetailLes: FC<ScreenProps> = ({navigation}) => {
     },
   ];
 
-  const listApplyingTutor = [
-    {
-      nama: 'Fahrul Firdaus',
-      perguruanTinggi: 'Politeknik Elektronika Negeri Surabaya',
-    },
-    {
-      nama: 'Nico Aidin',
-      perguruanTinggi: 'Universitas Negeri Surabaya',
-    },
-    {
-      nama: 'Fiqri Akbar',
-      perguruanTinggi: 'Universitas Jember',
-    },
-  ];
+  // const listApplyingTutor = [
+  //   {
+  //     nama: 'Fahrul Firdaus',
+  //     perguruanTinggi: 'Politeknik Elektronika Negeri Surabaya',
+  //   },
+  //   {
+  //     nama: 'Nico Aidin',
+  //     perguruanTinggi: 'Universitas Negeri Surabaya',
+  //   },
+  //   {
+  //     nama: 'Fiqri Akbar',
+  //     perguruanTinggi: 'Universitas Jember',
+  //   },
+  // ];
 
   return (
     <SafeAreaView style={styles.container}>
@@ -74,20 +118,27 @@ export const DetailLes: FC<ScreenProps> = ({navigation}) => {
         contentContainerStyle={{flexGrow: 1, padding: dimens.standard}}>
         {/* About Les */}
         <Card>
-          <Card.Title title="IPA kelas 5 SD" subtitle="5/8 Pertemuan" />
+          <Card.Title
+            title={detailLes.kelas + ' ' + detailLes.jenjang}
+            subtitle="5/8 Pertemuan"
+          />
           <Card.Content>
-            <CardKeyValue keyName="Siswa" value="Andi Rayka" keyFlex={8} />
-            <CardKeyValue keyName="Tutor" value="Udin Harun" keyFlex={8} />
+            <CardKeyValue
+              keyName="Siswa"
+              value={detailLes.siswa != null ? detailLes.siswa : '-'}
+              keyFlex={8}
+            />
+            <CardKeyValue keyName="Tutor" value="-" keyFlex={8} />
             <CardKeyValue
               keyName="Tgl Mulai"
-              value="12 Agustus 2021"
+              value={
+                detailLes != null
+                  ? new Date(detailLes.tglles).toLocaleDateString()
+                  : '-'
+              }
               keyFlex={8}
             />
-            <CardKeyValue
-              keyName="Tgl Selesai"
-              value="12 September 2021"
-              keyFlex={8}
-            />
+            <CardKeyValue keyName="Tgl Selesai" value="-" keyFlex={8} />
           </Card.Content>
         </Card>
 
@@ -136,14 +187,14 @@ export const DetailLes: FC<ScreenProps> = ({navigation}) => {
             subtitleStyle={{fontSize: dimens.medium_14}}
           />
           <Card.Content>
-            {listApplyingTutor.map((item, index) => {
+            {listApplyingTutor.map((item: any, index: number) => {
               return (
                 <NestedCard
                   key={index}
-                  title={item.nama}
-                  subtitle={item.perguruanTinggi}
+                  title={item.guru}
+                  subtitle={item.perguruantinggi}
                   onPress={() => {
-                    navigation.navigate('DetailTutor');
+                    navigation.navigate<any>('DetailTutor', {data: item});
                   }}
                   left={props => (
                     <Avatar.Image

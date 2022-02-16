@@ -13,14 +13,15 @@ import {StackScreenProps} from '@react-navigation/stack';
 import {AdminDrawerParamList, AppStackParamList} from '@routes/RouteTypes';
 import {CompositeScreenProps} from '@react-navigation/native';
 import {MaterialBottomTabScreenProps} from '@react-navigation/material-bottom-tabs';
-
+import {apiPost} from '@utils';
 type FormDataType = {
-  mapel: string;
-  jenjangKelas: string;
+  // mapel: string;
+  // jenjangKelas: string;
   paket: string;
-  wilayah: string;
+  // wilayah: string;
+  jumlah_pertemuan: string;
   biaya: string;
-  gajiTutor: string;
+  gaji: string;
 };
 
 type ScreenProps = CompositeScreenProps<
@@ -31,20 +32,32 @@ export const EditListLes: FC<ScreenProps> = ({
   route,
   navigation: {navigate},
 }) => {
-  const {data}: any = route.params;
-
   const {
     control,
     handleSubmit,
     formState: {errors, isSubmitting},
     setValue,
   } = useForm<FormDataType>({mode: 'onChange'});
-
+  const {data}: any = route.params;
+  const idpaket = data != null ? data.idpaket : null;
+  const paket = !data;
   const onSubmit: SubmitHandler<FormDataType> = async data => {
-    const success = true;
-
-    if (success) {
-      navigate('ListLes');
+    if (!paket) {
+      const success = await apiPost({
+        url: 'paket/' + idpaket,
+        payload: data,
+      });
+      if (success) {
+        navigate('ListLes');
+      }
+    } else {
+      const success = await apiPost({
+        url: 'paket',
+        payload: data,
+      });
+      if (success) {
+        navigate('ListLes');
+      }
     }
   };
 
@@ -57,7 +70,7 @@ export const EditListLes: FC<ScreenProps> = ({
       <ScrollView contentContainerStyle={{flexGrow: 1}}>
         <View style={{flex: 1, padding: dimens.standard}}>
           {/* Mapel */}
-          <Controller
+          {/* <Controller
             control={control}
             rules={{required: true}}
             render={({field: {onChange, onBlur, value}}) => (
@@ -74,10 +87,10 @@ export const EditListLes: FC<ScreenProps> = ({
             )}
             name="mapel"
             defaultValue={data && data.mapel}
-          />
+          /> */}
 
           {/* Jenjang Kelas */}
-          <Controller
+          {/* <Controller
             control={control}
             rules={{required: true}}
             render={({field: {onChange, onBlur, value}}) => (
@@ -94,7 +107,7 @@ export const EditListLes: FC<ScreenProps> = ({
             )}
             name="jenjangKelas"
             defaultValue={data && data.jenjangKelas}
-          />
+          /> */}
 
           {/* Paket */}
           <Controller
@@ -117,7 +130,7 @@ export const EditListLes: FC<ScreenProps> = ({
           />
 
           {/* Wilayah */}
-          <Controller
+          {/* <Controller
             control={control}
             rules={{required: true}}
             render={({field: {onChange, onBlur, value}}) => (
@@ -134,8 +147,27 @@ export const EditListLes: FC<ScreenProps> = ({
             )}
             name="wilayah"
             defaultValue={data && data.wilayah}
+          /> */}
+          {/* jumlah pertemuan */}
+          <Controller
+            control={control}
+            rules={{required: true}}
+            render={({field: {onChange, onBlur, value}}) => (
+              <InputText
+                autoCapitalize="words"
+                placeholder="Masukkan jumlah pertemuan"
+                label="Jumlah Pertemuan"
+                onBlur={onBlur}
+                onChangeText={onChange}
+                value={value}
+                error={!!errors.biaya}
+                errorMessage="jumlah pertemuanharus diisi"
+                keyboardType="number-pad"
+              />
+            )}
+            name="jumlah_pertemuan"
+            defaultValue={data && data.jumlah_pertemuan.toString()}
           />
-
           {/* Biaya */}
           <Controller
             control={control}
@@ -150,10 +182,11 @@ export const EditListLes: FC<ScreenProps> = ({
                 value={value}
                 error={!!errors.biaya}
                 errorMessage="Biaya harus diisi"
+                keyboardType="numeric"
               />
             )}
             name="biaya"
-            defaultValue={data && data.biaya}
+            defaultValue={data && data.biaya.toString()}
           />
 
           {/* Gaji tutor */}
@@ -168,12 +201,13 @@ export const EditListLes: FC<ScreenProps> = ({
                 onBlur={onBlur}
                 onChangeText={onChange}
                 value={value}
-                error={!!errors.gajiTutor}
+                error={!!errors.gaji}
                 errorMessage="Mapel harus diisi"
+                keyboardType="numeric"
               />
             )}
-            name="gajiTutor"
-            defaultValue={data && data.gajiTutor}
+            name="gaji"
+            defaultValue={data && data.gaji.toString()}
           />
         </View>
       </ScrollView>

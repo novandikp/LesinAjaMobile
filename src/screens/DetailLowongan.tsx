@@ -12,14 +12,27 @@ import {Card, Divider, Paragraph, Button, Caption} from 'react-native-paper';
 import {StackScreenProps} from '@react-navigation/stack';
 import {AppStackParamList} from '@routes/RouteTypes';
 import dayjs from 'dayjs';
-
+import {apiPost} from '../utils/api';
 type ScreenProps = StackScreenProps<AppStackParamList, 'DetailLowongan'>;
-export const DetailLowongan: FC<ScreenProps> = () => {
+export const DetailLowongan: FC<ScreenProps> = ({route}) => {
+  const {item}: any = route.params;
   const jadwalLes = [
     1630991440, 1631074240, 1631074240, 1631074240, 1631074240, 1631074240,
     1631074240, 1631074240,
   ];
+  // const Days = [
+  //   {id: '0', name: 'MINGGU'},
+  //   {id: '1', name: 'SENIN'},
+  //   {id: '2', name: 'SELASA'},
+  //   {id: '3', name: 'RABU'},
+  //   {id: '4', name: 'KAMIS'},
+  //   {id: '5', name: 'JUMAT'},
+  //   {id: '6', name: 'SABTU'},
+  // ];
 
+  // const submit = async idlowongan => {
+
+  // };
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar backgroundColor={color.bg_grey} barStyle="dark-content" />
@@ -36,13 +49,27 @@ export const DetailLowongan: FC<ScreenProps> = () => {
             <Divider />
             <Gap y={dimens.tiny} />
 
-            <CardLabelValue label="Siswa" value="Gopi" />
-            <CardLabelValue label="Wali Murid" value="Mikasa" />
-            <CardLabelValue label="Paket" value="8 Pertemuan" />
-            <CardLabelValue label="Paket" value="8 Pertemuan" />
-            <CardLabelValue label="Gaji Tutor" value="Rp 300000" />
+            <CardLabelValue label="Siswa" value={item.siswa} />
+            {/* <CardLabelValue label="Wali Murid" value="Mikasa" /> */}
+            {/* <CardLabelValue label="Paket" value="8 Pertemuan" /> */}
+            <CardLabelValue
+              label="Paket"
+              value={item.jumlah_pertemuan + ' Pertemuan'}
+            />
+            <CardLabelValue label="Gaji Tutor" value={item.gaji} />
             <CardLabelMultipleValue label="Jadwal Les" value={jadwalLes} />
-            <Button style={{marginTop: dimens.standard}}>Ambil Lowongan</Button>
+            <Button
+              style={{marginTop: dimens.standard}}
+              onPress={async () => {
+                const data = new FormData();
+                const {success} = await apiPost({
+                  url: '/lowongan/ajuan/' + item.idlowongan,
+                  payload: data,
+                });
+                console.log(success);
+              }}>
+              Ambil Lowongan
+            </Button>
             <Gap y={dimens.standard} />
           </Card.Content>
         </Card>

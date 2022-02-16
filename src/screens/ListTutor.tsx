@@ -70,12 +70,14 @@ export const ListTutor: FC<ScreenProps> = ({navigation}) => {
 
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         <OneLineInfo info="Klik item untuk melihat detail" />
-        {tutorList.map((item, index) => {
+        {tutorList.map((item: any, index: number) => {
           return (
             <Card
               key={index}
               style={{marginTop: dimens.standard}}
-              onPress={() => navigation.navigate('DetailTutor')}>
+              onPress={() =>
+                navigation.navigate<any>('DetailTutor', {data: item})
+              }>
               <Card.Title title={item.guru} />
               <Card.Content>
                 <CardKeyValue keyName="Nama" value={item.guru} />

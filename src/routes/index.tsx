@@ -1,6 +1,7 @@
 import React, {FC, useContext, useEffect, useState} from 'react';
 import {
   Account,
+  Les,
   AddLes,
   LoginAdmin,
   DetailLes,
@@ -85,6 +86,7 @@ const AppRouter: FC = () => {
             <AppStack.Screen name="EditStudent" component={EditStudent} />
             <AppStack.Screen name="AddLes" component={AddLes} />
             <AppStack.Screen name="DetailLes" component={DetailLes} />
+            <AppStack.Screen name="Les" component={Les} />
             <AppStack.Screen name="DetailTutor" component={DetailTutor} />
             <AppStack.Screen name="DetailPresensi" component={DetailPresensi} />
             <AppStack.Screen name="Account" component={Account} />

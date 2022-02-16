@@ -134,6 +134,8 @@ export const Account: FC<ScreenProps> = () => {
       payload: data,
     });
     console.log(success);
+    // if (success) {
+    // }
   };
   return (
     <SafeAreaView style={styles.container}>
@@ -194,7 +196,7 @@ export const Account: FC<ScreenProps> = () => {
                 <Controller
                   control={control}
                   rules={{required: true}}
-                  render={({field: {onChange, value}}) => (
+                  render={({field: {onChange}}) => (
                     <InputChoice
                       label="Domisili - Provinsi"
                       value={selectedDaerah.provinsi}
@@ -237,7 +239,7 @@ export const Account: FC<ScreenProps> = () => {
                 <Controller
                   control={control}
                   rules={{required: true}}
-                  render={({field: {onChange, value}}) => (
+                  render={({field: {onChange}}) => (
                     <InputChoice
                       label="Domisili - Kota"
                       value={selectedDaerah.kota}
@@ -273,7 +275,7 @@ export const Account: FC<ScreenProps> = () => {
                 <Controller
                   control={control}
                   rules={{required: true}}
-                  render={({field: {onChange, value}}) => (
+                  render={({field: {onChange}}) => (
                     <InputChoice
                       label="Domisili - Kecamatan"
                       value={selectedDaerah.kecamatan}
@@ -308,7 +310,7 @@ export const Account: FC<ScreenProps> = () => {
                 <Controller
                   control={control}
                   rules={{required: true}}
-                  render={({field: {onChange, value}}) => (
+                  render={({field: {onChange}}) => (
                     <InputChoice
                       label="Domisili - Kelurahan"
                       value={selectedDaerah.desa}

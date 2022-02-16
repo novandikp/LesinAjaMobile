@@ -37,9 +37,13 @@ export const apiPost = async ({
   try {
     const loginToken = await getLocalStorage(lsKey.userToken);
     const {ok, data} = await api.post(url, payload, {
-      headers: {Authorization: loginToken},
+      headers: {
+        Authorization: loginToken,
+      },
       cancelToken: source.token,
     });
+    console.log(payload);
+    console.log(data);
     // If success
     if (ok) {
       if (data.data.posisi == 'Admin') {
@@ -57,7 +61,39 @@ export const apiPost = async ({
     return {success: false, data: null};
   }
 };
+export const apiPostFile = async ({
+  url,
+  payload,
+  isLogin,
+}: ApiPostFuncType): Promise<ApiPostReturnType> => {
+  try {
+    const loginToken = await getLocalStorage(lsKey.userToken);
+    const {ok, data} = await api.post(url, payload, {
+      headers: {
+        Authorization: loginToken,
+        'Content-Type': 'multipart/form-data',
+      },
+      cancelToken: source.token,
+    });
+    console.log(payload);
+    console.log(data);
+    // If success
+    if (ok) {
+      if (data.data.posisi == 'Admin') {
+        setLocalStorage(lsKey.userToken, data.data.token);
+      }
 
+      if (isLogin) {
+        setLocalStorage(lsKey.userToken, data.data.token);
+      }
+      return {success: true, data: data.data};
+    }
+
+    return {success: false, data: null};
+  } catch (error) {
+    return {success: false, data: null};
+  }
+};
 // Get data from api
 export const apiGet = async ({
   url,

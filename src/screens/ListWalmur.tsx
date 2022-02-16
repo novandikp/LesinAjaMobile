@@ -67,12 +67,14 @@ export const ListWalmur: FC<ScreenProps> = ({navigation}) => {
 
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         <OneLineInfo info="Klik item untuk melihat detail" />
-        {walmurList.map((item, index) => {
+        {walmurList.map((item: any, index: number) => {
           return (
             <Card
               key={index}
               style={{marginTop: dimens.standard}}
-              onPress={() => navigation.navigate('DetailWalmur')}>
+              onPress={() =>
+                navigation.navigate<any>('DetailWalmur', {data: item})
+              }>
               <Card.Title title={item.wali} />
               <Card.Content>
                 <CardKeyValue keyName="Nama" value={item.wali} />

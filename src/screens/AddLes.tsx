@@ -14,7 +14,7 @@ import {
   // PilihanLesType,
 } from '@constants';
 import {TextInput} from 'react-native-paper';
-import {Controller, useForm} from 'react-hook-form';
+import {Controller, useForm, SubmitHandler} from 'react-hook-form';
 import {
   SafeAreaView,
   StatusBar,
@@ -50,7 +50,7 @@ export const AddLes: FC<ScreenProps> = ({navigation}) => {
   const [date, setDate] = useState(new Date());
   const [time, setTime] = useState(new Date());
   const [openTime, setOpenTime] = useState(false);
-  const [selectedDays, setSelectedDays] = useState([]);
+  const [selectedDays, setSelectedDays] = useState<any>([]);
   const Days = [
     {id: '00', name: 'MINGGU'},
     {id: '01', name: 'SENIN'},
@@ -80,15 +80,15 @@ export const AddLes: FC<ScreenProps> = ({navigation}) => {
       // cancelApiRequest();
     };
   }, []);
-  const onSubmit = async (data: object) => {
+  const onSubmit: SubmitHandler<FormDataType> = async data => {
     // console.log(data)
     data.hari = selectedDays;
     data.jamles = time.getHours() + ':' + time.getMinutes();
     listLes.find((i: any) =>
-      i.paket == data.idpaket ? (data.idpaket = Number(i.idpaket)) : null,
+      i.paket == data.idpaket ? (data.idpaket = i.idpaket) : null,
     );
     listMurid.find((i: any) =>
-      i.siswa == data.idsiswa ? (data.idsiswa = Number(i.idsiswa)) : null,
+      i.siswa == data.idsiswa ? (data.idsiswa = i.idsiswa) : null,
     );
     // console.log(data.tglles);
     console.log(data);
@@ -97,6 +97,7 @@ export const AddLes: FC<ScreenProps> = ({navigation}) => {
       payload: data,
     });
     console.log(success);
+    navigation.navigate('Les');
   };
 
   return (
@@ -159,7 +160,7 @@ export const AddLes: FC<ScreenProps> = ({navigation}) => {
                 <InputChoice
                   label="Pilihan Les"
                   value={value}
-                  error={!!errors.pilihanles}
+                  error={!!errors.idpaket}
                   errorMessage="Harap pilih les yang akan diikuti"
                   onSelect={item => {
                     onChange(item.paket);

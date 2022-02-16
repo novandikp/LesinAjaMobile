@@ -1,4 +1,4 @@
-import React, {FC, useContext} from 'react';
+import React, {FC, useContext, useEffect, useState} from 'react';
 import {ButtonFormSubmit, CardLabelValue, Gap, Header} from '@components';
 import {color, dimens} from '@constants';
 import {SafeAreaView, StatusBar, StyleSheet, ScrollView} from 'react-native';
@@ -6,13 +6,22 @@ import {Avatar, Card, Divider, Subheading, Title} from 'react-native-paper';
 import {StackScreenProps} from '@react-navigation/stack';
 import {AppStackParamList} from '@routes/RouteTypes';
 import {AuthContext} from '@context/AuthContext';
+import {apiPost} from '@utils';
 
 type ScreenProps = StackScreenProps<AppStackParamList, 'DetailTutor'>;
-export const DetailTutor: FC<ScreenProps> = ({navigation}) => {
+export const DetailTutor: FC<ScreenProps> = ({navigation, route}) => {
   const {
     state: {userRole},
   } = useContext(AuthContext);
-
+  const [item, setItem] = useState<any>([]);
+  const {data}: any = route.params;
+  useEffect(() => {
+    const getInitialData = async () => {
+      setItem(data);
+    };
+    getInitialData();
+    return () => {};
+  }, []);
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar backgroundColor={color.bg_grey} barStyle="dark-content" />
@@ -28,33 +37,31 @@ export const DetailTutor: FC<ScreenProps> = ({navigation}) => {
             source={{uri: 'http://placekitten.com/200/200'}}
             style={{alignSelf: 'center'}}
           />
-          <Title style={{textAlign: 'center'}}>Abdul Malik, S.Kom.</Title>
-          <Subheading style={{textAlign: 'center'}}>
-            Bahasa Arab, Matematika, IPA
-          </Subheading>
+          <Title style={{textAlign: 'center'}}>{item.guru}</Title>
+          <Subheading style={{textAlign: 'center'}}>{item.mapel}</Subheading>
           <Gap y={dimens.tiny} />
           <Divider />
           <Gap y={dimens.tiny} />
 
           {/* More data */}
-          <CardLabelValue label="Jenis Kelamin" value="Laki - Laki" />
+          <CardLabelValue label="Jenis Kelamin" value={item.jeniskelaminguru} />
           <CardLabelValue
             label="Perguruan Tinggi"
-            value="Universitas Teknologi Sepuluh November"
+            value={item.perguruantinggi}
           />
-          <CardLabelValue label="Jurusan" value="Teknik Informatika" />
+          <CardLabelValue label="Jurusan" value={item.jurusan} />
           <CardLabelValue
             label="Alamat"
-            value="Jl.Kenari No 37, RT 004, RW 036, Desa Arjosari, Kecamatan Kalipare, Kabupaten Malang, Provinsi Jawa Timur"
+            value={userRole == 'admin' ? item.alamat : item.alamatguru}
           />
 
           {/* This data only exist in admin page */}
           {userRole == 'admin' && (
             <>
-              <CardLabelValue label="Email" value="abdmlk@gmail.com" />
-              <CardLabelValue label="Nomor WA" value="089778664331" />
-              <CardLabelValue label="Bank" value="BCA" />
-              <CardLabelValue label="Rekening" value="0001119998" />
+              <CardLabelValue label="Email" value={item.email} />
+              <CardLabelValue label="Nomor WA" value={item.telp} />
+              <CardLabelValue label="Bank" value={item.bank} />
+              <CardLabelValue label="Rekening" value={item.rekening} />
             </>
           )}
 
@@ -71,7 +78,26 @@ export const DetailTutor: FC<ScreenProps> = ({navigation}) => {
       </ScrollView>
       {/* Submit button */}
       {userRole == 'parent' && (
-        <ButtonFormSubmit text="Pilih Tutor" onPress={() => {}} />
+        <ButtonFormSubmit
+          text="Pilih Tutor"
+          onPress={async () => {
+            const newData = new FormData();
+            newData.append('idapplylowongan', item.idapplylowongan);
+            newData.append('idles', item.idles);
+            newData.append(
+              'tglmulai',
+              new Date(item.tglles).toISOString().slice(0, 10),
+            );
+            const {success} = await apiPost({
+              url: '/lowongan/terima',
+              payload: newData,
+            });
+            console.log(success);
+            if (success) {
+              navigation.navigate('DetailLes');
+            }
+          }}
+        />
       )}
     </SafeAreaView>
   );

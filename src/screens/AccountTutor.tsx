@@ -19,7 +19,7 @@ import {
 } from 'react-native';
 import {StackScreenProps} from '@react-navigation/stack';
 import {AppStackParamList} from '@routes/RouteTypes';
-import {apiGet, apiPost, getSingleDocumentPDF} from '@utils';
+import {apiGet, apiPostFile, getSingleDocumentPDF} from '@utils';
 import {getListDaerah} from '@utils/getListData';
 
 type FormDataType = {
@@ -45,7 +45,10 @@ type FormDataType = {
 type ScreenProps = StackScreenProps<AppStackParamList, 'Account'>;
 
 export const AccountTutor: FC<ScreenProps> = () => {
-  const listJenis = ['Perempuan', 'Pria'];
+  const listJenis = [
+    {id: '00', name: 'Perempuan'},
+    {id: '01', name: 'Pria'},
+  ];
   const listBank = [
     {id: '00', name: 'BCA'},
     {id: '01', name: 'BRI'},
@@ -62,7 +65,7 @@ export const AccountTutor: FC<ScreenProps> = () => {
     kecamatan: [],
     desa: [],
   });
-  const [file, setFile] = useState();
+  const [file, setFile] = useState<any>();
   const [selectedDaerah, setSelectedDaerah] = useState({
     provinsi: '',
     kota: '',
@@ -107,14 +110,13 @@ export const AccountTutor: FC<ScreenProps> = () => {
   }, []);
 
   const onSubmit: SubmitHandler<FormDataType> = async data => {
-    console.log(data);
     const newCV = new FormData();
     newCV.append('file_cv[0][file]', {
       name: file?.name,
       type: file?.type,
       uri: Platform.OS === 'ios' ? file?.uri.replace('file://', '') : file?.uri,
     });
-    newCV.append('data[alamat]', data.alamat);
+    newCV.append('alamat', data.alamat);
     listDaerah.provinsi.find((i: any) =>
       i.name == data.idprovinsi ? (data.idprovinsi = i.id) : null,
     );
@@ -141,13 +143,9 @@ export const AccountTutor: FC<ScreenProps> = () => {
     newCV.append('pernahmengajar', data.pernahmengajar);
     newCV.append('rekening', data.rekening);
     newCV.append('telp', data.telp);
-    // console.log('new cv');
-    // console.log(newCV);
-    const {success} = await apiPost({
+    const {success} = await apiPostFile({
       url: '/guru/profile/',
       payload: newCV,
-      // payload: {data: newCV},
-      // payload: {newCV, data},
     });
     console.log(success);
   };
@@ -513,7 +511,7 @@ export const AccountTutor: FC<ScreenProps> = () => {
                     />
                   )}
                   name="jeniskelaminguru"
-                  defaultValue={oldData == null ? '' : oldData.bank}
+                  defaultValue={oldData == null ? '' : oldData.jeniskelaminguru}
                 />
               )}
               <Controller
@@ -541,7 +539,7 @@ export const AccountTutor: FC<ScreenProps> = () => {
                     style={{backgroundColor: 'white', marginBottom: 10}}
                     placeholder="Unggah File CV Anda"
                     error={!!errors.file_cv}
-                    errorMessage="File CV harus diupload"
+                    // errorMessage={'File CV harus diupload'}
                     value={value}
                     editable={false}
                     selectTextOnFocus={false}

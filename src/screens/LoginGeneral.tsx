@@ -39,7 +39,7 @@ export const LoginGeneral: FC<ScreenProps> = ({navigation: {navigate}}) => {
       if (!isRegistered) {
         setShowChooseRole(true);
       }
-    } catch (error) {
+    } catch (error: any) {
       if (error.code === statusCodes.SIGN_IN_CANCELLED) {
         // user cancelled the login flow
         console.log('user cancelled the login flow');

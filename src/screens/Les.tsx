@@ -29,6 +29,7 @@ type LesType = {
   namaLes: string;
   totalPertemuan: number;
   siswa: string;
+  jumlah_pertemuan: number;
   pertemuanSelesai: number | null;
   tglMulai: number | null;
   tglSelesai: number | null;
@@ -119,13 +120,13 @@ export const Les: FC<ScreenProps> = ({navigation}) => {
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar backgroundColor={color.bg_grey} barStyle="dark-content" />
-
       <Header
         noBackButton
         withFilter
         title="Daftar Les"
         onPressFilter={() => {
-          alert('Belum jadi');
+          // alert('Belum jadi');
+          console.log('belum jadi');
         }}
       />
 
@@ -137,13 +138,13 @@ export const Les: FC<ScreenProps> = ({navigation}) => {
         ) : (
           <>
             <OneLineInfo info="Klik item untuk melihat detail" />
-            {listData.map((item, index) => {
+            {listData.map((item: any, index: number) => {
               return (
                 <StudentItem
                   key={index}
                   item={item}
                   onPress={() => {
-                    navigation.navigate('DetailLes', {item});
+                    navigation.navigate<any>('DetailLes', {data: item});
                   }}
                 />
               );

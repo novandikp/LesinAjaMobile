@@ -1,4 +1,4 @@
-import React, {FC, useContext} from 'react';
+import React, {FC, useContext, useEffect, useState} from 'react';
 import {ButtonFormSubmit, CardLabelValue, Gap, Header} from '@components';
 import {color, dimens} from '@constants';
 import {SafeAreaView, StatusBar, StyleSheet, ScrollView} from 'react-native';
@@ -8,7 +8,17 @@ import {AppStackParamList} from '@routes/RouteTypes';
 import {AuthContext} from '@context/AuthContext';
 
 type ScreenProps = StackScreenProps<AppStackParamList, 'DetailWalmur'>;
-export const DetailWalmur: FC<ScreenProps> = () => {
+export const DetailWalmur: FC<ScreenProps> = ({route}) => {
+  const [item, setItem] = useState<any>([]);
+  useEffect(() => {
+    const getInitialData = async () => {
+      const {data}: any = route.params;
+      setItem(data);
+    };
+    getInitialData();
+
+    return () => {};
+  }, []);
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar backgroundColor={color.bg_grey} barStyle="dark-content" />
@@ -18,19 +28,33 @@ export const DetailWalmur: FC<ScreenProps> = () => {
       <ScrollView
         contentContainerStyle={{flexGrow: 1, padding: dimens.standard}}>
         <Card style={styles.contentContainer}>
-          <Title style={{textAlign: 'center'}}>Abdul Malik, S.Kom.</Title>
+          <Title style={{textAlign: 'center'}}>
+            {item.wali != null ? item.wali : '-'}
+          </Title>
 
           <Gap y={dimens.tiny} />
           <Divider />
           <Gap y={dimens.tiny} />
 
-          <CardLabelValue label="Jenis Kelamin" value="Laki - Laki" />
-          <CardLabelValue label="Email" value="abdmlk@gmail.com" />
-          <CardLabelValue label="Nomor WA" value="089778664331" />
-          <CardLabelValue label="Pekerjaan" value="Swasta" />
+          <CardLabelValue
+            label="Jenis Kelamin"
+            value={item.jeniskelamin != null ? item.jeniskelamin : '-'}
+          />
+          <CardLabelValue
+            label="Email"
+            value={item.email != null ? item.email : '-'}
+          />
+          <CardLabelValue
+            label="Nomor WA"
+            value={item.telp != null ? item.telp : '-'}
+          />
+          <CardLabelValue
+            label="Pekerjaan"
+            value={item.pekerjaan != null ? item.pekerjaan : '-'}
+          />
           <CardLabelValue
             label="Alamat"
-            value="Jl.Kenari No 37, RT 004, RW 036, Desa Arjosari, Kecamatan Kalipare, Kabupaten Malang, Provinsi Jawa Timur"
+            value={item.alamat != null ? item.alamat : '-'}
           />
         </Card>
       </ScrollView>

@@ -1,4 +1,4 @@
-import React, {FC} from 'react';
+  import React, {FC} from 'react';
 import {Header, OneLineInfo, FABList, Gap} from '@components';
 import {color, dimens} from '@constants';
 import {
