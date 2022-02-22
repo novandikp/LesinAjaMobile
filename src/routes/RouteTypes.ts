@@ -23,6 +23,7 @@ export type AppStackParamList = {
   MainTabs: NavigatorScreenParams<MainTabParamList>;
   AdminDrawer: NavigatorScreenParams<AdminDrawerParamList>;
   Account: undefined;
+  AccountTutor: undefined;
   Les: undefined;
   LoginAdmin: undefined;
   LoginGeneral: undefined;

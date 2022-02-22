@@ -18,6 +18,7 @@ export const DetailLes: FC<ScreenProps> = ({navigation, route}) => {
   const {data}: any = route.params;
   let id = data.idles;
   const bayar = data.biaya;
+  const statusles = data.statusles;
   const [buktiBayar, setBuktiBayar] = useState({
     path: '',
   });
@@ -26,30 +27,30 @@ export const DetailLes: FC<ScreenProps> = ({navigation, route}) => {
     if (buktiBayar.path === '') {
       const res = await getSingleDocument();
       if (res) {
-        const item = new FormData();
         setBuktiBayar(prev => ({...prev, path: res.uri}));
         setImages(res);
-        console.log(res);
-        item.append('idles', id.toString());
-        item.append('jumlahbayar', bayar.toString());
-        item.append('tglbayar', new Date().toISOString().slice(0, 10));
-        item.append('bukti[0][file]', {
-          uri:
-            Platform.OS === 'ios' ? res?.uri.replace('file://', '') : res?.uri,
-          type: res.type,
-          name: res.name,
-        });
-        const {success} = await apiPostFile({
-          url: 'bayar',
-          payload: item._parts,
-        });
-        // console.log(success);
-        if (success) {
-          navigation.navigate('Les');
-        }
       }
     } else {
-      const gbr = images;
+      const item = new FormData();
+      item.append('idles', id.toString());
+      item.append('jumlahbayar', bayar.toString());
+      item.append('tglbayar', new Date().toISOString().slice(0, 10));
+      item.append('bukti[0][file]', {
+        uri:
+          Platform.OS === 'ios'
+            ? images?.uri.replace('file://', '')
+            : images?.uri,
+        type: images?.type,
+        name: images?.name,
+      });
+      const {success} = await apiPostFile({
+        url: 'bayar',
+        payload: item,
+      });
+      if (success) {
+        navigation.navigate('Les');
+      }
+      // const gbr = images;
     }
   };
   const [detailLes, setDetailLes] = useState<any>([]);
@@ -61,6 +62,9 @@ export const DetailLes: FC<ScreenProps> = ({navigation, route}) => {
       });
       setListApplyingTutor(applyingTutor.data);
       setDetailLes(data);
+      if (statusles > 3) {
+        setBuktiBayar(prev => ({...prev, path: 'ada'}));
+      }
     };
     getInitialData();
 
@@ -143,71 +147,86 @@ export const DetailLes: FC<ScreenProps> = ({navigation, route}) => {
         </Card>
 
         {/* Pay Les */}
-        <Card style={{marginTop: dimens.standard}}>
-          <Card.Title
-            title="Anda Belum Membayar Biaya Les"
-            subtitle="Biaya Les: Rp 200.000"
-            titleStyle={{color: '#EF4444'}}
-            subtitleStyle={{fontSize: dimens.medium_14}}
-          />
-          {buktiBayar.path !== '' && (
-            <Card.Cover
-              source={{uri: buktiBayar.path}}
-              style={{
-                marginTop: dimens.small,
-                marginHorizontal: dimens.standard,
-              }}
+        {statusles == 3 && (
+          <Card style={{marginTop: dimens.standard}}>
+            <Card.Title
+              title="Proses Konfirmasi Pembayaran"
+              subtitle="Menunggu admin konfirmasi pembayaran"
+              titleStyle={{color: '#EF4444'}}
+              subtitleStyle={{fontSize: dimens.medium_14}}
             />
-          )}
-          <Card.Actions>
-            <Button onPress={onPressUploadBuktiBayar}>
-              {buktiBayar.path === '' ? 'Unggah Bukti Pembayaran' : 'Kirim'}
-            </Button>
-          </Card.Actions>
-        </Card>
-
+          </Card>
+        )}
+        {statusles <= 2 && (
+          <Card style={{marginTop: dimens.standard}}>
+            <Card.Title
+              title="Anda Belum Membayar Biaya Les"
+              subtitle="Biaya Les: Rp 200.000"
+              titleStyle={{color: '#EF4444'}}
+              subtitleStyle={{fontSize: dimens.medium_14}}
+            />
+            {buktiBayar.path !== '' && (
+              <Card.Cover
+                source={{uri: buktiBayar.path}}
+                style={{
+                  marginTop: dimens.small,
+                  marginHorizontal: dimens.standard,
+                }}
+              />
+            )}
+            <Card.Actions>
+              <Button onPress={onPressUploadBuktiBayar}>
+                {buktiBayar.path === '' ? 'Unggah Bukti Pembayaran' : 'Kirim'}
+              </Button>
+            </Card.Actions>
+          </Card>
+        )}
         {/* There is no applying tutor */}
-        <Card style={{marginTop: dimens.standard}}>
-          <Card.Title
-            title="Menunggu Ada Tutor"
-            titleStyle={{color: '#2563EB'}}
-          />
-          <Card.Content>
-            <Subheading>Belum ada tutor yang mengambil les ini</Subheading>
-          </Card.Content>
-        </Card>
+        {statusles <= 1 && (
+          <Card style={{marginTop: dimens.standard}}>
+            <Card.Title
+              title="Menunggu Ada Tutor"
+              titleStyle={{color: '#2563EB'}}
+            />
+            <Card.Content>
+              <Subheading>Belum ada tutor yang mengambil les ini</Subheading>
+            </Card.Content>
+          </Card>
+        )}
 
         {/* Choose Tutor */}
-        <Card style={{marginTop: dimens.standard}}>
-          <Card.Title
-            style={{width: '100%'}}
-            title="Anda Belum Memilih Tutor"
-            subtitle="Klik item untuk melihat detail tutor "
-            titleStyle={{color: '#F59E0B'}}
-            subtitleStyle={{fontSize: dimens.medium_14}}
-          />
-          <Card.Content>
-            {listApplyingTutor.map((item: any, index: number) => {
-              return (
-                <NestedCard
-                  key={index}
-                  title={item.guru}
-                  subtitle={item.perguruantinggi}
-                  onPress={() => {
-                    navigation.navigate<any>('DetailTutor', {data: item});
-                  }}
-                  left={props => (
-                    <Avatar.Image
-                      {...props}
-                      size={45}
-                      source={{uri: 'http://placekitten.com/100/100'}}
-                    />
-                  )}
-                />
-              );
-            })}
-          </Card.Content>
-        </Card>
+        {statusles <= 1 && (
+          <Card style={{marginTop: dimens.standard}}>
+            <Card.Title
+              style={{width: '100%'}}
+              title="Anda Belum Memilih Tutor"
+              subtitle="Klik item untuk melihat detail tutor "
+              titleStyle={{color: '#F59E0B'}}
+              subtitleStyle={{fontSize: dimens.medium_14}}
+            />
+            <Card.Content>
+              {listApplyingTutor.map((item: any, index: number) => {
+                return (
+                  <NestedCard
+                    key={index}
+                    title={item.guru}
+                    subtitle={item.perguruantinggi}
+                    onPress={() => {
+                      navigation.navigate<any>('DetailTutor', {data: item});
+                    }}
+                    left={props => (
+                      <Avatar.Image
+                        {...props}
+                        size={45}
+                        source={{uri: 'http://placekitten.com/100/100'}}
+                      />
+                    )}
+                  />
+                );
+              })}
+            </Card.Content>
+          </Card>
+        )}
 
         {/* Presence */}
         <Card style={{marginTop: dimens.standard}}>

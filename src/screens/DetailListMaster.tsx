@@ -1,4 +1,4 @@
-  import React, {FC} from 'react';
+import React, {FC, useState, useEffect} from 'react';
 import {Header, OneLineInfo, FABList, Gap} from '@components';
 import {color, dimens} from '@constants';
 import {
@@ -11,79 +11,98 @@ import {
 import {Card, DataTable, IconButton, Text} from 'react-native-paper';
 import {StackScreenProps} from '@react-navigation/stack';
 import {AppStackParamList} from '@routes/RouteTypes';
-
+import {apiGet} from '@utils';
 type ScreenProps = StackScreenProps<AppStackParamList, 'DetailListMaster'>;
 
 export const DetailListMaster: FC<ScreenProps> = ({route, navigation}) => {
   const {detailType}: any = route.params;
-
-  const data: any = {
-    jenjangkelas: [
-      {
-        item: 'TK A',
-      },
-      {
-        item: 'TK B',
-      },
-      {
-        item: 'SMP Kelas 7',
-      },
-      {
-        item: 'SMP Kelas 8',
-      },
-      {
-        item: 'SMP Kelas 9',
-      },
-    ],
-    mapel: [
-      {
-        item: 'IPS',
-      },
-      {
-        item: 'IPA',
-      },
-      {
-        item: 'Mengaji',
-      },
-      {
-        item: 'Gambar Teknik',
-      },
-      {
-        item: 'Bahasa Inggris',
-      },
-    ],
-    paket: [
-      {
-        item: 'Paket 1',
-        jumlahPertemuan: '4',
-      },
-      {
-        item: 'Paket 2',
-        jumlahPertemuan: '8',
-      },
-      {
-        item: 'Paket 3',
-        jumlahPertemuan: '9',
-      },
-    ],
-    wilayah: [
-      {
-        item: 'Wilayah 1',
-        biaya: '230000',
-        wilayah: ['jawa timur', 'jawa tengah', 'jawa barat'],
-      },
-      {
-        item: 'Wilayah 2',
-        biaya: '250000',
-        wilayah: ['jakarta', 'banten', 'serang'],
-      },
-      {
-        item: 'Wilayah 3',
-        biaya: '200000',
-        wilayah: ['bali', 'madura', 'lombok', 'surakarta'],
-      },
-    ],
-  };
+  const [data, setData] = useState<any>({
+    paket: [],
+    jenjangkelas: [],
+  });
+  useEffect(() => {
+    const getInitialData = async () => {
+      const paket = await apiGet({
+        url: '/paket?page=1&paket&orderBy=biaya&sort=ASC',
+      });
+      setData((prev: any) => ({...prev, paket: paket.data}));
+      // setLesList(data.data);
+      // console.log(applyingTutor.data);
+    };
+    getInitialData();
+    // console.log(detailType.replace(/\s+/g, '').toLowerCase());
+    // data[paket].map();
+    return () => {
+      // isActive = false;
+    };
+  }, []);
+  // const data: any = {
+  //   jenjangkelas: [
+  //     {
+  //       item: 'TK A',
+  //     },
+  //     {
+  //       item: 'TK B',
+  //     },
+  //     {
+  //       item: 'SMP Kelas 7',
+  //     },
+  //     {
+  //       item: 'SMP Kelas 8',
+  //     },
+  //     {
+  //       item: 'SMP Kelas 9',
+  //     },
+  //   ],
+  //   mapel: [
+  //     {
+  //       item: 'IPS',
+  //     },
+  //     {
+  //       item: 'IPA',
+  //     },
+  //     {
+  //       item: 'Mengaji',
+  //     },
+  //     {
+  //       item: 'Gambar Teknik',
+  //     },
+  //     {
+  //       item: 'Bahasa Inggris',
+  //     },
+  //   ],
+  //   paket: [
+  //     {
+  //       item: 'Paket 1',
+  //       jumlahPertemuan: '4',
+  //     },
+  //     {
+  //       item: 'Paket 2',
+  //       jumlahPertemuan: '8',
+  //     },
+  //     {
+  //       item: 'Paket 3',
+  //       jumlahPertemuan: '9',
+  //     },
+  //   ],
+  //   wilayah: [
+  //     {
+  //       item: 'Wilayah 1',
+  //       biaya: '230000',
+  //       wilayah: ['jawa timur', 'jawa tengah', 'jawa barat'],
+  //     },
+  //     {
+  //       item: 'Wilayah 2',
+  //       biaya: '250000',
+  //       wilayah: ['jakarta', 'banten', 'serang'],
+  //     },
+  //     {
+  //       item: 'Wilayah 3',
+  //       biaya: '200000',
+  //       wilayah: ['bali', 'madura', 'lombok', 'surakarta'],
+  //     },
+  //   ],
+  // };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -124,6 +143,7 @@ export const DetailListMaster: FC<ScreenProps> = ({route, navigation}) => {
                 </DataTable.Header>
                 {data[detailType.replace(/\s+/g, '').toLowerCase()].map(
                   (item: {item: any}, index: number) => {
+                    console.log(item);
                     return (
                       <ItemRow
                         key={index}
@@ -166,10 +186,10 @@ const ItemRow: FC<{item: any; itemType: string; onPress: () => void}> = ({
 }) => {
   return (
     <DataTable.Row>
-      <DataTable.Cell style={styles.tableCell}>{item.item}</DataTable.Cell>
+      <DataTable.Cell style={styles.tableCell}>{item.paket}</DataTable.Cell>
       {itemType == 'Paket' && (
         <DataTable.Cell style={styles.tableCell}>
-          {item.jumlahPertemuan}
+          {item.jumlah_pertemuan}
         </DataTable.Cell>
       )}
       {itemType == 'Wilayah' && (

@@ -81,20 +81,17 @@ export const DetailTutor: FC<ScreenProps> = ({navigation, route}) => {
         <ButtonFormSubmit
           text="Pilih Tutor"
           onPress={async () => {
-            const newData = new FormData();
-            newData.append('idapplylowongan', item.idapplylowongan);
-            newData.append('idles', item.idles);
-            newData.append(
-              'tglmulai',
-              new Date(item.tglles).toISOString().slice(0, 10),
-            );
+            const newdata = {
+              idapplylowongan: item.idapplylowongan.toString(),
+              idles: item.idles.toString(),
+              tglmulai: new Date(item.tglles).toISOString().slice(0, 10),
+            };
             const {success} = await apiPost({
               url: '/lowongan/terima',
-              payload: newData,
+              payload: newdata,
             });
-            console.log(success);
             if (success) {
-              navigation.navigate('DetailLes');
+              navigation.navigate<any>('MainTabs');
             }
           }}
         />

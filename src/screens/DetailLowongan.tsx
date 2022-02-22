@@ -1,4 +1,4 @@
-import React, {FC} from 'react';
+import React, {FC, useState, useEffect} from 'react';
 import {Header, Gap, CardLabelValue} from '@components';
 import {color, dimens} from '@constants';
 import {
@@ -13,22 +13,81 @@ import {StackScreenProps} from '@react-navigation/stack';
 import {AppStackParamList} from '@routes/RouteTypes';
 import dayjs from 'dayjs';
 import {apiPost} from '../utils/api';
+
 type ScreenProps = StackScreenProps<AppStackParamList, 'DetailLowongan'>;
-export const DetailLowongan: FC<ScreenProps> = ({route}) => {
+export const DetailLowongan: FC<ScreenProps> = ({route, navigation}) => {
   const {item}: any = route.params;
-  const jadwalLes = [
-    1630991440, 1631074240, 1631074240, 1631074240, 1631074240, 1631074240,
-    1631074240, 1631074240,
-  ];
-  // const Days = [
-  //   {id: '0', name: 'MINGGU'},
-  //   {id: '1', name: 'SENIN'},
-  //   {id: '2', name: 'SELASA'},
-  //   {id: '3', name: 'RABU'},
-  //   {id: '4', name: 'KAMIS'},
-  //   {id: '5', name: 'JUMAT'},
-  //   {id: '6', name: 'SABTU'},
+  // const jadwalLes = [
+  //   1630991440, 1631074240, 1631074240, 1631074240, 1631074240, 1631074240,
+  //   1631074240, 1631074240,
   // ];
+  const [jadwalLes, setJadwalLes] = useState([]);
+  const days = [
+    {
+      id: '0',
+      name: 'MINGGU',
+    },
+    {
+      id: '1',
+      name: 'SENIN',
+    },
+    {
+      id: '2',
+      name: 'SELASA',
+    },
+    {
+      id: '3',
+      name: 'RABU',
+    },
+    {
+      id: '4',
+      name: 'KAMIS',
+    },
+    {
+      id: '5',
+      name: 'JUMAT',
+    },
+    {
+      id: '6',
+      name: 'SABTU',
+    },
+  ];
+  useEffect(() => {
+    const getInitialData = async () => {
+      const date = new Date(item.tglles);
+      const hari = item.hari;
+      const jmlh = item.jumlah_pertemuan;
+      let year = date.getFullYear();
+      let month = date.getMonth() - 1;
+      let tgl = date.getDate();
+      let Days = hari.replace(/[{}]/g, '');
+      Days = Days.split(','); //['MINGGU',KAMIS,SABTU]
+      let DayArray = [];
+      let DateArray = [];
+      console.log(Days);
+      for (let i = 0; i < days.length; i++) {
+        for (let y = 0; y < Days.length; y++) {
+          if (Days[y] == days[i].name) {
+            DayArray.push(Number(days[i].id));
+          }
+        }
+      }
+      // [{"id": "00", }, {"id": "02"}, {"id": "04"]
+      let initialDays = new Date(year, month, tgl).getDay();
+      let sum = 0;
+      // 1.initial date
+      // 2 iniyiad; tgl
+      //3,
+      // for (let i = 0; i < DayArray.length; i++) {
+      // for (let j = 0; j < jmlh; j++) {}
+      // }
+      // setJadwalLes(DateArray);
+    };
+    getInitialData();
+    return () => {
+      // cancelApiRequest();
+    };
+  }, []);
 
   // const submit = async idlowongan => {
 
@@ -42,7 +101,7 @@ export const DetailLowongan: FC<ScreenProps> = ({route}) => {
       <ScrollView contentContainerStyle={styles.scrollView}>
         <Card>
           <Card.Title
-            title="Gambar Teknik TK B"
+            title={item.paket + ' ' + item.jenjang + ' ' + item.kelas}
             titleStyle={{alignSelf: 'center'}}
           />
           <Card.Content>
@@ -51,7 +110,6 @@ export const DetailLowongan: FC<ScreenProps> = ({route}) => {
 
             <CardLabelValue label="Siswa" value={item.siswa} />
             {/* <CardLabelValue label="Wali Murid" value="Mikasa" /> */}
-            {/* <CardLabelValue label="Paket" value="8 Pertemuan" /> */}
             <CardLabelValue
               label="Paket"
               value={item.jumlah_pertemuan + ' Pertemuan'}
@@ -61,12 +119,15 @@ export const DetailLowongan: FC<ScreenProps> = ({route}) => {
             <Button
               style={{marginTop: dimens.standard}}
               onPress={async () => {
-                const data = new FormData();
+                // const data = new FormData();
+                const newdata = {};
                 const {success} = await apiPost({
                   url: '/lowongan/ajuan/' + item.idlowongan,
-                  payload: data,
+                  payload: newdata,
                 });
-                console.log(success);
+                if (success) {
+                  navigation.navigate<any>('MainTabs');
+                }
               }}>
               Ambil Lowongan
             </Button>

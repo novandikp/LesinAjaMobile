@@ -82,7 +82,9 @@ export const AddLes: FC<ScreenProps> = ({navigation}) => {
   }, []);
   const onSubmit: SubmitHandler<FormDataType> = async data => {
     // console.log(data)
-    data.hari = selectedDays;
+    let hari = selectedDays.toString();
+    data.hari = hari;
+    // data.hari = hari.replace(/[{}]/g, '');
     data.jamles = time.getHours() + ':' + time.getMinutes();
     listLes.find((i: any) =>
       i.paket == data.idpaket ? (data.idpaket = i.idpaket) : null,
@@ -90,14 +92,14 @@ export const AddLes: FC<ScreenProps> = ({navigation}) => {
     listMurid.find((i: any) =>
       i.siswa == data.idsiswa ? (data.idsiswa = i.idsiswa) : null,
     );
-    // console.log(data.tglles);
-    console.log(data);
+
     const {success} = await apiPost({
       url: 'les/daftar',
       payload: data,
     });
-    console.log(success);
-    navigation.navigate('Les');
+    if (success) {
+      navigation.navigate('MainTabs');
+    }
   };
 
   return (
@@ -193,6 +195,7 @@ export const AddLes: FC<ScreenProps> = ({navigation}) => {
                       setOpen(false);
                     });
                   }}
+                  minimumDate={new Date()}
                   onCancel={() => {
                     setOpen(false);
                   }}
@@ -203,6 +206,8 @@ export const AddLes: FC<ScreenProps> = ({navigation}) => {
                   value={date.toISOString().slice(0, 10)}
                   editable={false}
                   selectTextOnFocus={false}
+                  error={!!errors.tglles}
+                  // errorMessage="Harap pilih tanggal les"
                   right={
                     <TextInput.Icon
                       name="calendar"
@@ -246,6 +251,8 @@ export const AddLes: FC<ScreenProps> = ({navigation}) => {
                   value={time.getHours() + ':' + time.getMinutes()}
                   editable={false}
                   selectTextOnFocus={false}
+                  error={!!errors.jamles}
+                  // errorMessage="Harap pilih jam les"
                   right={
                     <TextInput.Icon
                       name="clock"
@@ -273,6 +280,8 @@ export const AddLes: FC<ScreenProps> = ({navigation}) => {
                 }}
                 selectedItems={selectedDays}
                 selectText="Pilih Hari Les"
+                // error={!!errors.hari}
+                // errorMessage="Harap pilih tanggal les"
               />
             )}
             name="hari"

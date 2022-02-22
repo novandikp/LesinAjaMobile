@@ -1,11 +1,11 @@
-import React, {FC, useState} from 'react';
+import React, {FC, useState, useEffect} from 'react';
 import {CardKeyValue, Gap, Header, NestedCard} from '@components';
 import {color, dimens} from '@constants';
 import {SafeAreaView, StatusBar, StyleSheet, ScrollView} from 'react-native';
 import {Avatar, Button, Card, Subheading} from 'react-native-paper';
 import {StackScreenProps} from '@react-navigation/stack';
 import {AppStackParamList} from '@routes/RouteTypes';
-import {getSingleDocument} from '@utils';
+import {getSingleDocument, apiGet} from '@utils';
 
 type ScreenProps = StackScreenProps<AppStackParamList, 'DetailLesTutor'>;
 export const DetailLesTutor: FC<ScreenProps> = ({navigation}) => {
@@ -33,7 +33,19 @@ export const DetailLesTutor: FC<ScreenProps> = ({navigation}) => {
       tutor: 'Nico Akbar',
     },
   ];
+  useEffect(() => {
+    const getInitialData = async () => {
+      const siswaku = await apiGet({
+        url: '/siswa/my?page=1&siswa=&orderBy=siswa&sort=ASC',
+      });
+      console.log(siswaku);
+    };
 
+    getInitialData();
+    return () => {
+      // cancelApiRequest();
+    };
+  }, []);
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar backgroundColor={color.bg_grey} barStyle="dark-content" />

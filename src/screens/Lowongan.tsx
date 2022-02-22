@@ -18,24 +18,21 @@ export const Lowongan: FC<ScreenProps> = ({navigation}) => {
   useEffect(() => {
     const getInitialData = async () => {
       const tutor = await apiGet({url: '/guru/profile'});
-      console.log(tutor.data.idkabupaten);
       const lowonganKabupaten = await apiGet({
         url:
           '/lowongan/' +
-          tutor.data.idkabupaten +
+          tutor.data.idkecamatan +
           '?page=1&cari=&orderBy=idlowongan&sort=ASC',
       });
-      setLowonganList(lowonganKabupaten.data);
       console.log(lowonganKabupaten.data);
-      // setListMurid(murid.data);
-      // setListLes(les);
+      setLowonganList(lowonganKabupaten.data);
     };
 
     getInitialData();
     return () => {
       // cancelApiRequest();
     };
-  }, []);
+  }, [lowonganList]);
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar backgroundColor={color.bg_grey} barStyle="dark-content" />

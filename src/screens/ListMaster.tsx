@@ -22,7 +22,7 @@ export const ListMaster: FC<ScreenProps> = ({navigation}) => {
 
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         <OneLineInfo info="Klik item untuk melihat detail" />
-        <Card
+        {/* <Card
           style={styles.card}
           onPress={() =>
             navigation.navigate<any>('DetailListMaster', {
@@ -34,8 +34,8 @@ export const ListMaster: FC<ScreenProps> = ({navigation}) => {
             subtitle="untuk mengelola data yang berkaitan dengan jenjang kelas"
             subtitleNumberOfLines={2}
           />
-        </Card>
-        <Card
+        </Card> */}
+        {/* <Card
           style={styles.card}
           onPress={() =>
             navigation.navigate<any>('DetailListMaster', {detailType: 'Mapel'})
@@ -45,7 +45,7 @@ export const ListMaster: FC<ScreenProps> = ({navigation}) => {
             subtitle="untuk mengelola data yang berkaitan dengan mapel"
             subtitleNumberOfLines={2}
           />
-        </Card>
+        </Card> */}
         <Card
           style={styles.card}
           onPress={() =>
@@ -57,7 +57,7 @@ export const ListMaster: FC<ScreenProps> = ({navigation}) => {
             subtitleNumberOfLines={2}
           />
         </Card>
-        <Card
+        {/* <Card
           style={styles.card}
           onPress={() =>
             navigation.navigate<any>('DetailListMaster', {
@@ -69,7 +69,7 @@ export const ListMaster: FC<ScreenProps> = ({navigation}) => {
             subtitle="untuk mengelola data yang berkaitan dengan wilayah"
             subtitleNumberOfLines={2}
           />
-        </Card>
+        </Card> */}
       </ScrollView>
     </SafeAreaView>
   );
