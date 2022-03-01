@@ -26,6 +26,7 @@ export type AppStackParamList = {
   Account: undefined;
   AccountTutor: undefined;
   Les: undefined;
+  InputLaporan: undefined;
   LoginAdmin: undefined;
   LoginGeneral: undefined;
   ListStudents: undefined;

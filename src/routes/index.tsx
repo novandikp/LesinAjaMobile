@@ -17,6 +17,7 @@ import {
   EditListMaster,
   EditListLes,
   AccountTutor,
+  InputLaporan,
 } from '@screens';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
@@ -76,6 +77,7 @@ const AppRouter: FC = () => {
             />
             <AppStack.Screen name="EditListMaster" component={EditListMaster} />
             <AppStack.Screen name="EditListLes" component={EditListLes} />
+            <AppStack.Screen name="InputLaporan" component={InputLaporan} />
           </>
         )}
         {/* Parent Stack */}

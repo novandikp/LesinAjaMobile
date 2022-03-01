@@ -1,4 +1,4 @@
-import React, {FC, useState} from 'react';
+import React, {FC, useState, useEffect} from 'react';
 import {CardKeyValue, Gap, Header} from '@components';
 import {color, dimens} from '@constants';
 import {
@@ -13,6 +13,7 @@ import {StackScreenProps} from '@react-navigation/stack';
 import {AdminDrawerParamList, AppStackParamList} from '@routes/RouteTypes';
 import {CompositeScreenProps} from '@react-navigation/core';
 import {DrawerScreenProps} from '@react-navigation/drawer';
+import {apiGet} from '@utils';
 
 type ScreenProps = CompositeScreenProps<
   DrawerScreenProps<AdminDrawerParamList, 'Laporan'>,
@@ -20,21 +21,8 @@ type ScreenProps = CompositeScreenProps<
 >;
 export const Laporan: FC<ScreenProps> = ({navigation}) => {
   const [openFab, setOpenFab] = useState(false);
-  const [penjualan, setPenjualan] = useState([
-    {
-      tgl: '2021-09-15',
-      jumlah: '20',
-      nama: 'Seragam',
-      nominal: '20.000',
-    },
-  ]);
-  const [pengeluaran, setPengeluaran] = useState([
-    {
-      tgl: '2021-09-15',
-      nama: 'Seragam',
-      nominal: '20.000',
-    },
-  ]);
+  const [penjualan, setPenjualan] = useState<any>([]);
+  const [pengeluaran, setPengeluaran] = useState<any>([]);
   const [sadaqah, setSadaqah] = useState([
     {tgl: '2021-09-15', nominal: '20.000'},
   ]);
@@ -54,7 +42,23 @@ export const Laporan: FC<ScreenProps> = ({navigation}) => {
       Nominal: 'Rp 200.000',
     },
   ]);
-
+  useEffect(() => {
+    const getInitialData = async () => {
+      const dataPemasukan = await apiGet({
+        url: '/keuangan/pemasukan?page=1&cari=&sort=ASC',
+      });
+      const dataPengeluaran = await apiGet({
+        url: '/keuangan/pengeluaran?page=1&cari=&sort=ASC',
+      });
+      // console.log(dataPemasukan.data);
+      setPenjualan(dataPemasukan.data.data);
+      setPengeluaran(dataPengeluaran.data.data);
+    };
+    getInitialData();
+    return () => {
+      // isActive = false;
+    };
+  });
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar backgroundColor={color.bg_grey} barStyle="dark-content" />
@@ -109,19 +113,20 @@ export const Laporan: FC<ScreenProps> = ({navigation}) => {
                   <DataTable.Title style={{minWidth: 100}}>
                     Tanggal
                   </DataTable.Title>
-                  <DataTable.Title style={{minWidth: 100}}>
+                  {/*<DataTable.Title style={{minWidth: 100}}>
                     Jumlah
-                  </DataTable.Title>
+                  </DataTable.Title> */}
                   <DataTable.Title style={{minWidth: 100}}>
-                    Nama
+                    Keterangan
                   </DataTable.Title>
                   <DataTable.Title style={{minWidth: 100}}>
                     Nominal
                   </DataTable.Title>
                 </DataTable.Header>
-                {penjualan.map((item, key) => {
+                {penjualan.map((item: any, key: number) => {
                   return <PenjualanRow item={item} key={key} />;
                 })}
+                {/* {console.log(penjualan)} */}
               </DataTable>
             </ScrollView>
           </Card>
@@ -136,13 +141,13 @@ export const Laporan: FC<ScreenProps> = ({navigation}) => {
                     Tanggal
                   </DataTable.Title>
                   <DataTable.Title style={{minWidth: 100}}>
-                    Nama
+                    Keterangan
                   </DataTable.Title>
                   <DataTable.Title style={{minWidth: 100}}>
                     Nominal
                   </DataTable.Title>
                 </DataTable.Header>
-                {pengeluaran.map((item, key) => {
+                {pengeluaran.map((item: any, key: number) => {
                   return <PengeluaranRow item={item} key={key} />;
                 })}
               </DataTable>
@@ -236,15 +241,22 @@ export const Laporan: FC<ScreenProps> = ({navigation}) => {
             actions={[
               {
                 icon: 'cash-multiple',
-                label: 'Input Penjualan',
-                onPress: () => console.log(''),
+                label: 'Input Pemasukan',
+                onPress: () =>
+                  navigation.navigate<any>('InputLaporan', {
+                    detailType: 'Pemasukan',
+                  }),
+                // navigation.navigate<any>('inputLaporan)
                 small: false,
                 style: {marginRight: 40},
               },
               {
                 icon: 'bell',
                 label: 'Input Pengeluaran',
-                onPress: () => console.log(''),
+                onPress: () =>
+                  navigation.navigate<any>('InputLaporan', {
+                    detailType: 'Pengeluaran',
+                  }),
                 small: false,
                 style: {marginRight: 40},
               },
@@ -274,19 +286,25 @@ export const Laporan: FC<ScreenProps> = ({navigation}) => {
 const PenjualanRow: FC<{item: any}> = ({item}) => {
   return (
     <DataTable.Row>
-      <DataTable.Cell style={{minWidth: 100}}>{item.tgl}</DataTable.Cell>
-      <DataTable.Cell style={{minWidth: 100}}>{item.jumlah}</DataTable.Cell>
-      <DataTable.Cell style={{minWidth: 100}}>{item.nama}</DataTable.Cell>
-      <DataTable.Cell style={{minWidth: 100}}>{item.nominal}</DataTable.Cell>
+      <DataTable.Cell style={{minWidth: 100}}>
+        {new Date(item.tglkeuangan).toISOString().slice(0, 10)}
+      </DataTable.Cell>
+      <DataTable.Cell style={{minWidth: 100, marginLeft: 10}}>
+        {item.keterangan}
+      </DataTable.Cell>
+      <DataTable.Cell style={{minWidth: 100}}>{item.masuk}</DataTable.Cell>
+      {/* <DataTable.Cell style={{minWidth: 100}}>{item.nominal}</DataTable.Cell> */}
     </DataTable.Row>
   );
 };
 const PengeluaranRow: FC<{item: any}> = ({item}) => {
   return (
     <DataTable.Row>
-      <DataTable.Cell style={{minWidth: 100}}>{item.tgl}</DataTable.Cell>
-      <DataTable.Cell style={{minWidth: 100}}>{item.nama}</DataTable.Cell>
-      <DataTable.Cell style={{minWidth: 100}}>{item.nominal}</DataTable.Cell>
+      <DataTable.Cell style={{minWidth: 100}}>
+        {new Date(item.tglkeuangan).toISOString().slice(0, 10)}
+      </DataTable.Cell>
+      <DataTable.Cell style={{minWidth: 100}}>{item.keterangan}</DataTable.Cell>
+      <DataTable.Cell style={{minWidth: 100}}>{item.keluar}</DataTable.Cell>
     </DataTable.Row>
   );
 };
