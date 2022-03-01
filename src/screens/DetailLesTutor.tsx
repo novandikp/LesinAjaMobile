@@ -1,51 +1,34 @@
-import React, {FC, useState, useEffect} from 'react';
+import React, {FC, useEffect, useState} from 'react';
 import {CardKeyValue, Gap, Header, NestedCard} from '@components';
 import {color, dimens} from '@constants';
 import {SafeAreaView, StatusBar, StyleSheet, ScrollView} from 'react-native';
-import {Avatar, Button, Card, Subheading} from 'react-native-paper';
+import {Card, Subheading} from 'react-native-paper';
 import {StackScreenProps} from '@react-navigation/stack';
 import {AppStackParamList} from '@routes/RouteTypes';
-import {getSingleDocument, apiGet} from '@utils';
+import {apiGet} from '@utils';
 
 type ScreenProps = StackScreenProps<AppStackParamList, 'DetailLesTutor'>;
-export const DetailLesTutor: FC<ScreenProps> = ({navigation}) => {
-  const coursePresenceList = [
-    {
-      tanggal: 'Kamis, 02 September 2021',
-      waktu: '07:00',
-      tutor: 'Nico Akbar',
-      status: 'selesai',
-    },
-    {
-      tanggal: 'Jumat, 03 September 2021',
-      waktu: '07:00',
-      tutor: 'Nico Akbar',
-      status: 'selesai',
-    },
-    {
-      tanggal: 'Sabtu, 04 September 2021',
-      waktu: '07:00',
-      tutor: 'Nico Akbar',
-    },
-    {
-      tanggal: 'Minggu, 06 September 2021',
-      waktu: '07:00',
-      tutor: 'Nico Akbar',
-    },
-  ];
+export const DetailLesTutor: FC<ScreenProps> = ({navigation, route}) => {
+  const {data}: any = route.params;
+  console.log(data);
+  const [coursePresenceList, setCoursePresenceList] = useState([]);
+
   useEffect(() => {
     const getInitialData = async () => {
-      const siswaku = await apiGet({
-        url: '/siswa/my?page=1&siswa=&orderBy=siswa&sort=ASC',
+      const jadwalles = await apiGet({
+        url: '/jadwal/siswa/' + data.idsiswa,
       });
-      console.log(siswaku);
+      console.log(jadwalles.data);
+      setCoursePresenceList(jadwalles.data);
+      // conso
     };
-
     getInitialData();
+
     return () => {
-      // cancelApiRequest();
+      // isActive = false;
     };
-  }, []);
+  });
+  // console.log();
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar backgroundColor={color.bg_grey} barStyle="dark-content" />
@@ -58,18 +41,15 @@ export const DetailLesTutor: FC<ScreenProps> = ({navigation}) => {
         <Card>
           <Card.Title title="IPA kelas 5 SD" subtitle="5/8 Pertemuan" />
           <Card.Content>
-            <CardKeyValue keyName="Siswa" value="Andi Rayka" keyFlex={8} />
-            <CardKeyValue keyName="Tutor" value="Udin Harun" keyFlex={8} />
+            <CardKeyValue keyName="Siswa" value={data.siswa} keyFlex={8} />
+            <CardKeyValue keyName="Tutor" value="-" keyFlex={8} />
             <CardKeyValue
               keyName="Tgl Mulai"
-              value="12 Agustus 2021"
+              value="-"
+              // {coursePresenceList[0].tglabsen.toISOString()}
               keyFlex={8}
             />
-            <CardKeyValue
-              keyName="Tgl Selesai"
-              value="12 September 2021"
-              keyFlex={8}
-            />
+            <CardKeyValue keyName="Tgl Selesai" value="-" keyFlex={8} />
           </Card.Content>
         </Card>
 
@@ -95,15 +75,18 @@ export const DetailLesTutor: FC<ScreenProps> = ({navigation}) => {
             subtitleStyle={{fontSize: dimens.medium_14}}
           />
           <Card.Content>
-            {coursePresenceList.map((item, index) => {
+            {coursePresenceList.map((item: any, index: number) => {
               return (
                 <NestedCard
                   key={index}
-                  title={item.tanggal}
-                  subtitle={item.waktu}
-                  additionalText={item.status && item.status}
+                  title={new Date(item.tglabsen).toLocaleDateString()}
+                  // subtitle={new Date(item.tglabsen).getTime()}
+                  subtitle="-"
+                  additionalText={
+                    item.flagabsen == 1 ? 'Sudah absen' : 'Belum absen'
+                  }
                   onPress={() => {
-                    navigation.navigate('DetailPresensi');
+                    navigation.navigate<any>('DetailPresensi', {data: item});
                   }}
                 />
               );

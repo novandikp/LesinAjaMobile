@@ -7,13 +7,14 @@ import {
 } from '@react-navigation/drawer';
 import {
   HomeAdmin,
-  Les,
+  // Les,
   ListLes,
   ListMaster,
   ListTutor,
   ListWalmur,
   Laporan,
   RiwayatPembayaran,
+  KonfirmasiPembayaran,
 } from '@screens';
 import {AdminDrawerParamList} from './RouteTypes';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -74,6 +75,13 @@ export const AdminDrawer = () => {
         options={{
           drawerIcon: () => <MaterialCommunityIcons name="school" size={26} />,
           drawerLabel: 'Daftar Les',
+        }}
+      />
+      <DrawerContainer.Screen
+        name="KonfirmasiPembayaran"
+        component={KonfirmasiPembayaran}
+        options={{
+          drawerIcon: () => <MaterialCommunityIcons name="check" size={26} />,
         }}
       />
       <DrawerContainer.Screen

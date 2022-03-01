@@ -22,7 +22,7 @@ export const DetailLes: FC<ScreenProps> = ({navigation, route}) => {
   const [buktiBayar, setBuktiBayar] = useState({
     path: '',
   });
-  const [images, setImages] = useState(null);
+  const [images, setImages] = useState<any>([]);
   const onPressUploadBuktiBayar = async () => {
     if (buktiBayar.path === '') {
       const res = await getSingleDocument();
@@ -48,13 +48,15 @@ export const DetailLes: FC<ScreenProps> = ({navigation, route}) => {
         payload: item,
       });
       if (success) {
-        navigation.navigate('Les');
+        navigation.navigate<any>('MainTabs');
       }
       // const gbr = images;
     }
   };
   const [detailLes, setDetailLes] = useState<any>([]);
   const [listApplyingTutor, setListApplyingTutor] = useState<any>([]);
+
+  const [coursePresenceList, setCoursePresenceList] = useState<any>([]);
   useEffect(() => {
     const getInitialData = async () => {
       const applyingTutor = await apiGet({
@@ -62,56 +64,24 @@ export const DetailLes: FC<ScreenProps> = ({navigation, route}) => {
       });
       setListApplyingTutor(applyingTutor.data);
       setDetailLes(data);
-      if (statusles > 3) {
+      console.log(data);
+      const jadwalles = await apiGet({
+        url:
+          '/jadwal/siswa/' +
+          data.idsiswa +
+          '?cari=&orderBy=siswa&sort=desc&page=1',
+      });
+      if (statusles >= 3) {
         setBuktiBayar(prev => ({...prev, path: 'ada'}));
       }
+      setCoursePresenceList(jadwalles.data);
     };
     getInitialData();
 
     return () => {
       // isActive = false;
     };
-  }, []);
-  const coursePresenceList = [
-    {
-      tanggal: 'Kamis, 02 September 2021',
-      waktu: '07:00',
-      tutor: 'Nico Akbar',
-      status: 'selesai',
-    },
-    {
-      tanggal: 'Jumat, 03 September 2021',
-      waktu: '07:00',
-      tutor: 'Nico Akbar',
-      status: 'selesai',
-    },
-    {
-      tanggal: 'Sabtu, 04 September 2021',
-      waktu: '07:00',
-      tutor: 'Nico Akbar',
-    },
-    {
-      tanggal: 'Minggu, 06 September 2021',
-      waktu: '07:00',
-      tutor: 'Nico Akbar',
-    },
-  ];
-
-  // const listApplyingTutor = [
-  //   {
-  //     nama: 'Fahrul Firdaus',
-  //     perguruanTinggi: 'Politeknik Elektronika Negeri Surabaya',
-  //   },
-  //   {
-  //     nama: 'Nico Aidin',
-  //     perguruanTinggi: 'Universitas Negeri Surabaya',
-  //   },
-  //   {
-  //     nama: 'Fiqri Akbar',
-  //     perguruanTinggi: 'Universitas Jember',
-  //   },
-  // ];
-
+  });
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar backgroundColor={color.bg_grey} barStyle="dark-content" />
@@ -182,7 +152,7 @@ export const DetailLes: FC<ScreenProps> = ({navigation, route}) => {
           </Card>
         )}
         {/* There is no applying tutor */}
-        {statusles <= 1 && (
+        {statusles <= 2 && (
           <Card style={{marginTop: dimens.standard}}>
             <Card.Title
               title="Menunggu Ada Tutor"
@@ -229,29 +199,34 @@ export const DetailLes: FC<ScreenProps> = ({navigation, route}) => {
         )}
 
         {/* Presence */}
-        <Card style={{marginTop: dimens.standard}}>
-          <Card.Title
-            title="Presensi Les"
-            titleStyle={{color: '#2563EB'}}
-            subtitle="Klik item untuk melihat detail presensi"
-            subtitleStyle={{fontSize: dimens.medium_14}}
-          />
-          <Card.Content>
-            {coursePresenceList.map((item, index) => {
-              return (
-                <NestedCard
-                  key={index}
-                  title={item.tanggal}
-                  subtitle={item.waktu}
-                  additionalText={item.status && item.status}
-                  onPress={() => {
-                    navigation.navigate('DetailPresensi');
-                  }}
-                />
-              );
-            })}
-          </Card.Content>
-        </Card>
+        {statusles == 4 && (
+          <Card style={{marginTop: dimens.standard}}>
+            <Card.Title
+              title="Presensi Les"
+              titleStyle={{color: '#2563EB'}}
+              subtitle="Klik item untuk melihat detail presensi"
+              subtitleStyle={{fontSize: dimens.medium_14}}
+            />
+            <Card.Content>
+              {coursePresenceList.map((item: any, index: number) => {
+                return (
+                  <NestedCard
+                    key={index}
+                    title={new Date(item.tglabsen).toLocaleDateString()}
+                    // subtitle={item.waktu}
+                    subtitle="-"
+                    additionalText={
+                      item.flagabsen == 1 ? 'Sudah absen' : 'Belum absen'
+                    }
+                    onPress={() => {
+                      navigation.navigate<any>('DetailPresensi', {data: item});
+                    }}
+                  />
+                );
+              })}
+            </Card.Content>
+          </Card>
+        )}
         <Gap y={dimens.standard} />
       </ScrollView>
     </SafeAreaView>

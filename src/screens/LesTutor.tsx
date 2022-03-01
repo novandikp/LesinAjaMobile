@@ -1,4 +1,4 @@
-import React, {FC, useState} from 'react';
+import React, {FC, useState, useEffect} from 'react';
 import {CardKeyValue, EmptyData, Header, OneLineInfo} from '@components';
 import {color, dimens} from '@constants';
 import {
@@ -14,6 +14,7 @@ import {CompositeScreenProps} from '@react-navigation/native';
 import {AppStackParamList, MainTabParamList} from '@routes/RouteTypes';
 import {MaterialBottomTabScreenProps} from '@react-navigation/material-bottom-tabs';
 import {StackScreenProps} from '@react-navigation/stack';
+import {apiGet} from '@utils';
 
 type LesType = {
   namaLes: string;
@@ -27,30 +28,30 @@ type LesType = {
   menungguTutor: boolean;
 };
 
-const lesItems: LesType[] = [
-  {
-    namaLes: 'Mengaji kelas 3 SD',
-    totalPertemuan: 8,
-    pertemuanSelesai: 6,
-    tglMulai: 1629698756,
-    tglSelesai: 1631403073,
-    siswa: 'Andi Rayka',
-    tutor: 'Udin Harun',
-    sudahBayar: true,
-    menungguTutor: false,
-  },
-  {
-    namaLes: 'Mengaji kelas 2 SD',
-    totalPertemuan: 12,
-    pertemuanSelesai: null,
-    tglMulai: null,
-    tglSelesai: null,
-    siswa: 'Andi Rayka',
-    tutor: null,
-    sudahBayar: false,
-    menungguTutor: false,
-  },
-];
+// const lesItems: LesType[] = [
+//   {
+//     namaLes: 'Mengaji kelas 3 SD',
+//     totalPertemuan: 8,
+//     pertemuanSelesai: 6,
+//     tglMulai: 1629698756,
+//     tglSelesai: 1631403073,
+//     siswa: 'Andi Rayka',
+//     tutor: 'Udin Harun',
+//     sudahBayar: true,
+//     menungguTutor: false,
+//   },
+//   {
+//     namaLes: 'Mengaji kelas 2 SD',
+//     totalPertemuan: 12,
+//     pertemuanSelesai: null,
+//     tglMulai: null,
+//     tglSelesai: null,
+//     siswa: 'Andi Rayka',
+//     tutor: null,
+//     sudahBayar: false,
+//     menungguTutor: false,
+//   },
+// ];
 
 type ScreenProps = CompositeScreenProps<
   MaterialBottomTabScreenProps<MainTabParamList, 'LesTutor'>,
@@ -58,7 +59,24 @@ type ScreenProps = CompositeScreenProps<
 >;
 export const LesTutor: FC<ScreenProps> = ({navigation}) => {
   const [isEmptyData, setisEmptyData] = useState(false);
+  const [lesItems, setLesItem] = useState([]);
+  useEffect(() => {
+    const getInitialData = async () => {
+      const siswaku = await apiGet({
+        url: '/siswa/my',
+      });
+      if (siswaku.data == null) {
+        setisEmptyData = true;
+      }
+      setLesItem(siswaku.data);
+      // setLesItem(siswaku);
+    };
 
+    getInitialData();
+    return () => {
+      // cancelApiRequest();
+    };
+  }, []);
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar backgroundColor={color.bg_grey} barStyle="dark-content" />
@@ -85,7 +103,7 @@ export const LesTutor: FC<ScreenProps> = ({navigation}) => {
                   key={index}
                   item={item}
                   onPress={() => {
-                    navigation.navigate('DetailLesTutor');
+                    navigation.navigate<any>('DetailLesTutor', {data: item});
                   }}
                 />
               );

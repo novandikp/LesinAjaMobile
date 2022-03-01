@@ -98,7 +98,7 @@ export const AddLes: FC<ScreenProps> = ({navigation}) => {
       payload: data,
     });
     if (success) {
-      navigation.navigate('MainTabs');
+      navigation.navigate<any>('MainTabs');
     }
   };
 
@@ -112,25 +112,6 @@ export const AddLes: FC<ScreenProps> = ({navigation}) => {
         //  contentContainerStyle={{flexGrow: 1}}
         style={{flex: 1}}>
         <View style={{flex: 1, padding: dimens.standard}}>
-          {/* Siswa */}
-          {/* <Controller
-            control={control}
-            rules={{required: true}}
-            render={({field: {onChange, value}}) => (
-              <InputChoice
-                label="Siswa yang Mengikuti Les"
-                value={value}
-                error={!!errors.siswa}
-                errorMessage="Harap pilih siswa yang mengikuti les"
-                onSelect={item => onChange(item.nama)}
-                listData={master_siswa}
-                keyMenuTitle="nama"
-                keyMenuDescription="jenjangKelas"
-              />
-            )}
-            name="siswa"
-            defaultValue={''}
-          /> */}
           {/* pilih siswa */}
           {listMurid && (
             <Controller

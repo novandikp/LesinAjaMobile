@@ -11,19 +11,27 @@ import {
 import {Card, Divider, Paragraph, Button, IconButton} from 'react-native-paper';
 import {StackScreenProps} from '@react-navigation/stack';
 import {AppStackParamList} from '@routes/RouteTypes';
-import dayjs from 'dayjs';
+import DatePicker from 'react-native-date-picker';
+// import dayjs from 'dayjs';
+import {apiPost} from '@utils';
 
 type ScreenProps = StackScreenProps<AppStackParamList, 'DetailPresensi'>;
-export const DetailPresensi: FC<ScreenProps> = () => {
-  const tanggalPertemuan = dayjs.unix(1630610037).format('DD MMMM YYYY');
+export const DetailPresensi: FC<ScreenProps> = ({navigation, route}) => {
+  const {data}: any = route.params;
+  // const tanggalPertemuan = dayjs.unix(1630610037).format('DD MMMM YYYY');
+  const tanggalPertemuan = new Date(data.tglabsen).toISOString().slice(0, 10);
   const [ratingCount, setRatingCount] = useState(0);
   const [ratingColor, setRatingColor] = useState(undefined);
+  const date = new Date();
+  const [Open, setOpen] = useState(false);
 
   const handleRating = async (count: number) => {
     setRatingCount(count);
   };
 
-  useEffect(() => {}, [ratingCount, ratingColor]);
+  useEffect(() => {
+    console.log(data);
+  }, [ratingCount, ratingColor]);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -34,9 +42,9 @@ export const DetailPresensi: FC<ScreenProps> = () => {
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         <Card>
           <Card.Title
-            title="Presensi Les Siswa Gopi"
+            title={'Presensi Les Siswa ' + data.siswa}
             titleStyle={{alignSelf: 'center'}}
-            subtitle="Presensi ke 1"
+            // subtitle="Presensi ke 1"
             subtitleStyle={styles.subTitle}
             style={{marginBottom: dimens.standard}}
           />
@@ -49,13 +57,26 @@ export const DetailPresensi: FC<ScreenProps> = () => {
             <Divider />
             <Gap y={dimens.tiny} />
 
-            <CardKeyValue keyFlex={10} keyName="Les" value="Mengaji TK A" />
             <CardKeyValue
               keyFlex={10}
-              keyName="Tutor"
-              value="Nico Akbar Prasetyo"
+              keyName="Les"
+              value={data.paket + ' ' + data.jenjang + ' ' + data.kelas}
             />
-            <Paragraph style={styles.presenceStatus}>Selesai</Paragraph>
+            <CardKeyValue keyFlex={10} keyName="Tutor" value={data.guru} />
+            {/* <Paragraph style={styles.presenceStatus}>Selesai</Paragraph> */}
+            <Button
+              style={{marginTop: dimens.standard}}
+              onPress={async () => {
+                const {success} = await apiPost({
+                  url: '/les/absen/' + data.idabsen,
+                  payload: {},
+                });
+                if (success) {
+                  navigation.navigate<any>('MainTabs');
+                }
+              }}>
+              Selesai
+            </Button>
             <Gap y={dimens.standard} />
 
             {/* if not over */}
@@ -66,15 +87,44 @@ export const DetailPresensi: FC<ScreenProps> = () => {
             <Divider />
             <Gap y={dimens.tiny} />
 
-            <CardKeyValue keyFlex={10} keyName="Les" value="Mengaji TK A" />
             <CardKeyValue
               keyFlex={10}
-              keyName="Tutor"
-              value="Nico Akbar Prasetyo"
+              keyName="Les"
+              value={data.paket + ' ' + data.jenjang + ' ' + data.kelas}
             />
-            <Button style={{marginTop: dimens.standard}} icon="pencil-outline">
+            <CardKeyValue keyFlex={10} keyName="Tutor" value={data.guru} />
+            <Button
+              style={{marginTop: dimens.standard}}
+              icon="pencil-outline"
+              onPress={() => {
+                setOpen(true);
+              }}>
               Edit tanggal pertemuan
             </Button>
+            {Open == true && (
+              <DatePicker
+                modal
+                open={Open}
+                date={date}
+                mode="date"
+                textColor={color.grey_5}
+                minimumDate={new Date()}
+                onConfirm={async Date => {
+                  const {success} = await apiPost({
+                    url: '/les/edit/' + data.idabsen,
+                    payload: {
+                      tglabsen: Date.toISOString().slice(0, 10),
+                    },
+                  });
+                  if (success) {
+                    navigation.navigate<any>('MainTabs');
+                  }
+                }}
+                onCancel={() => {
+                  setOpen(false);
+                }}
+              />
+            )}
             <Gap y={dimens.standard} />
 
             {/* Rating */}

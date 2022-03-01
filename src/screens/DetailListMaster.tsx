@@ -11,7 +11,7 @@ import {
 import {Card, DataTable, IconButton, Text} from 'react-native-paper';
 import {StackScreenProps} from '@react-navigation/stack';
 import {AppStackParamList} from '@routes/RouteTypes';
-import {apiGet} from '@utils';
+import {apiGet, apiDelete} from '@utils';
 type ScreenProps = StackScreenProps<AppStackParamList, 'DetailListMaster'>;
 
 export const DetailListMaster: FC<ScreenProps> = ({route, navigation}) => {
@@ -143,15 +143,14 @@ export const DetailListMaster: FC<ScreenProps> = ({route, navigation}) => {
                 </DataTable.Header>
                 {data[detailType.replace(/\s+/g, '').toLowerCase()].map(
                   (item: {item: any}, index: number) => {
-                    console.log(item);
                     return (
                       <ItemRow
                         key={index}
                         item={item}
                         itemType={detailType}
                         onPress={() =>
-                          navigation.navigate<any>('EditListMaster', {
-                            detailType: detailType,
+                          navigation.navigate<any>('EditListLes', {
+                            // detailType: detailType,
                             data: item,
                           })
                         }
@@ -170,9 +169,10 @@ export const DetailListMaster: FC<ScreenProps> = ({route, navigation}) => {
       <FABList
         label="Tambah Data"
         onPress={() =>
-          navigation.navigate<any>('EditListMaster', {
-            detailType: detailType,
-          })
+          // navigation.navigate<any>('EditListMaster', {
+          // detailType: detailType,
+          // })
+          navigation.navigate<any>('EditListLes', {data: null})
         }
       />
     </SafeAreaView>
@@ -204,7 +204,15 @@ const ItemRow: FC<{item: any; itemType: string; onPress: () => void}> = ({
       )}
       <DataTable.Cell style={styles.wideTableCell}>
         <IconButton icon="pencil" size={30} onPress={onPress} />
-        <IconButton icon="delete" size={30} onPress={() => {}} />
+        <IconButton
+          icon="delete"
+          size={30}
+          onPress={async () => {
+            const {success} = await apiDelete({
+              url: '/paket/' + item.idpaket,
+            });
+          }}
+        />
       </DataTable.Cell>
     </DataTable.Row>
   );

@@ -38,53 +38,6 @@ type LesType = {
   menungguTutor: boolean;
 };
 
-// const lesItems: LesType[] = [
-//   {
-//     namaLes: 'Mengaji kelas 3 SD',
-//     totalPertemuan: 8,
-//     pertemuanSelesai: 6,
-//     tglMulai: 1629698756,
-//     tglSelesai: 1631403073,
-//     siswa: 'Andi Rayka',
-//     tutor: 'Udin Harun',
-//     sudahBayar: true,
-//     menungguTutor: false,
-//   },
-//   {
-//     namaLes: 'Mengaji kelas 1 SD',
-//     totalPertemuan: 4,
-//     pertemuanSelesai: null,
-//     tglMulai: null,
-//     tglSelesai: null,
-//     siswa: 'Andi Rayka',
-//     tutor: 'Udin Harun',
-//     sudahBayar: false,
-//     menungguTutor: false,
-//   },
-//   {
-//     namaLes: 'Mengaji kelas 2 SD',
-//     totalPertemuan: 12,
-//     pertemuanSelesai: null,
-//     tglMulai: null,
-//     tglSelesai: null,
-//     siswa: 'Andi Rayka',
-//     tutor: null,
-//     sudahBayar: false,
-//     menungguTutor: false,
-//   },
-//   {
-//     namaLes: 'Mengaji kelas 6 SD',
-//     totalPertemuan: 12,
-//     pertemuanSelesai: null,
-//     tglMulai: null,
-//     tglSelesai: null,
-//     siswa: 'Andi Rayka',
-//     tutor: null,
-//     sudahBayar: false,
-//     menungguTutor: true,
-//   },
-// ];
-
 type ScreenProps = CompositeScreenProps<
   MaterialBottomTabScreenProps<MainTabParamList, 'Les'>,
   StackScreenProps<AppStackParamList>
