@@ -113,6 +113,7 @@ export const EditStudent: FC<ScreenProps> = ({
             rules={{required: true}}
             render={({field: {onChange, value}}) => (
               <InputChoice
+                toNumber={false}
                 label="Jenjang Kelas"
                 value={value}
                 error={!!errors.jenjang}

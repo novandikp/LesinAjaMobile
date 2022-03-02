@@ -7,13 +7,16 @@ import {
   SkeletonLoading,
 } from '@components';
 import {color, dimens} from '@constants';
+import {Icon} from 'react-native-elements';
 import {Controller, SubmitHandler, useForm} from 'react-hook-form';
+import Modal from 'react-native-modal';
 import {
   SafeAreaView,
   StatusBar,
   StyleSheet,
   View,
   ScrollView,
+  Text,
 } from 'react-native';
 import {StackScreenProps} from '@react-navigation/stack';
 import {AppStackParamList} from '@routes/RouteTypes';
@@ -52,7 +55,9 @@ export const Account: FC<ScreenProps> = () => {
     desa: '',
   });
   const [isLoading, setIsLoading] = useState(true);
-  const [oldData, setOldData] = useState({
+  const [isModalVisible, setModalVisible] = useState(false);
+
+  const [oldData, setOldData] = useState<any>({
     wali: '',
     telp: '',
     idprovinsi: '',
@@ -66,46 +71,40 @@ export const Account: FC<ScreenProps> = () => {
     const getInitialData = async () => {
       const provinsi = await getListDaerah({type: 'provinsi'});
       setListDaerah(prev => ({...prev, provinsi}));
-
       const OldData = await apiGet({url: 'wali/profile'});
-      console.log(OldData.data);
-      // if (OldData.data != '' || OldData.data != null) {
-      //   let kota = await getListDaerah({
-      //     type: 'kota',
-      //     idParent: OldData.data.idprovinsi,
-      //   });
-      //   let kecamatan = await getListDaerah({
-      //     type: 'kecamatan',
-      //     idParent: OldData.data.idkabupaten,
-      //   });
-      //   let desa = await getListDaerah({
-      //     type: 'desa',
-      //     idParent: OldData.data.idkecamatan,
-      //   });
-      //   setListDaerah(prev => ({...prev, kota}));
-      //   setListDaerah(prev => ({...prev, kecamatan}));
-      //   setListDaerah(prev => ({...prev, desa}));
-      //   let defaultProvinsi = await listDaerah.provinsi.find(
-      //     (i: any) => i.id == OldData.data.idprovinsi,
-      //   )?.name;
-      //   let defaultKota = await listDaerah.kota.find(
-      //     (i: any) => i.id == OldData.data.idkabupaten,
-      //   )?.name;
-      //   let defaultKecamatan = await listDaerah.kecamatan.find(
-      //     (i: any) => i.id == OldData.data.idkecamatan,
-      //   )?.name;
-      //   let defaultDesa = await listDaerah.desa.find(
-      //     (i: any) => i.id == OldData.data.iddesa,
-      //   )?.name;
-      //   await setSelectedDaerah({
-      //     provinsi: defaultProvinsi,
-      //     kota: defaultKota,
-      //     kecamatan: defaultKecamatan,
-      //     desa: defaultDesa,
-      //   });
-      //   console.log(selectedDaerah.desa);
-      // }
-      setOldData(OldData.data);
+      if (OldData.data.idprovinsi != null && OldData.data.idkecamatan != null) {
+        let kota = await getListDaerah({
+          type: 'kota',
+          idParent: OldData.data.idprovinsi,
+        });
+        let kecamatan = await getListDaerah({
+          type: 'kecamatan',
+          idParent: OldData.data.idkabupaten,
+        });
+        let desa = await getListDaerah({
+          type: 'desa',
+          idParent: OldData.data.idkecamatan,
+        });
+        let defaultProvinsi = await provinsi.find(
+          (i: any) => i.id == OldData.data.idprovinsi,
+        )?.name;
+        let defaultKota = await kota.find(
+          (i: any) => i.id == OldData.data.idkabupaten,
+        )?.name;
+        let defaultKecamatan = await kecamatan.find(
+          (i: any) => i.id == OldData.data.idkecamatan,
+        )?.name;
+        let defaultDesa = await desa.find(
+          (i: any) => i.id == OldData.data.iddesa,
+        )?.name;
+        await setSelectedDaerah({
+          provinsi: defaultProvinsi,
+          kota: defaultKota,
+          kecamatan: defaultKecamatan,
+          desa: defaultDesa,
+        });
+        setOldData(OldData.data);
+      }
       setIsLoading(false);
     };
 
@@ -134,8 +133,9 @@ export const Account: FC<ScreenProps> = () => {
       payload: data,
     });
     console.log(success);
-    // if (success) {
-    // }
+    if (success) {
+      setModalVisible(true);
+    }
   };
   return (
     <SafeAreaView style={styles.container}>
@@ -198,6 +198,7 @@ export const Account: FC<ScreenProps> = () => {
                   rules={{required: true}}
                   render={({field: {onChange}}) => (
                     <InputChoice
+                      toNumber={false}
                       label="Domisili - Provinsi"
                       value={selectedDaerah.provinsi}
                       error={!!errors.idprovinsi}
@@ -223,13 +224,7 @@ export const Account: FC<ScreenProps> = () => {
                     />
                   )}
                   name="idprovinsi"
-                  defaultValue={
-                    oldData != null
-                      ? listDaerah.provinsi.find(
-                          (i: any) => i.id == oldData.idprovinsi,
-                        )?.name
-                      : ''
-                  }
+                  defaultValue={''}
                 />
               )}
 
@@ -241,6 +236,7 @@ export const Account: FC<ScreenProps> = () => {
                   rules={{required: true}}
                   render={({field: {onChange}}) => (
                     <InputChoice
+                      toNumber={false}
                       label="Domisili - Kota"
                       value={selectedDaerah.kota}
                       error={!!errors.idkabupaten}
@@ -278,6 +274,7 @@ export const Account: FC<ScreenProps> = () => {
                   render={({field: {onChange}}) => (
                     <InputChoice
                       label="Domisili - Kecamatan"
+                      toNumber={false}
                       value={selectedDaerah.kecamatan}
                       error={!!errors.idkecamatan}
                       errorMessage="Harap pilih kecamatan tempat tinggal Anda"
@@ -313,6 +310,7 @@ export const Account: FC<ScreenProps> = () => {
                   render={({field: {onChange}}) => (
                     <InputChoice
                       label="Domisili - Kelurahan"
+                      toNumber={false}
                       value={selectedDaerah.desa}
                       error={!!errors.iddesa}
                       errorMessage="Harap pilih kecamatan tempat tinggal Anda"
@@ -372,7 +370,35 @@ export const Account: FC<ScreenProps> = () => {
               />
             </View>
           </ScrollView>
-
+          {isModalVisible && (
+            <Modal
+              isVisible={isModalVisible}
+              onBackdropPress={() => setModalVisible(false)}>
+              <View
+                style={{
+                  flex: 1,
+                  backgroundColor: 'white',
+                  alignItems: 'center',
+                  alignContent: 'center',
+                  borderRadius: 20,
+                  maxHeight: 250,
+                  maxWidth: 500,
+                }}>
+                <View style={{paddingTop: 10}}>
+                  <Icon
+                    name="check"
+                    solid={true}
+                    size={100}
+                    borderRadius={100}
+                    backgroundColor={color.green_500}
+                  />
+                </View>
+                <Text style={{fontSize: 24, paddingTop: 10}}>
+                  Akun Telah Diubah
+                </Text>
+              </View>
+            </Modal>
+          )}
           {/* Submit button */}
           <ButtonFormSubmit text="Simpan" onPress={handleSubmit(onSubmit)} />
         </>

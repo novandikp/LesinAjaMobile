@@ -13,10 +13,17 @@ type ComponentProps = InputProps & {
   listData: any[];
   keyMenuTitle: string;
   keyMenuDescription?: string;
+  toNumber: boolean;
 };
 export const InputChoice: FC<ComponentProps> = props => {
-  const {onSelect, errorMessage, listData, keyMenuTitle, keyMenuDescription} =
-    props;
+  const {
+    onSelect,
+    errorMessage,
+    listData,
+    keyMenuTitle,
+    keyMenuDescription,
+    toNumber,
+  } = props;
   const [modalVisible, setModalVisible] = useState(false);
   const [keyword, setKeyword] = useState('');
   const [value, setValue] = useState('');
@@ -56,7 +63,15 @@ export const InputChoice: FC<ComponentProps> = props => {
                     style={styles.listItem}
                     key={index}
                     title={item[keyMenuTitle]}
-                    description={keyMenuDescription && item[keyMenuDescription]}
+                    description={
+                      // console.log(toNumber)
+                      !toNumber
+                        ? keyMenuDescription && item[keyMenuDescription]
+                        : keyMenuDescription &&
+                          item[keyMenuDescription]
+                            .toFixed(2)
+                            .replace(/\d(?=(\d{3})+\.)/g, '$&,')
+                    }
                     onPress={() => {
                       onPressItem(item);
                       setValue(item[keyMenuTitle]);

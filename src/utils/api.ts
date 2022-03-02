@@ -42,8 +42,6 @@ export const apiPost = async ({
       },
       cancelToken: source.token,
     });
-    console.log(payload);
-    console.log(data);
     // If success
     if (ok) {
       if (data.data.posisi == 'Admin') {

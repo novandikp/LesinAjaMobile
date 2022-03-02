@@ -9,9 +9,12 @@ import {
 import {TextInput} from 'react-native-paper';
 import {color, dimens} from '@constants';
 import {Controller, SubmitHandler, useForm} from 'react-hook-form';
+import {Icon} from 'react-native-elements';
+import Modal from 'react-native-modal';
 import {
   SafeAreaView,
   StatusBar,
+  Text,
   StyleSheet,
   View,
   ScrollView,
@@ -66,6 +69,8 @@ export const AccountTutor: FC<ScreenProps> = () => {
     desa: [],
   });
   const [file, setFile] = useState<any>();
+  const [isModalVisible, setModalVisible] = useState(false);
+
   const [selectedDaerah, setSelectedDaerah] = useState({
     provinsi: '',
     kota: '',
@@ -98,8 +103,39 @@ export const AccountTutor: FC<ScreenProps> = () => {
       setListDaerah(prev => ({...prev, provinsi}));
 
       const OldData = await apiGet({url: '/guru/profile'});
-      setOldData(OldData.data);
-      console.log(OldData);
+      if (OldData.data.idprovinsi != null && OldData.data.idkecamatan != null) {
+        let kota = await getListDaerah({
+          type: 'kota',
+          idParent: OldData.data.idprovinsi,
+        });
+        let kecamatan = await getListDaerah({
+          type: 'kecamatan',
+          idParent: OldData.data.idkabupaten,
+        });
+        let desa = await getListDaerah({
+          type: 'desa',
+          idParent: OldData.data.idkecamatan,
+        });
+        let defaultProvinsi = await provinsi.find(
+          (i: any) => i.id == OldData.data.idprovinsi,
+        )?.name;
+        let defaultKota = await kota.find(
+          (i: any) => i.id == OldData.data.idkabupaten,
+        )?.name;
+        let defaultKecamatan = await kecamatan.find(
+          (i: any) => i.id == OldData.data.idkecamatan,
+        )?.name;
+        let defaultDesa = await desa.find(
+          (i: any) => i.id == OldData.data.iddesa,
+        )?.name;
+        await setSelectedDaerah({
+          provinsi: defaultProvinsi,
+          kota: defaultKota,
+          kecamatan: defaultKecamatan,
+          desa: defaultDesa,
+        });
+        setOldData(OldData.data);
+      }
       setIsLoading(false);
     };
 
@@ -209,6 +245,7 @@ export const AccountTutor: FC<ScreenProps> = () => {
                   rules={{required: true}}
                   render={({field: {onChange}}) => (
                     <InputChoice
+                      toNumber={false}
                       label="Domisili - Provinsi"
                       value={selectedDaerah.provinsi}
                       error={!!errors.idprovinsi}
@@ -234,13 +271,8 @@ export const AccountTutor: FC<ScreenProps> = () => {
                     />
                   )}
                   name="idprovinsi"
-                  defaultValue={
-                    oldData != null
-                      ? listDaerah.provinsi.find(
-                          (i: any) => i.id == oldData.idprovinsi,
-                        )?.name
-                      : ''
-                  }
+                  defaultValue={''}
+                  // )}
                 />
               )}
 
@@ -252,6 +284,7 @@ export const AccountTutor: FC<ScreenProps> = () => {
                   rules={{required: true}}
                   render={({field: {onChange}}) => (
                     <InputChoice
+                      toNumber={false}
                       label="Domisili - Kota"
                       value={selectedDaerah.kota}
                       error={!!errors.idkabupaten}
@@ -289,6 +322,7 @@ export const AccountTutor: FC<ScreenProps> = () => {
                   render={({field: {onChange}}) => (
                     <InputChoice
                       label="Domisili - Kecamatan"
+                      toNumber={false}
                       value={selectedDaerah.kecamatan}
                       error={!!errors.idkecamatan}
                       errorMessage="Harap pilih kecamatan tempat tinggal Anda"
@@ -324,6 +358,7 @@ export const AccountTutor: FC<ScreenProps> = () => {
                   render={({field: {onChange}}) => (
                     <InputChoice
                       label="Domisili - Kelurahan"
+                      toNumber={false}
                       value={selectedDaerah.desa}
                       error={!!errors.iddesa}
                       errorMessage="Harap pilih kecamatan tempat tinggal Anda"
@@ -474,6 +509,7 @@ export const AccountTutor: FC<ScreenProps> = () => {
                   rules={{required: true}}
                   render={({field: {onChange, value}}) => (
                     <InputChoice
+                      toNumber={false}
                       label="Bank Rekening"
                       value={value}
                       error={!!errors.idprovinsi}
@@ -498,6 +534,7 @@ export const AccountTutor: FC<ScreenProps> = () => {
                   render={({field: {onChange, value}}) => (
                     <InputChoice
                       label="Jenis Kelamin"
+                      toNumber={false}
                       value={value}
                       error={!!errors.idprovinsi}
                       errorMessage="Harap Isi Jenis Kelamin Anda"
@@ -537,7 +574,7 @@ export const AccountTutor: FC<ScreenProps> = () => {
                 render={({field: {onChange, value}}) => (
                   <TextInput
                     style={{backgroundColor: 'white', marginBottom: 10}}
-                    placeholder="Unggah File CV Anda"
+                    placeholder="Unggah File CV Anda (format ***.pdf)"
                     error={!!errors.file_cv}
                     // errorMessage={'File CV harus diupload'}
                     value={value}
@@ -560,6 +597,36 @@ export const AccountTutor: FC<ScreenProps> = () => {
                 name="file_cv"
                 // defaultValue={oldData == null ? '' : oldData.cv}
               />
+              {/* modal */}
+              {isModalVisible && (
+                <Modal
+                  isVisible={isModalVisible}
+                  onBackdropPress={() => setModalVisible(false)}>
+                  <View
+                    style={{
+                      flex: 1,
+                      backgroundColor: 'white',
+                      alignItems: 'center',
+                      alignContent: 'center',
+                      borderRadius: 20,
+                      maxHeight: 250,
+                      maxWidth: 500,
+                    }}>
+                    <View style={{paddingTop: 10}}>
+                      <Icon
+                        name="check"
+                        solid={true}
+                        size={100}
+                        borderRadius={100}
+                        backgroundColor={color.green_500}
+                      />
+                    </View>
+                    <Text style={{fontSize: 24, paddingTop: 10}}>
+                      Akun Telah Diubah
+                    </Text>
+                  </View>
+                </Modal>
+              )}
             </View>
           </ScrollView>
 

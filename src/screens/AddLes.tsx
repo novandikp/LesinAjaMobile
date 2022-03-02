@@ -31,7 +31,6 @@ import {AppStackParamList} from '@routes/RouteTypes';
 import {apiGet, apiPost} from '@utils';
 import {getListLest} from '@utils/getListData';
 import DatePicker from 'react-native-date-picker';
-import {unstable_batchedUpdates} from 'react-native';
 import MultiSelect from 'react-native-multiple-select';
 // react-native-multiple-select
 type FormDataType = {
@@ -81,6 +80,7 @@ export const AddLes: FC<ScreenProps> = ({navigation}) => {
     };
   }, []);
   const onSubmit: SubmitHandler<FormDataType> = async data => {
+    console.log(data);
     // console.log(data)
     let hari = selectedDays.toString();
     data.hari = hari;
@@ -97,6 +97,7 @@ export const AddLes: FC<ScreenProps> = ({navigation}) => {
       url: 'les/daftar',
       payload: data,
     });
+    console.log(success);
     if (success) {
       navigation.navigate<any>('MainTabs');
     }
@@ -119,6 +120,7 @@ export const AddLes: FC<ScreenProps> = ({navigation}) => {
               rules={{required: true}}
               render={({field: {onChange, value}}) => (
                 <InputChoice
+                  toNumber={false}
                   label="Pilih Murid"
                   value={value}
                   error={!!errors.idsiswa}
@@ -141,6 +143,7 @@ export const AddLes: FC<ScreenProps> = ({navigation}) => {
               rules={{required: true}}
               render={({field: {onChange, value}}) => (
                 <InputChoice
+                  toNumber={true}
                   label="Pilihan Les"
                   value={value}
                   error={!!errors.idpaket}
@@ -170,11 +173,9 @@ export const AddLes: FC<ScreenProps> = ({navigation}) => {
                   mode="date"
                   textColor={color.grey_5}
                   onConfirm={Date => {
-                    unstable_batchedUpdates(() => {
-                      onChange(Date.toISOString().slice(0, 10));
-                      setDate(Date);
-                      setOpen(false);
-                    });
+                    onChange(Date.toISOString().slice(0, 10));
+                    setDate(Date);
+                    setOpen(false);
                   }}
                   minimumDate={new Date()}
                   onCancel={() => {
@@ -216,11 +217,9 @@ export const AddLes: FC<ScreenProps> = ({navigation}) => {
                   mode="time"
                   textColor={color.grey_5}
                   onConfirm={Time => {
-                    unstable_batchedUpdates(() => {
-                      onChange(Time.toISOString());
-                      setTime(Time);
-                      setOpenTime(false);
-                    });
+                    onChange(Time.toISOString());
+                    setTime(Time);
+                    setOpenTime(false);
                   }}
                   onCancel={() => {
                     setOpenTime(false);
@@ -256,8 +255,9 @@ export const AddLes: FC<ScreenProps> = ({navigation}) => {
                 items={Days}
                 uniqueKey="name"
                 onSelectedItemsChange={(item: any) => {
+                  console.log(item);
                   setSelectedDays(item);
-                  onChange(selectedDays);
+                  onChange(item);
                 }}
                 selectedItems={selectedDays}
                 selectText="Pilih Hari Les"

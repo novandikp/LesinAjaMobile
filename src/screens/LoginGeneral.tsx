@@ -7,11 +7,12 @@ import {
   StyleSheet,
   View,
 } from 'react-native';
+import {color, dimens} from '@constants';
+import {Icon} from 'react-native-elements';
 import {AuthContext} from '@context/AuthContext';
 import {Button, Subheading, Text, Title} from 'react-native-paper';
 import {StackScreenProps} from '@react-navigation/stack';
 import {AppStackParamList} from '@routes/RouteTypes';
-import {dimens} from '@constants';
 import {LogoLesinAja} from '@assets';
 import {
   GoogleSigninButton,
@@ -19,21 +20,21 @@ import {
   statusCodes,
 } from '@react-native-google-signin/google-signin';
 import {Gap, StandardDialog} from '@components';
+import {apiGet} from '@utils';
+import Modal from 'react-native-modal';
 
 type ScreenProps = StackScreenProps<AppStackParamList, 'LoginGeneral'>;
 // Login screen for Parent and Tutor
 export const LoginGeneral: FC<ScreenProps> = ({navigation: {navigate}}) => {
   const [showChooseRole, setShowChooseRole] = useState(false);
-
-  const {login, register, setUserRole} = useContext(AuthContext);
-
+  const {login, register, setUserRole, logout} = useContext(AuthContext);
+  const [isModalVisible, setModalVisible] = useState(false);
   // When user presses sign in with google
   const onPressLogin = async () => {
     try {
       await GoogleSignin.hasPlayServices();
       // scopes, serverAuthCode, idToken, user
       const userInfo = await GoogleSignin.signIn();
-
       // Try to login
       const {isRegistered} = await login(userInfo);
       if (!isRegistered) {
@@ -63,6 +64,14 @@ export const LoginGeneral: FC<ScreenProps> = ({navigation: {navigate}}) => {
     if (isRegistered) {
       setUserRole(role === 1 ? 'tutor' : 'parent', true);
     }
+    const {success} = await apiGet({url: '/access'});
+    console.log(success);
+    // if (success) {
+    // tokenisnotvalid;
+    // <Text style={{fontSize: 50}}>teas idjiansidh</Text>;
+    // logout();
+    // }
+    // }
   };
 
   return (
@@ -121,6 +130,36 @@ export const LoginGeneral: FC<ScreenProps> = ({navigation: {navigate}}) => {
           <Gap y={50} />
         </View>
       </ScrollView>
+
+      {isModalVisible && (
+        <Modal
+          isVisible={isModalVisible}
+          onBackdropPress={() => setModalVisible(false)}>
+          <View
+            style={{
+              flex: 1,
+              backgroundColor: 'white',
+              alignItems: 'center',
+              alignContent: 'center',
+              borderRadius: 20,
+              maxHeight: 250,
+              maxWidth: 500,
+            }}>
+            <View style={{paddingTop: 10}}>
+              <Icon
+                name="check"
+                solid={true}
+                size={100}
+                borderRadius={100}
+                backgroundColor={color.green_500}
+              />
+            </View>
+            <Text style={{fontSize: 24, paddingTop: 10}}>
+              Akun Telah Diubah
+            </Text>
+          </View>
+        </Modal>
+      )}
     </SafeAreaView>
   );
 };

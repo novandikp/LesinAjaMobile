@@ -94,11 +94,10 @@ export const AuthProvider: FC = ({children}) => {
   };
 
   const logout = async () => {
-    // if (state.UserRole]'' == 'tutor') {
-    // console.log('in here');
-    // await GoogleSignin.revokeAccess();
-    // await GoogleSignin.signOut();
-    // }
+    if (state.userRole == 'parent' || state.userRole == 'tutor') {
+      await GoogleSignin.revokeAccess();
+      await GoogleSignin.signOut();
+    }
     await clearLocalStorage();
     setUserRole('', false);
   };
