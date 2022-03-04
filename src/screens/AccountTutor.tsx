@@ -575,8 +575,9 @@ export const AccountTutor: FC<ScreenProps> = () => {
                 render={({field: {onChange, value}}) => (
                   <TextInput
                     style={{backgroundColor: 'white', marginBottom: 10}}
-                    placeholder="Unggah File CV Anda (format ***.pdf)"
+                    placeholder="Unggah File CV Anda (*.pdf)"
                     error={!!errors.file_cv}
+                    label="Unggah File CV Anda (*.pdf)"
                     // errorMessage={'File CV harus diupload'}
                     value={value}
                     editable={false}
