@@ -8,6 +8,7 @@ import {
 } from '@components';
 import {TextInput} from 'react-native-paper';
 import {color, dimens} from '@constants';
+import {Card} from 'react-native-paper';
 import {Controller, SubmitHandler, useForm} from 'react-hook-form';
 import {Icon} from 'react-native-elements';
 import Modal from 'react-native-modal';
@@ -602,29 +603,33 @@ export const AccountTutor: FC<ScreenProps> = () => {
                 <Modal
                   isVisible={isModalVisible}
                   onBackdropPress={() => setModalVisible(false)}>
-                  <View
+                  <Card
                     style={{
-                      flex: 1,
-                      backgroundColor: 'white',
-                      alignItems: 'center',
+                      borderRadius: 25,
+                      minHeight: 100,
                       alignContent: 'center',
-                      borderRadius: 20,
-                      maxHeight: 250,
-                      maxWidth: 500,
+                      alignItems: 'center',
                     }}>
-                    <View style={{paddingTop: 10}}>
-                      <Icon
-                        name="check"
-                        solid={true}
-                        size={100}
-                        borderRadius={100}
-                        backgroundColor={color.green_500}
-                      />
+                    <View>
+                      <View style={{paddingTop: 10}}>
+                        <Icon
+                          name="check"
+                          solid={true}
+                          size={100}
+                          borderRadius={50}
+                          backgroundColor={color.green_500}
+                        />
+                      </View>
+                      <Text
+                        style={{
+                          fontSize: 24,
+                          paddingTop: 10,
+                          paddingBottom: 10,
+                        }}>
+                        Edit Akun Berhasil Diubah
+                      </Text>
                     </View>
-                    <Text style={{fontSize: 24, paddingTop: 10}}>
-                      Akun Telah Diubah
-                    </Text>
-                  </View>
+                  </Card>
                 </Modal>
               )}
             </View>

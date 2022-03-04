@@ -7,8 +7,9 @@ import {
   StyleSheet,
   View,
 } from 'react-native';
-import {color, dimens} from '@constants';
+import {dimens} from '@constants';
 import {Icon} from 'react-native-elements';
+import {Card} from 'react-native-paper';
 import {AuthContext} from '@context/AuthContext';
 import {Button, Subheading, Text, Title} from 'react-native-paper';
 import {StackScreenProps} from '@react-navigation/stack';
@@ -66,11 +67,10 @@ export const LoginGeneral: FC<ScreenProps> = ({navigation: {navigate}}) => {
     }
     const {success} = await apiGet({url: '/access'});
     console.log(success);
-    // if (success) {
-    // tokenisnotvalid;
-    // <Text style={{fontSize: 50}}>teas idjiansidh</Text>;
-    // logout();
-    // }
+    if (!success) {
+      setModalVisible(true);
+      logout();
+    }
     // }
   };
 
@@ -135,7 +135,7 @@ export const LoginGeneral: FC<ScreenProps> = ({navigation: {navigate}}) => {
         <Modal
           isVisible={isModalVisible}
           onBackdropPress={() => setModalVisible(false)}>
-          <View
+          {/* <View
             style={{
               flex: 1,
               backgroundColor: 'white',
@@ -144,20 +144,27 @@ export const LoginGeneral: FC<ScreenProps> = ({navigation: {navigate}}) => {
               borderRadius: 20,
               maxHeight: 250,
               maxWidth: 500,
+            }}> */}
+          {/* <View style={{paddingTop: 10}}>
+            
+          </View>*/}
+          <Card
+            style={{
+              borderRadius: 25,
+              minHeight: 100,
+              alignContent: 'center',
+              alignItems: 'center',
             }}>
-            <View style={{paddingTop: 10}}>
-              <Icon
-                name="check"
-                solid={true}
-                size={100}
-                borderRadius={100}
-                backgroundColor={color.green_500}
-              />
+            <View>
+              <View>
+                <Icon name="cancel" solid={true} size={100} />
+              </View>
+              <Text style={{fontSize: 24, paddingTop: 10, paddingBottom: 10}}>
+                Token Tidak Valid
+              </Text>
             </View>
-            <Text style={{fontSize: 24, paddingTop: 10}}>
-              Akun Telah Diubah
-            </Text>
-          </View>
+          </Card>
+          {/* </View> */}
         </Modal>
       )}
     </SafeAreaView>

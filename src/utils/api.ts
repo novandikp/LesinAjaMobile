@@ -103,6 +103,7 @@ export const apiGet = async ({
       headers: {Authorization: loginToken},
       cancelToken: source.token,
     });
+    // console.log(data);
     // If success
     if (ok) {
       return {success: true, data: data.data};
