@@ -612,28 +612,45 @@ export const AccountTutor: FC<ScreenProps> = () => {
                   onBackdropPress={() => setModalVisible(false)}>
                   <Card
                     style={{
-                      borderRadius: 25,
+                      // borderRadius: 25,
                       minHeight: 100,
-                      alignContent: 'center',
                       alignItems: 'center',
+                      justifyContent: 'center',
+                      paddingVertical: 15,
                     }}>
                     <View>
-                      <View style={{paddingTop: 10}}>
+                      <View
+                        style={{
+                          justifyContent: 'center',
+                          alignSelf: 'center',
+                          backgroundColor: color.green_500,
+                          borderRadius: 50,
+                          width: 100,
+                          height: 100,
+                        }}>
                         <Icon
                           name="check"
                           solid={true}
                           size={100}
-                          borderRadius={50}
-                          backgroundColor={color.green_500}
+                          style={{textAlign: 'center'}}
                         />
                       </View>
                       <Text
                         style={{
                           fontSize: 24,
-                          paddingTop: 10,
-                          paddingBottom: 10,
+                          paddingVertical: 10,
+                          textAlign: 'center',
                         }}>
                         Edit Akun Berhasil Diubah
+                      </Text>
+                      <Text
+                        style={{
+                          fontSize: 11,
+                          fontWeight: '200',
+                          color: color.grey_2,
+                          textAlign: 'center',
+                        }}>
+                        Klik bagian belakang untuk keluar
                       </Text>
                     </View>
                   </Card>
