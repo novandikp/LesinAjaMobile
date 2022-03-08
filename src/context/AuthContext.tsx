@@ -67,7 +67,6 @@ export const AuthProvider: FC = ({children}) => {
     if (success) {
       if (data.posisi) {
         setUserRole(data.posisi == 'Wali' ? 'parent' : 'tutor', true);
-
         return {isRegistered: true};
       }
       dispatch({type: 'SET_USER_INFO', userInfo});
@@ -87,7 +86,8 @@ export const AuthProvider: FC = ({children}) => {
       payload: {email: state.userInfo.user.email, posisi},
     });
     if (success) {
-      return {isRegistered: true};
+      setLocalStorage(lsKey.userToken, data.token);
+      return {isRegistered: true, data: data};
     }
 
     return {isRegistered: true};
