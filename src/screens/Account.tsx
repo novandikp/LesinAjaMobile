@@ -57,7 +57,7 @@ export const Account: FC<ScreenProps> = () => {
     desa: '',
   });
   const [isLoading, setIsLoading] = useState(true);
-  const [isModalVisible, setModalVisible] = useState(true);
+  const [isModalVisible, setModalVisible] = useState(false);
 
   const [oldData, setOldData] = useState<any>({
     wali: '',
