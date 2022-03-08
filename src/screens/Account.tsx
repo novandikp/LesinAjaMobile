@@ -87,6 +87,12 @@ export const Account: FC<ScreenProps> = () => {
           type: 'desa',
           idParent: OldData.data.idkecamatan,
         });
+        setListDaerah(prev => ({
+          ...prev,
+          kota: kota,
+          kecamatan: kecamatan,
+          desa: desa,
+        }));
         let defaultProvinsi = await provinsi.find(
           (i: any) => i.id == OldData.data.idprovinsi,
         )?.name;
