@@ -13,7 +13,7 @@ import {
   // master_siswa,
   // PilihanLesType,
 } from '@constants';
-import {TextInput} from 'react-native-paper';
+import {TextInput, HelperText} from 'react-native-paper';
 import {Controller, useForm, SubmitHandler} from 'react-hook-form';
 import {
   SafeAreaView,
@@ -254,19 +254,28 @@ export const AddLes: FC<ScreenProps> = ({navigation}) => {
             control={control}
             rules={{required: true}}
             render={({field: {onChange}}) => (
-              <MultiSelect
-                items={Days}
-                uniqueKey="name"
-                onSelectedItemsChange={(item: any) => {
-                  console.log(item);
-                  setSelectedDays(item);
-                  onChange(item);
-                }}
-                selectedItems={selectedDays}
-                selectText="Pilih Hari Les"
-                // error={!!errors.hari}
-                // errorMessage="Harap pilih tanggal les"
-              />
+              <View>
+                <MultiSelect
+                  items={Days}
+                  uniqueKey="name"
+                  onSelectedItemsChange={(item: any) => {
+                    setSelectedDays(item);
+                    onChange(item);
+                  }}
+                  selectedItems={selectedDays}
+                  selectText="Pilih Hari Les"
+                  // fixedHeight={true}
+                />
+
+                {!!errors.hari && (
+                  <HelperText
+                    style={{paddingLeft: 0, fontSize: dimens.medium_14}}
+                    type="error"
+                    visible={true}>
+                    Harap pilih hari les
+                  </HelperText>
+                )}
+              </View>
             )}
             name="hari"
           />
