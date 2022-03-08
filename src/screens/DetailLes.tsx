@@ -151,7 +151,7 @@ export const DetailLes: FC<ScreenProps> = ({navigation, route}) => {
               />
             )}
             <Card.Actions>
-              <Button onPress={onPressUploadBuktiBayar}>
+              <Button disabled={isLoading} onPress={onPressUploadBuktiBayar}>
                 {buktiBayar.path === '' ? 'Unggah Bukti Pembayaran' : 'Kirim'}
               </Button>
               {isLoading && <ActivityIndicator animating={isLoading} />}
