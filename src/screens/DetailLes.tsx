@@ -8,7 +8,13 @@ import {
   ScrollView,
   Platform,
 } from 'react-native';
-import {Avatar, Button, Card, Subheading} from 'react-native-paper';
+import {
+  Avatar,
+  Button,
+  Card,
+  Subheading,
+  ActivityIndicator,
+} from 'react-native-paper';
 import {StackScreenProps} from '@react-navigation/stack';
 import {AppStackParamList} from '@routes/RouteTypes';
 import {getSingleDocument, apiGet, apiPostFile} from '@utils';
@@ -23,6 +29,7 @@ export const DetailLes: FC<ScreenProps> = ({navigation, route}) => {
     path: '',
   });
   const [images, setImages] = useState<any>([]);
+  const [isLoading, setLoading] = useState(false);
   const onPressUploadBuktiBayar = async () => {
     if (buktiBayar.path === '') {
       const res = await getSingleDocument();
@@ -31,6 +38,7 @@ export const DetailLes: FC<ScreenProps> = ({navigation, route}) => {
         setImages(res);
       }
     } else {
+      setLoading(true);
       const item = new FormData();
       item.append('idles', id.toString());
       item.append('jumlahbayar', bayar.toString());
@@ -50,7 +58,6 @@ export const DetailLes: FC<ScreenProps> = ({navigation, route}) => {
       if (success) {
         navigation.navigate<any>('MainTabs');
       }
-      // const gbr = images;
     }
   };
   const [detailLes, setDetailLes] = useState<any>([]);
@@ -64,7 +71,6 @@ export const DetailLes: FC<ScreenProps> = ({navigation, route}) => {
       });
       setListApplyingTutor(applyingTutor.data);
       setDetailLes(data);
-      console.log(data);
       const jadwalles = await apiGet({
         url:
           '/jadwal/siswa/' +
@@ -127,7 +133,7 @@ export const DetailLes: FC<ScreenProps> = ({navigation, route}) => {
             />
           </Card>
         )}
-        {statusles <= 2 && (
+        {statusles == 2 && (
           <Card style={{marginTop: dimens.standard}}>
             <Card.Title
               title="Anda Belum Membayar Biaya Les"
@@ -148,11 +154,12 @@ export const DetailLes: FC<ScreenProps> = ({navigation, route}) => {
               <Button onPress={onPressUploadBuktiBayar}>
                 {buktiBayar.path === '' ? 'Unggah Bukti Pembayaran' : 'Kirim'}
               </Button>
+              {isLoading && <ActivityIndicator animating={isLoading} />}
             </Card.Actions>
           </Card>
         )}
         {/* There is no applying tutor */}
-        {statusles <= 2 && (
+        {statusles == 1 && (
           <Card style={{marginTop: dimens.standard}}>
             <Card.Title
               title="Menunggu Ada Tutor"
