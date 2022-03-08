@@ -46,7 +46,10 @@ export const AddLes: FC<ScreenProps> = ({navigation}) => {
   const [listLes, setListLes] = useState([]);
   const [listMurid, setListMurid] = useState([]);
   const [Open, setOpen] = useState(false);
-  const [date, setDate] = useState(new Date());
+  const today = new Date();
+  today.setDate(today.getDate() + 1);
+  const [biaya, setBiaya] = useState(0);
+  const [date, setDate] = useState(today);
   const [time, setTime] = useState(new Date());
   const [openTime, setOpenTime] = useState(false);
   const [selectedDays, setSelectedDays] = useState<any>([]);
@@ -80,18 +83,16 @@ export const AddLes: FC<ScreenProps> = ({navigation}) => {
     };
   }, []);
   const onSubmit: SubmitHandler<FormDataType> = async data => {
-    console.log(data);
-    // console.log(data)
     let hari = selectedDays.toString();
     data.hari = hari;
-    // data.hari = hari.replace(/[{}]/g, '');
-    data.jamles = time.getHours() + ':' + time.getMinutes();
+    // data.jamles = time.getHours() + ':' + time.getMinutes();
     listLes.find((i: any) =>
       i.paket == data.idpaket ? (data.idpaket = i.idpaket) : null,
     );
     listMurid.find((i: any) =>
       i.siswa == data.idsiswa ? (data.idsiswa = i.idsiswa) : null,
     );
+    console.log(data);
 
     const {success} = await apiPost({
       url: 'les/daftar',
@@ -149,8 +150,8 @@ export const AddLes: FC<ScreenProps> = ({navigation}) => {
                   error={!!errors.idpaket}
                   errorMessage="Harap pilih les yang akan diikuti"
                   onSelect={item => {
+                    setBiaya(item.biaya);
                     onChange(item.paket);
-                    // setBiaya(item.biaya);
                   }}
                   listData={listLes}
                   keyMenuTitle="paket"
@@ -202,6 +203,7 @@ export const AddLes: FC<ScreenProps> = ({navigation}) => {
               </View>
             )}
             name="tglles"
+            defaultValue={today.toISOString().slice(0, 10)}
           />
           {/* Input Time */}
           <Controller
@@ -245,6 +247,7 @@ export const AddLes: FC<ScreenProps> = ({navigation}) => {
               </View>
             )}
             name="jamles"
+            defaultValue={today.getHours() + ':' + today.getMinutes()}
           />
           {/* hari */}
           <Controller
@@ -292,9 +295,9 @@ export const AddLes: FC<ScreenProps> = ({navigation}) => {
 
           {/* Total Price */}
           <TotalPrice
-            hargaLes="Rp 100.000"
-            hargaDaftar="Rp 150.000"
-            total="Rp 350.000"
+            hargaLes={biaya.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')}
+            hargaDaftar="Rp 150,000.00"
+            total="Rp 350,000"
           />
         </View>
       </SafeAreaView>
