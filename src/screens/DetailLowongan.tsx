@@ -8,11 +8,18 @@ import {
   ScrollView,
   View,
 } from 'react-native';
-import {Card, Divider, Paragraph, Button, Caption} from 'react-native-paper';
+import {
+  Card,
+  Divider,
+  Paragraph,
+  Button,
+  Caption,
+  Text,
+} from 'react-native-paper';
 import {StackScreenProps} from '@react-navigation/stack';
 import {AppStackParamList} from '@routes/RouteTypes';
 import dayjs from 'dayjs';
-import {apiPost} from '../utils/api';
+import {apiGet, apiPost} from '../utils/api';
 
 type ScreenProps = StackScreenProps<AppStackParamList, 'DetailLowongan'>;
 export const DetailLowongan: FC<ScreenProps> = ({route, navigation}) => {
@@ -54,34 +61,11 @@ export const DetailLowongan: FC<ScreenProps> = ({route, navigation}) => {
   ];
   useEffect(() => {
     const getInitialData = async () => {
-      const date = new Date(item.tglles);
-      const hari = item.hari;
-      const jmlh = item.jumlah_pertemuan;
-      let year = date.getFullYear();
-      let month = date.getMonth() - 1;
-      let tgl = date.getDate();
-      let Days = hari.replace(/[{}]/g, '');
-      Days = Days.split(','); //['MINGGU',KAMIS,SABTU]
-      let DayArray = [];
-      let DateArray = [];
-      console.log(Days);
-      for (let i = 0; i < days.length; i++) {
-        for (let y = 0; y < Days.length; y++) {
-          if (Days[y] == days[i].name) {
-            DayArray.push(Number(days[i].id));
-          }
-        }
-      }
-      // [{"id": "00", }, {"id": "02"}, {"id": "04"]
-      let initialDays = new Date(year, month, tgl).getDay();
-      let sum = 0;
-      // 1.initial date
-      // 2 iniyiad; tgl
-      //3,
-      // for (let i = 0; i < DayArray.length; i++) {
-      // for (let j = 0; j < jmlh; j++) {}
+      // console.log(item.idsiswa);
+      // console.log(item.hari);
+      // if (item.hari != null) {
+      //   setJadwalLes(item.hari);
       // }
-      // setJadwalLes(DateArray);
     };
     getInitialData();
     return () => {
@@ -114,23 +98,69 @@ export const DetailLowongan: FC<ScreenProps> = ({route, navigation}) => {
               label="Paket"
               value={item.jumlah_pertemuan + ' Pertemuan'}
             />
-            <CardLabelValue label="Gaji Tutor" value={item.gaji} />
+            <CardLabelValue
+              label="Gaji Tutor"
+              value={item.gaji.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')}
+            />
             <CardLabelMultipleValue label="Jadwal Les" value={jadwalLes} />
-            <Button
-              style={{marginTop: dimens.standard}}
-              onPress={async () => {
-                // const data = new FormData();
-                const newdata = {};
-                const {success} = await apiPost({
-                  url: '/lowongan/ajuan/' + item.idlowongan,
-                  payload: newdata,
-                });
-                if (success) {
-                  navigation.navigate<any>('MainTabs');
-                }
-              }}>
-              Ambil Lowongan
-            </Button>
+            {item.statuslowongan == 0 && (
+              <Button
+                style={{marginTop: dimens.standard}}
+                onPress={async () => {
+                  // const data = new FormData();
+                  const newdata = {};
+                  const {success} = await apiPost({
+                    url: '/lowongan/ajuan/' + item.idlowongan,
+                    payload: newdata,
+                  });
+                  if (success) {
+                    navigation.navigate<any>('MainTabs');
+                  }
+                }}>
+                Ambil Lowongan
+              </Button>
+            )}
+            {item.statuslowongan == 1 && (
+              <Text
+                style={{
+                  textAlign: 'center',
+                  color: color.green_500,
+                  marginTop: dimens.standard,
+                }}>
+                Menunggu Konfirmasi Wali Murid
+              </Text>
+            )}
+            {item.statuslowongan == 2 && (
+              <Text
+                style={{
+                  textAlign: 'center',
+                  color: color.green_500,
+                  marginTop: dimens.standard,
+                }}>
+                Lowongan Telah Diambil
+              </Text>
+            )}
+            {item.statuslowongan == 3 && (
+              <Text
+                style={{
+                  textAlign: 'center',
+                  color: color.green_500,
+                  marginTop: dimens.standard,
+                }}>
+                Lowongan Telah Dikonfirmasi
+              </Text>
+            )}
+            {item.statuslowongan == 4 && (
+              <Text
+                style={{
+                  textAlign: 'center',
+                  color: color.green_500,
+                  marginTop: dimens.standard,
+                }}>
+                Lowongan Telah Dibatalkan
+              </Text>
+            )}
+
             <Gap y={dimens.standard} />
           </Card.Content>
         </Card>

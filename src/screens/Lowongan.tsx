@@ -15,6 +15,7 @@ type ScreenProps = CompositeScreenProps<
 
 export const Lowongan: FC<ScreenProps> = ({navigation}) => {
   const [lowonganList, setLowonganList] = useState([]);
+  const [page, setPage] = useState(1);
   useEffect(() => {
     const getInitialData = async () => {
       const tutor = await apiGet({url: '/guru/profile'});
@@ -22,9 +23,10 @@ export const Lowongan: FC<ScreenProps> = ({navigation}) => {
         url:
           '/lowongan/' +
           tutor.data.idkecamatan +
-          '?page=1&cari=&orderBy=idlowongan&sort=ASC',
+          '?page=' +
+          page +
+          '&cari=&orderBy=idlowongan&sort=ASC',
       });
-      console.log(lowonganKabupaten.data);
       setLowonganList(lowonganKabupaten.data);
     };
 
@@ -48,7 +50,9 @@ export const Lowongan: FC<ScreenProps> = ({navigation}) => {
               key={index}
               title={'' + item.paket + ' ' + item.jenjang}
               subtitle={`${item.jumlah_pertemuan} pertemuan `}
-              additionalText={`Rp. ${item.gaji}`}
+              additionalText={
+                'Rp.' + item.gaji.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')
+              }
               onPress={() => {
                 navigation.navigate<any>('DetailLowongan', {item});
               }}
