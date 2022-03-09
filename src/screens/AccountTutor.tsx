@@ -102,6 +102,8 @@ export const AccountTutor: FC<ScreenProps> = () => {
     const getInitialData = async () => {
       const provinsi = await getListDaerah({type: 'provinsi'});
       setListDaerah(prev => ({...prev, provinsi}));
+    };
+    const getPersonalData = async () => {
       const OldData = await apiGet({url: '/guru/profile'});
       if (OldData.data.idprovinsi != null && OldData.data.idkecamatan != null) {
         let kota = await getListDaerah({
@@ -116,12 +118,13 @@ export const AccountTutor: FC<ScreenProps> = () => {
           type: 'desa',
           idParent: OldData.data.idkecamatan,
         });
-        setListDaerah(prev => ({
-          ...prev,
+        let provinsi = await getListDaerah({type: 'provinsi'});
+        setListDaerah({
+          provinsi: provinsi,
           kota: kota,
           kecamatan: kecamatan,
           desa: desa,
-        }));
+        });
         let defaultProvinsi = await provinsi.find(
           (i: any) => i.id == OldData.data.idprovinsi,
         )?.name;
@@ -146,6 +149,7 @@ export const AccountTutor: FC<ScreenProps> = () => {
     };
 
     getInitialData();
+    getPersonalData();
     return () => {
       // cancelApiRequest();
     };
@@ -190,6 +194,9 @@ export const AccountTutor: FC<ScreenProps> = () => {
       payload: newCV,
     });
     console.log(success);
+    if (success) {
+      setModalVisible(true);
+    }
   };
   return (
     <SafeAreaView style={styles.container}>

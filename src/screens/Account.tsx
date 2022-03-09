@@ -73,8 +73,10 @@ export const Account: FC<ScreenProps> = () => {
     const getInitialData = async () => {
       const provinsi = await getListDaerah({type: 'provinsi'});
       setListDaerah(prev => ({...prev, provinsi}));
+    };
+    const getPersonalData = async () => {
       const OldData = await apiGet({url: 'wali/profile'});
-      if (OldData.data.idprovinsi != null && OldData.data.idkecamatan != null) {
+      if (OldData.data.idkecamatan != null) {
         let kota = await getListDaerah({
           type: 'kota',
           idParent: OldData.data.idprovinsi,
@@ -87,12 +89,13 @@ export const Account: FC<ScreenProps> = () => {
           type: 'desa',
           idParent: OldData.data.idkecamatan,
         });
-        setListDaerah(prev => ({
-          ...prev,
+        let provinsi = await getListDaerah({type: 'provinsi'});
+        setListDaerah({
+          provinsi: provinsi,
           kota: kota,
           kecamatan: kecamatan,
           desa: desa,
-        }));
+        });
         let defaultProvinsi = await provinsi.find(
           (i: any) => i.id == OldData.data.idprovinsi,
         )?.name;
@@ -117,6 +120,7 @@ export const Account: FC<ScreenProps> = () => {
     };
 
     getInitialData();
+    getPersonalData();
     return () => {
       // cancelApiRequest();
     };
