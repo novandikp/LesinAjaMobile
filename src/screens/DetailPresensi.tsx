@@ -24,13 +24,19 @@ export const DetailPresensi: FC<ScreenProps> = ({navigation, route}) => {
   const [ratingColor, setRatingColor] = useState(undefined);
   const date = new Date();
   const [Open, setOpen] = useState(false);
-
+  const [disabledAbsen, setDisabledAbsen] = useState(false);
   const handleRating = async (count: number) => {
     setRatingCount(count);
   };
 
   useEffect(() => {
-    console.log(data);
+    const getInitialData = () => {
+      if (data.flagabsen == 1) {
+        setDisabledAbsen(true);
+      }
+    };
+    getInitialData();
+    return;
   }, [ratingCount, ratingColor]);
 
   return (
@@ -65,11 +71,13 @@ export const DetailPresensi: FC<ScreenProps> = ({navigation, route}) => {
             <CardKeyValue keyFlex={10} keyName="Tutor" value={data.guru} />
             {/* <Paragraph style={styles.presenceStatus}>Selesai</Paragraph> */}
             <Button
+              disabled={disabledAbsen}
               style={{marginTop: dimens.standard}}
               onPress={async () => {
+                const newData = {};
                 const {success} = await apiPost({
                   url: '/les/absen/' + data.idabsen,
-                  payload: {},
+                  payload: newData,
                 });
                 if (success) {
                   navigation.navigate<any>('MainTabs');
@@ -94,6 +102,7 @@ export const DetailPresensi: FC<ScreenProps> = ({navigation, route}) => {
             />
             <CardKeyValue keyFlex={10} keyName="Tutor" value={data.guru} />
             <Button
+              disabled={disabledAbsen}
               style={{marginTop: dimens.standard}}
               icon="pencil-outline"
               onPress={() => {
