@@ -33,9 +33,10 @@ type LesType = {
   pertemuanSelesai: number | null;
   tglMulai: number | null;
   tglSelesai: number | null;
-  tutor: string | null;
-  sudahBayar: boolean;
-  menungguTutor: boolean;
+  statusles: number | null;
+  // tutor: string | null;
+  // sudahBayar: boolean;
+  // menungguTutor: boolean;
 };
 
 type ScreenProps = CompositeScreenProps<
@@ -75,12 +76,11 @@ export const Les: FC<ScreenProps> = ({navigation}) => {
       <StatusBar backgroundColor={color.bg_grey} barStyle="dark-content" />
       <Header
         noBackButton
-        withFilter
+        // withFilter
         title="Daftar Les"
-        onPressFilter={() => {
-          // alert('Belum jadi');
-          console.log('belum jadi');
-        }}
+        // onPressFilter={() => {
+        //   // alert('Belum jadi');
+        // }}
       />
 
       <ScrollView contentContainerStyle={styles.scrollContainer}>
@@ -131,16 +131,21 @@ const StudentItem: FC<{item: LesType; onPress: () => void}> = ({
     : '';
 
   const statusData = () => {
-    if (item.menungguTutor) {
+    if (item.statusles == 0) {
       return {text: 'Menunggu ada tutor', bgColor: '#93C5FD'};
     }
-    if (!item.tutor) {
-      return {text: 'Belum pilih tutor', bgColor: '#FBBF24'};
-    }
-    if (!item.sudahBayar) {
+    // if (item.statusles === 1) {
+    //   return {text: 'Belum pilih tutor', bgColor: '#FBBF24'};
+    // }
+    if (item.statusles === 2) {
       return {text: 'Belum bayar les', bgColor: '#F87171'};
     }
-
+    if (item.statusles === 3) {
+      return {text: 'Menunggu konfirmasi les', bgColor: color.bg_grey};
+    }
+    if (item.statusles === 4) {
+      return {text: 'Les telah berjalan', bgColor: color.green_500};
+    }
     return null;
   };
 
@@ -153,7 +158,7 @@ const StudentItem: FC<{item: LesType; onPress: () => void}> = ({
 
       <Card.Content>
         <CardKeyValue keyName="Siswa" value={item.siswa} />
-        {item.tutor && <CardKeyValue keyName="Tutor" value={item.tutor} />}
+        {/* {item.tutor && <CardKeyValue keyName="Tutor" value={item.tutor} />} */}
         {tglMulai && tglSelesai && (
           <>
             <CardKeyValue keyName="Tgl Mulai" value={tglMulai} />

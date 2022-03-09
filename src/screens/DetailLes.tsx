@@ -159,7 +159,7 @@ export const DetailLes: FC<ScreenProps> = ({navigation, route}) => {
           </Card>
         )}
         {/* There is no applying tutor */}
-        {statusles == 1 && (
+        {statusles == 0 && (
           <Card style={{marginTop: dimens.standard}}>
             <Card.Title
               title="Menunggu Ada Tutor"
@@ -172,7 +172,7 @@ export const DetailLes: FC<ScreenProps> = ({navigation, route}) => {
         )}
 
         {/* Choose Tutor */}
-        {statusles <= 1 && (
+        {statusles == 0 && (
           <Card style={{marginTop: dimens.standard}}>
             <Card.Title
               style={{width: '100%'}}
