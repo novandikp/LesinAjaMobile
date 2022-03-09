@@ -102,7 +102,6 @@ export const AccountTutor: FC<ScreenProps> = () => {
     const getInitialData = async () => {
       const provinsi = await getListDaerah({type: 'provinsi'});
       setListDaerah(prev => ({...prev, provinsi}));
-
       const OldData = await apiGet({url: '/guru/profile'});
       if (OldData.data.idprovinsi != null && OldData.data.idkecamatan != null) {
         let kota = await getListDaerah({
@@ -278,7 +277,7 @@ export const AccountTutor: FC<ScreenProps> = () => {
                     />
                   )}
                   name="idprovinsi"
-                  defaultValue={''}
+                  defaultValue={selectedDaerah.provinsi}
                   // )}
                 />
               )}
@@ -315,7 +314,7 @@ export const AccountTutor: FC<ScreenProps> = () => {
                     />
                   )}
                   name="idkabupaten"
-                  defaultValue={''}
+                  defaultValue={selectedDaerah.kota}
 
                   // }
                 />
@@ -352,7 +351,7 @@ export const AccountTutor: FC<ScreenProps> = () => {
                     />
                   )}
                   name="idkecamatan"
-                  defaultValue={''}
+                  defaultValue={selectedDaerah.kecamatan}
                 />
               )}
 
@@ -383,7 +382,7 @@ export const AccountTutor: FC<ScreenProps> = () => {
                     />
                   )}
                   name="iddesa"
-                  defaultValue={''}
+                  defaultValue={selectedDaerah.desa}
                 />
               )}
               {/* Alamat */}

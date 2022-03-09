@@ -123,7 +123,6 @@ export const Account: FC<ScreenProps> = () => {
   }, []);
 
   const onSubmit: SubmitHandler<FormDataType> = async data => {
-    console.log(data.iddesa);
     listDaerah.provinsi.find((i: any) =>
       i.name == data.idprovinsi ? (data.idprovinsi = i.id) : null,
     );
@@ -195,7 +194,6 @@ export const Account: FC<ScreenProps> = () => {
                   />
                 )}
                 name="telp"
-                // defaultValue=""
                 defaultValue={oldData == null ? ' ' : oldData.telp}
               />
 
@@ -232,7 +230,7 @@ export const Account: FC<ScreenProps> = () => {
                     />
                   )}
                   name="idprovinsi"
-                  defaultValue={''}
+                  defaultValue={selectedDaerah.provinsi}
                 />
               )}
 
@@ -268,9 +266,7 @@ export const Account: FC<ScreenProps> = () => {
                     />
                   )}
                   name="idkabupaten"
-                  defaultValue={''}
-
-                  // }
+                  defaultValue={selectedDaerah.kota}
                 />
               )}
               {/* kecamatan */}
@@ -305,7 +301,7 @@ export const Account: FC<ScreenProps> = () => {
                     />
                   )}
                   name="idkecamatan"
-                  defaultValue={''}
+                  defaultValue={selectedDaerah.kecamatan}
                 />
               )}
 
@@ -336,7 +332,7 @@ export const Account: FC<ScreenProps> = () => {
                     />
                   )}
                   name="iddesa"
-                  defaultValue={''}
+                  defaultValue={selectedDaerah.desa}
                 />
               )}
               {/* Alamat */}
