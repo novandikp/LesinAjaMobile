@@ -290,8 +290,8 @@ export const AddLes: FC<ScreenProps> = ({navigation}) => {
                 value={value}
                 onChange={onChange}
                 radioItems={[
-                  {text: 'Laki-laki', value: 'laki-laki'},
-                  {text: 'Perempuan', value: 'perempuan'},
+                  {text: 'Pria', value: 'Pria'},
+                  {text: 'Wanita', value: 'Wanita'},
                   {text: 'Bebas', value: 'bebas'},
                 ]}
                 error={!!errors.preferensiTutor}

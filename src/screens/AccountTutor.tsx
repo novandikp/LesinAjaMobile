@@ -50,7 +50,7 @@ type ScreenProps = StackScreenProps<AppStackParamList, 'Account'>;
 
 export const AccountTutor: FC<ScreenProps> = () => {
   const listJenis = [
-    {id: '00', name: 'Perempuan'},
+    {id: '00', name: 'Wanita'},
     {id: '01', name: 'Pria'},
   ];
   const listBank = [
