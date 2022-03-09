@@ -1,7 +1,16 @@
 import React, {FC, useState, useEffect} from 'react';
 import {Header, NestedCard, OneLineInfo} from '@components';
 import {color, dimens} from '@constants';
-import {SafeAreaView, StatusBar, StyleSheet, ScrollView} from 'react-native';
+import {
+  SafeAreaView,
+  StatusBar,
+  StyleSheet,
+  ScrollView,
+  View,
+} from 'react-native';
+import {Headline, Subheading} from 'react-native-paper';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+
 import {AppStackParamList, MainTabParamList} from '@routes/RouteTypes';
 import {StackScreenProps} from '@react-navigation/stack';
 import {CompositeScreenProps} from '@react-navigation/native';
@@ -14,27 +23,31 @@ type ScreenProps = CompositeScreenProps<
 >;
 
 export const Lowongan: FC<ScreenProps> = ({navigation}) => {
-  const [lowonganList, setLowonganList] = useState([]);
+  const [lowonganList, setLowonganList] = useState<any>([]);
   const [page, setPage] = useState(1);
   useEffect(() => {
     const getInitialData = async () => {
       const tutor = await apiGet({url: '/guru/profile'});
-      const lowonganKabupaten = await apiGet({
-        url:
-          '/lowongan/' +
-          tutor.data.idkecamatan +
-          '?page=' +
-          page +
-          '&cari=&orderBy=idlowongan&sort=ASC',
-      });
-      setLowonganList(lowonganKabupaten.data);
+      if (tutor.data.idkecamatan != null) {
+        const lowonganKabupaten = await apiGet({
+          url:
+            '/lowongan/' +
+            tutor.data.idkecamatan +
+            '?page=' +
+            page +
+            '&cari=&orderBy=idlowongan&sort=ASC',
+        });
+        setLowonganList(lowonganKabupaten.data);
+      } else if (tutor.data.idkecamatan == null) {
+        setLowonganList(null);
+      }
     };
 
     getInitialData();
     return () => {
       // cancelApiRequest();
     };
-  }, [lowonganList]);
+  }, []);
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar backgroundColor={color.bg_grey} barStyle="dark-content" />
@@ -43,22 +56,65 @@ export const Lowongan: FC<ScreenProps> = ({navigation}) => {
 
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         <OneLineInfo info="Klik item untuk melihat detail" />
-
-        {lowonganList.map((item: any, index: number) => {
-          return (
-            <NestedCard
-              key={index}
-              title={'' + item.paket + ' ' + item.jenjang}
-              subtitle={`${item.jumlah_pertemuan} pertemuan `}
-              additionalText={
-                'Rp.' + item.gaji.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')
-              }
-              onPress={() => {
-                navigation.navigate<any>('DetailLowongan', {item});
-              }}
+        {lowonganList != null ? (
+          lowonganList.map((item: any, index: number) => {
+            return (
+              <NestedCard
+                key={index}
+                title={'' + item.paket + ' ' + item.jenjang}
+                subtitle={`${item.jumlah_pertemuan} pertemuan `}
+                additionalText={
+                  'Rp.' +
+                  item.gaji.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')
+                }
+                onPress={() => {
+                  navigation.navigate<any>('DetailLowongan', {item});
+                }}
+              />
+            );
+          })
+        ) : (
+          <View
+            style={{
+              flex: 1,
+              justifyContent: 'center',
+              alignItems: 'center',
+              paddingBottom: dimens.massive,
+            }}>
+            <MaterialCommunityIcons
+              name="database-remove"
+              size={130}
+              style={{color: 'grey'}}
             />
-          );
-        })}
+
+            <Headline style={{textAlign: 'center', marginTop: dimens.large}}>
+              Belum ada data.
+            </Headline>
+            <Subheading
+              style={{textAlign: 'center', paddingHorizontal: dimens.large}}>
+              Harap isi data diri
+            </Subheading>
+          </View>
+        )}
+        {lowonganList.length == 0 && (
+          <View
+            style={{
+              flex: 1,
+              justifyContent: 'center',
+              alignItems: 'center',
+              paddingBottom: dimens.massive,
+            }}>
+            <MaterialCommunityIcons
+              name="database-remove"
+              size={130}
+              style={{color: 'grey'}}
+            />
+
+            <Headline style={{textAlign: 'center', marginTop: dimens.large}}>
+              Belum ada data.
+            </Headline>
+          </View>
+        )}
       </ScrollView>
     </SafeAreaView>
   );
