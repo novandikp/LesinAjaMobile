@@ -56,6 +56,8 @@ export const AddLes: FC<ScreenProps> = ({navigation}) => {
   const [openTime, setOpenTime] = useState(false);
   const [isModalVisibleDay, setModalVisibleDay] = useState(false);
   const [selectedDays, setSelectedDays] = useState<any>([]);
+  const [isModalVisibleJenjang, setModalVisibleJenjang] = useState(false);
+  const [valueJenjang, setValueJenjang] = useState();
   const [Days, setDays] = useState([
     {id: '00', name: 'MINGGU', status: false},
     {id: '01', name: 'SENIN', status: false},
@@ -64,6 +66,15 @@ export const AddLes: FC<ScreenProps> = ({navigation}) => {
     {id: '04', name: 'KAMIS', status: false},
     {id: '05', name: 'JUMAT', status: false},
     {id: '06', name: 'SABTU', status: false},
+  ]);
+  const [Jenjang, setJenjang] = useState([
+    {id: '00', jenjang: 'PAUD', status: false},
+    {id: '01', jenjang: 'TK', status: false},
+    {id: '02', jenjang: 'SD', status: false},
+    {id: '03', jenjang: 'SMP', status: false},
+    {id: '04', jenjang: 'SMA', status: false},
+    {id: '05', jenjang: 'UMUM', status: false},
+    {id: '06', jenjang: 'AGAMA', status: false},
   ]);
   const {
     control,
@@ -142,25 +153,85 @@ export const AddLes: FC<ScreenProps> = ({navigation}) => {
               control={control}
               rules={{required: true}}
               render={({field: {onChange, value}}) => (
-                <InputChoiceWFilter
-                  toNumber={true}
-                  label="Pilihan Les"
-                  value={value}
-                  error={!!errors.idpaket}
-                  errorMessage="Harap pilih les yang akan diikuti"
-                  onSelect={item => {
-                    setBiaya(item.biaya);
-                    onChange(item.paket);
-                  }}
-                  onIconPress={() => {
-                    console.log('test');
-                    // setModalVisibleJenjang(true);
-                  }}
-                  littleKeyMenuDescription="jenjang"
-                  listData={listLes}
-                  keyMenuTitle="paket"
-                  keyMenuDescription="biaya"
-                />
+                <View>
+                  <InputChoiceWFilter
+                    toNumber={true}
+                    label="Pilihan Les"
+                    value={value}
+                    error={!!errors.idpaket}
+                    errorMessage="Harap pilih les yang akan diikuti"
+                    onSelect={item => {
+                      setBiaya(item.biaya);
+                      onChange(item.paket);
+                    }}
+                    onIconPress={() => {
+                      setModalVisibleJenjang(true);
+                    }}
+                    littleKeyMenuDescription="jenjang"
+                    listData={listLes}
+                    keyMenuTitle="paket"
+                    keyMenuDescription="biaya"
+                  />
+                  <Modal
+                    isVisible={isModalVisibleJenjang}
+                    onBackdropPress={() => setModalVisibleJenjang(false)}>
+                    <Card
+                      style={{
+                        paddingVertical: 15,
+                      }}>
+                      <Text
+                        style={{
+                          fontSize: 22,
+                          paddingVertical: 10,
+                          textAlign: 'center',
+                        }}>
+                        Filter Jenjang Les
+                      </Text>
+                      {/* List Jenjang */}
+                      {Jenjang.map((item: any, index: number) => {
+                        return (
+                          <Checkbox.Item
+                            key={index}
+                            label={item.jenjang}
+                            status={item.status ? 'checked' : 'unchecked'}
+                            onPress={() => {
+                              setJenjang(
+                                Jenjang.map((object: any) => {
+                                  if (object.id == item.id) {
+                                    setValueJenjang(item.jenjang);
+                                    if (item.status == true) {
+                                      return {...object, status: !item.status};
+                                    } else {
+                                      return {...object, status: !item.status};
+                                    }
+                                  } else if (object.id != item.id) {
+                                    if (item.status == true) {
+                                      return {...object, status: !item.status};
+                                    } else {
+                                      return {...object, status: item.status};
+                                    }
+                                  }
+                                }),
+                              );
+                            }}
+                          />
+                        );
+                      })}
+                      <Button
+                        onPress={async () => {
+                          const newListLes = await apiGet({
+                            url:
+                              '/paket?page=1&paket&orderBy=biaya&sort=ASC&jenjang=' +
+                              valueJenjang,
+                          });
+                          setListLes(newListLes.data);
+                          setModalVisibleJenjang(false);
+                        }}>
+                        Pilih
+                      </Button>
+                    </Card>
+                  </Modal>
+                </View>
               )}
               name="idpaket"
             />
