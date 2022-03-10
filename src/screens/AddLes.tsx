@@ -4,6 +4,7 @@ import {
   CardKeyValue,
   Header,
   InputChoice,
+  InputChoiceWFilter,
   InputRadio,
 } from '@components';
 import {
@@ -13,26 +14,27 @@ import {
   // master_siswa,
   // PilihanLesType,
 } from '@constants';
-import {TextInput, HelperText} from 'react-native-paper';
+import {TextInput, Text, Button} from 'react-native-paper';
 import {Controller, useForm, SubmitHandler} from 'react-hook-form';
 import {
   SafeAreaView,
   StatusBar,
   StyleSheet,
   View,
-  // ScrollView,
+  ScrollView,
 } from 'react-native';
 import {
   //Button, Text, TextInput, RadioButton,
   Card,
+  Checkbox,
 } from 'react-native-paper';
+import Modal from 'react-native-modal';
 import {StackScreenProps} from '@react-navigation/stack';
 import {AppStackParamList} from '@routes/RouteTypes';
 import {apiGet, apiPost} from '@utils';
 import {getListLest} from '@utils/getListData';
 import DatePicker from 'react-native-date-picker';
-import MultiSelect from 'react-native-multiple-select';
-// react-native-multiple-select
+// import MultiSelect from 'react-native-multiple-select';
 type FormDataType = {
   idpaket: string;
   idsiswa: string;
@@ -52,16 +54,17 @@ export const AddLes: FC<ScreenProps> = ({navigation}) => {
   const [date, setDate] = useState(today);
   const [time, setTime] = useState(new Date());
   const [openTime, setOpenTime] = useState(false);
+  const [isModalVisibleDay, setModalVisibleDay] = useState(false);
   const [selectedDays, setSelectedDays] = useState<any>([]);
-  const Days = [
-    {id: '00', name: 'MINGGU'},
-    {id: '01', name: 'SENIN'},
-    {id: '02', name: 'SELASA'},
-    {id: '03', name: 'RABU'},
-    {id: '04', name: 'KAMIS'},
-    {id: '05', name: 'JUMAT'},
-    {id: '06', name: 'SABTU'},
-  ];
+  const [Days, setDays] = useState([
+    {id: '00', name: 'MINGGU', status: false},
+    {id: '01', name: 'SENIN', status: false},
+    {id: '02', name: 'SELASA', status: false},
+    {id: '03', name: 'RABU', status: false},
+    {id: '04', name: 'KAMIS', status: false},
+    {id: '05', name: 'JUMAT', status: false},
+    {id: '06', name: 'SABTU', status: false},
+  ]);
   const {
     control,
     handleSubmit,
@@ -81,38 +84,34 @@ export const AddLes: FC<ScreenProps> = ({navigation}) => {
     return () => {
       // cancelApiRequest();
     };
-  }, []);
+  }, [selectedDays]);
   const onSubmit: SubmitHandler<FormDataType> = async data => {
     let hari = selectedDays.toString();
     data.hari = hari;
-    // data.jamles = time.getHours() + ':' + time.getMinutes();
     listLes.find((i: any) =>
       i.paket == data.idpaket ? (data.idpaket = i.idpaket) : null,
     );
     listMurid.find((i: any) =>
       i.siswa == data.idsiswa ? (data.idsiswa = i.idsiswa) : null,
     );
-    console.log(data);
-
     const {success} = await apiPost({
       url: 'les/daftar',
       payload: data,
     });
-    console.log(success);
     if (success) {
       navigation.navigate<any>('MainTabs');
     }
   };
-
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar backgroundColor={color.bg_grey} barStyle="dark-content" />
 
       <Header title="Tambah Les Baru" />
 
-      <SafeAreaView
-        //  contentContainerStyle={{flexGrow: 1}}
-        style={{flex: 1}}>
+      <ScrollView
+        contentContainerStyle={{flexGrow: 1}}
+        // style={{flex: 1}}
+      >
         <View style={{flex: 1, padding: dimens.standard}}>
           {/* pilih siswa */}
           {listMurid && (
@@ -143,7 +142,7 @@ export const AddLes: FC<ScreenProps> = ({navigation}) => {
               control={control}
               rules={{required: true}}
               render={({field: {onChange, value}}) => (
-                <InputChoice
+                <InputChoiceWFilter
                   toNumber={true}
                   label="Pilihan Les"
                   value={value}
@@ -153,6 +152,11 @@ export const AddLes: FC<ScreenProps> = ({navigation}) => {
                     setBiaya(item.biaya);
                     onChange(item.paket);
                   }}
+                  onIconPress={() => {
+                    console.log('test');
+                    // setModalVisibleJenjang(true);
+                  }}
+                  littleKeyMenuDescription="jenjang"
                   listData={listLes}
                   keyMenuTitle="paket"
                   keyMenuDescription="biaya"
@@ -255,29 +259,82 @@ export const AddLes: FC<ScreenProps> = ({navigation}) => {
             rules={{required: true}}
             render={({field: {onChange}}) => (
               <View>
-                <MultiSelect
-                  items={Days}
-                  uniqueKey="name"
-                  onSelectedItemsChange={(item: any) => {
-                    setSelectedDays(item);
-                    onChange(item);
-                  }}
-                  selectedItems={selectedDays}
-                  selectText="Pilih Hari Les"
-                  // fixedHeight={true}
+                <Modal
+                  isVisible={isModalVisibleDay}
+                  onBackdropPress={() => setModalVisibleDay(!isModalVisibleDay)}
+                  onModalHide={() => {
+                    onChange(selectedDays);
+                  }}>
+                  <Card
+                    style={{
+                      paddingVertical: 15,
+                    }}>
+                    <Text
+                      style={{
+                        fontSize: 22,
+                        paddingVertical: 10,
+                        textAlign: 'center',
+                      }}>
+                      Pilih Hari
+                    </Text>
+                    {Days.map((item: any, index: number) => {
+                      return (
+                        <Checkbox.Item
+                          key={index}
+                          label={item.name}
+                          status={item.status ? 'checked' : 'unchecked'}
+                          onPress={() => {
+                            setDays(
+                              Days.map((object: any) => {
+                                if (object.id == item.id) {
+                                  return {...object, status: !item.status};
+                                } else {
+                                  return object;
+                                }
+                              }),
+                            );
+                          }}
+                        />
+                      );
+                    })}
+                    <Button
+                      onPress={async () => {
+                        var selectedItems: string[] = [];
+                        Days.map((object: any) => {
+                          if (object.status == true) {
+                            selectedItems.push(object.name);
+                          }
+                        });
+                        setSelectedDays(selectedItems.toString());
+                        setModalVisibleDay(!isModalVisibleDay);
+                      }}>
+                      Pilih hari les
+                    </Button>
+                  </Card>
+                </Modal>
+                <TextInput
+                  style={{backgroundColor: 'white', marginBottom: 10}}
+                  placeholder="Pilih hari les"
+                  error={!!errors.hari}
+                  label="Pilih hari les"
+                  value={selectedDays.toString()}
+                  selectTextOnFocus={false}
+                  editable={false}
+                  right={
+                    <TextInput.Icon
+                      name="calendar"
+                      onPress={async () => {
+                        // const openmodal = () =>
+                        setModalVisibleDay(!isModalVisibleDay);
+                        // openmodal();
+                      }}
+                    />
+                  }
                 />
-
-                {!!errors.hari && (
-                  <HelperText
-                    style={{paddingLeft: 0, fontSize: dimens.medium_14}}
-                    type="error"
-                    visible={true}>
-                    Harap pilih hari les
-                  </HelperText>
-                )}
               </View>
             )}
             name="hari"
+            defaultValue={selectedDays.toString()}
           />
 
           {/* Jenis kelamin tutor */}
@@ -302,14 +359,14 @@ export const AddLes: FC<ScreenProps> = ({navigation}) => {
             defaultValue={''}
           />
 
-          {/* Total Price */}
+          {/* Total Psrice */}
           <TotalPrice
             hargaLes={biaya.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')}
-            hargaDaftar="Rp 150,000.00"
-            total="Rp 350,000"
+            // hargaDaftar="Rp 150,000.00"
+            total={biaya.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')}
           />
         </View>
-      </SafeAreaView>
+      </ScrollView>
 
       {/* Submit button */}
       <ButtonFormSubmit text="Kirim" onPress={handleSubmit(onSubmit)} />

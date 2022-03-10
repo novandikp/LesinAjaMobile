@@ -5730,13 +5730,6 @@ react-native-modal@^13.0.1:
     prop-types "^15.6.2"
     react-native-animatable "1.3.3"
 
-react-native-multiple-select@^0.5.7:
-  version "0.5.7"
-  resolved "https://registry.npmjs.org/react-native-multiple-select/-/react-native-multiple-select-0.5.7.tgz"
-  integrity sha512-scVCrOKwGacOYspWa8aINoe+cmMHc5yEMERThUXa04P9VNFWsq9NoQEwLKI+cCXPhe+VMg0+NsoLIhUGTn69fg==
-  dependencies:
-    prop-types "^15.7.2"
-
 react-native-paper@^4.9.2:
   version "4.9.2"
   resolved "https://registry.npmjs.org/react-native-paper/-/react-native-paper-4.9.2.tgz"
