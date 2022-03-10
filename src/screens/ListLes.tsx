@@ -15,54 +15,19 @@ type ScreenProps = CompositeScreenProps<
 
 export const ListLes: FC<ScreenProps> = ({navigation}) => {
   const [lesList, setLesList] = useState([]);
-  // const lesList = [
-  //   {
-  //     mapel: 'Fisika',
-  //     jenjangKelas: 'SMP Kelas 3',
-  //     paket: 'Paket 2',
-  //     wilayah: 'Wilayah 1',
-  //     biaya: '2500000',
-  //     gajiTutor: '200000',
-  //   },
-  //   {
-  //     mapel: 'Gambar Teknik',
-  //     jenjangKelas: 'TK A',
-  //     paket: 'Paket 1',
-  //     wilayah: 'Wilayah 1',
-  //     biaya: '2500000',
-  //     gajiTutor: '200000',
-  //   },
-  //   {
-  //     mapel: 'Matematika',
-  //     jenjangKelas: 'SMP Kelas 1',
-  //     paket: 'Paket 1',
-  //     wilayah: 'Wilayah 2',
-  //     biaya: '2500000',
-  //     gajiTutor: '200000',
-  //   },
-  //   {
-  //     mapel: 'Bahasa Inggris',
-  //     jenjangKelas: 'SMA Kelas 3',
-  //     paket: 'Paket 2',
-  //     wilayah: 'Wilayah 1',
-  //     biaya: '2500000',
-  //     gajiTutor: '200000',
-  //   },
-  // ];
   useEffect(() => {
     const getInitialData = async () => {
       const data = await apiGet({
         url: '/paket?page=1&paket&orderBy=biaya&sort=ASC',
       });
       setLesList(data.data);
-      // console.log(applyingTutor.data);
     };
     getInitialData();
 
     return () => {
       // isActive = false;
     };
-  }, []);
+  }, [lesList]);
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar backgroundColor={color.bg_grey} barStyle="dark-content" />
@@ -82,12 +47,23 @@ export const ListLes: FC<ScreenProps> = ({navigation}) => {
               {/* <Card.Title title={`${item.mapel} ${item.jenjangKelas}`} /> */}
               <Card.Content>
                 <CardKeyValue keyName="Paket" value={item.paket} />
+                <CardKeyValue keyName="Jenjang" value={item.jenjang} />
                 <CardKeyValue
-                  keyName="Jumlah Pertemua"
+                  keyName="Jumlah Pertemuan"
                   value={item.jumlah_pertemuan}
                 />
-                <CardKeyValue keyName="Biaya" value={item.biaya} />
-                <CardKeyValue keyName="Gaji Tutor" value={item.gaji} />
+                <CardKeyValue
+                  keyName="Biaya"
+                  value={item.biaya
+                    .toFixed(2)
+                    .replace(/\d(?=(\d{3})+\.)/g, '$&,')}
+                />
+                <CardKeyValue
+                  keyName="Gaji Tutor"
+                  value={item.gaji
+                    .toFixed(2)
+                    .replace(/\d(?=(\d{3})+\.)/g, '$&,')}
+                />
               </Card.Content>
               <Card.Actions>
                 <Button

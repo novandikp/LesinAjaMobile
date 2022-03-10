@@ -1,5 +1,5 @@
-import React, {FC} from 'react';
-import {ButtonFormSubmit, Header, InputText} from '@components';
+import React, {FC, useEffect, useState} from 'react';
+import {ButtonFormSubmit, Header, InputChoice, InputText} from '@components';
 import {color, dimens} from '@constants';
 import {Controller, SubmitHandler, useForm} from 'react-hook-form';
 import {
@@ -13,12 +13,10 @@ import {StackScreenProps} from '@react-navigation/stack';
 import {AdminDrawerParamList, AppStackParamList} from '@routes/RouteTypes';
 import {CompositeScreenProps} from '@react-navigation/native';
 import {MaterialBottomTabScreenProps} from '@react-navigation/material-bottom-tabs';
-import {apiPost} from '@utils';
+import {apiGet, apiPost} from '@utils';
 type FormDataType = {
-  // mapel: string;
-  // jenjangKelas: string;
   paket: string;
-  // wilayah: string;
+  jenjang: string;
   jumlah_pertemuan: string;
   biaya: string;
   gaji: string;
@@ -36,11 +34,28 @@ export const EditListLes: FC<ScreenProps> = ({
     control,
     handleSubmit,
     formState: {errors, isSubmitting},
-    setValue,
+    // setValue,
   } = useForm<FormDataType>({mode: 'onChange'});
   const {data}: any = route.params;
   const idpaket = data != null ? data.idpaket : null;
   const paket = !data;
+  const [listJenjang, setListJenjang] = useState([]);
+  const [selectedJenjang, setSelectedJenjang] = useState({jenjang: ''});
+  useEffect(() => {
+    const getInitialData = async () => {
+      const jenjang = await apiGet({url: '/paket/jenjang'});
+      setListJenjang(jenjang.data);
+      if (data) {
+        setSelectedJenjang({
+          jenjang: data.jenjang,
+        });
+      }
+    };
+    getInitialData();
+    return () => {
+      // isActive = false;
+    };
+  }, []);
   const onSubmit: SubmitHandler<FormDataType> = async data => {
     if (!paket) {
       const success = await apiPost({
@@ -69,46 +84,6 @@ export const EditListLes: FC<ScreenProps> = ({
 
       <ScrollView contentContainerStyle={{flexGrow: 1}}>
         <View style={{flex: 1, padding: dimens.standard}}>
-          {/* Mapel */}
-          {/* <Controller
-            control={control}
-            rules={{required: true}}
-            render={({field: {onChange, onBlur, value}}) => (
-              <InputText
-                autoCapitalize="words"
-                placeholder="Masukkan nama mapel"
-                label="Mapel"
-                onBlur={onBlur}
-                onChangeText={onChange}
-                value={value}
-                error={!!errors.mapel}
-                errorMessage="Mapel harus diisi"
-              />
-            )}
-            name="mapel"
-            defaultValue={data && data.mapel}
-          /> */}
-
-          {/* Jenjang Kelas */}
-          {/* <Controller
-            control={control}
-            rules={{required: true}}
-            render={({field: {onChange, onBlur, value}}) => (
-              <InputText
-                autoCapitalize="words"
-                placeholder="Masukkan nama jenjang kelas"
-                label="Jenjang Kelas"
-                onBlur={onBlur}
-                onChangeText={onChange}
-                value={value}
-                error={!!errors.jenjangKelas}
-                errorMessage="Jenjang kelas harus diisi"
-              />
-            )}
-            name="jenjangKelas"
-            defaultValue={data && data.jenjangKelas}
-          /> */}
-
           {/* Paket */}
           <Controller
             control={control}
@@ -128,26 +103,28 @@ export const EditListLes: FC<ScreenProps> = ({
             name="paket"
             defaultValue={data && data.paket}
           />
-
-          {/* Wilayah */}
-          {/* <Controller
+          {/* Jenjang */}
+          <Controller
             control={control}
             rules={{required: true}}
-            render={({field: {onChange, onBlur, value}}) => (
-              <InputText
-                autoCapitalize="words"
-                placeholder="Masukkan nama wilayah"
-                label="Wilayah"
-                onBlur={onBlur}
-                onChangeText={onChange}
-                value={value}
-                error={!!errors.wilayah}
-                errorMessage="Wilayah harus diisi"
+            render={({field: {onChange}}) => (
+              <InputChoice
+                label="Jenjang"
+                toNumber={false}
+                listData={listJenjang}
+                keyMenuTitle={'jenjang'}
+                onSelect={item => {
+                  setSelectedJenjang({
+                    jenjang: item.jenjang,
+                  });
+                  onChange(item.jenjang);
+                }}
+                value={selectedJenjang.jenjang}
               />
             )}
-            name="wilayah"
-            defaultValue={data && data.wilayah}
-          /> */}
+            name="jenjang"
+            defaultValue={selectedJenjang.jenjang}
+          />
           {/* jumlah pertemuan */}
           <Controller
             control={control}
