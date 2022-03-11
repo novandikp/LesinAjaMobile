@@ -1,4 +1,4 @@
-import React, {FC, useState, useEffect} from 'react';
+import React, {FC, useState, useEffect, useRef} from 'react';
 import {Header, OneLineInfo, FABList, Gap} from '@components';
 import {color, dimens} from '@constants';
 import {
@@ -16,6 +16,8 @@ type ScreenProps = StackScreenProps<AppStackParamList, 'DetailListMaster'>;
 
 export const DetailListMaster: FC<ScreenProps> = ({route, navigation}) => {
   const {detailType}: any = route.params;
+  const componentMounted = useRef(true); // (3) component is mounted
+
   const [data, setData] = useState<any>({
     paket: [],
     jenjangkelas: [],
@@ -25,84 +27,16 @@ export const DetailListMaster: FC<ScreenProps> = ({route, navigation}) => {
       const paket = await apiGet({
         url: '/paket?page=1&paket&orderBy=biaya&sort=ASC',
       });
-      setData((prev: any) => ({...prev, paket: paket.data}));
-      // setLesList(data.data);
-      // console.log(applyingTutor.data);
+      if (componentMounted.current) {
+        setData((prev: any) => ({...prev, paket: paket.data}));
+      }
     };
     getInitialData();
-    // console.log(detailType.replace(/\s+/g, '').toLowerCase());
-    // data[paket].map();
     return () => {
+      componentMounted.current = false;
       // isActive = false;
     };
   }, []);
-  // const data: any = {
-  //   jenjangkelas: [
-  //     {
-  //       item: 'TK A',
-  //     },
-  //     {
-  //       item: 'TK B',
-  //     },
-  //     {
-  //       item: 'SMP Kelas 7',
-  //     },
-  //     {
-  //       item: 'SMP Kelas 8',
-  //     },
-  //     {
-  //       item: 'SMP Kelas 9',
-  //     },
-  //   ],
-  //   mapel: [
-  //     {
-  //       item: 'IPS',
-  //     },
-  //     {
-  //       item: 'IPA',
-  //     },
-  //     {
-  //       item: 'Mengaji',
-  //     },
-  //     {
-  //       item: 'Gambar Teknik',
-  //     },
-  //     {
-  //       item: 'Bahasa Inggris',
-  //     },
-  //   ],
-  //   paket: [
-  //     {
-  //       item: 'Paket 1',
-  //       jumlahPertemuan: '4',
-  //     },
-  //     {
-  //       item: 'Paket 2',
-  //       jumlahPertemuan: '8',
-  //     },
-  //     {
-  //       item: 'Paket 3',
-  //       jumlahPertemuan: '9',
-  //     },
-  //   ],
-  //   wilayah: [
-  //     {
-  //       item: 'Wilayah 1',
-  //       biaya: '230000',
-  //       wilayah: ['jawa timur', 'jawa tengah', 'jawa barat'],
-  //     },
-  //     {
-  //       item: 'Wilayah 2',
-  //       biaya: '250000',
-  //       wilayah: ['jakarta', 'banten', 'serang'],
-  //     },
-  //     {
-  //       item: 'Wilayah 3',
-  //       biaya: '200000',
-  //       wilayah: ['bali', 'madura', 'lombok', 'surakarta'],
-  //     },
-  //   ],
-  // };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -119,12 +53,21 @@ export const DetailListMaster: FC<ScreenProps> = ({route, navigation}) => {
             <ScrollView horizontal>
               <DataTable>
                 <DataTable.Header>
-                  <DataTable.Title style={styles.tableCell}>
+                  <DataTable.Title
+                    style={{
+                      minWidth: 250,
+                      marginRight: 10,
+                    }}>
                     Item
                   </DataTable.Title>
                   {detailType == 'Paket' && (
                     <DataTable.Title style={styles.tableCell}>
                       Jumlah Pertemuan
+                    </DataTable.Title>
+                  )}
+                  {detailType == 'Paket' && (
+                    <DataTable.Title style={styles.tableCell}>
+                      Jenjang
                     </DataTable.Title>
                   )}
                   {detailType == 'Wilayah' && (
@@ -168,12 +111,9 @@ export const DetailListMaster: FC<ScreenProps> = ({route, navigation}) => {
       {/* Add button */}
       <FABList
         label="Tambah Data"
-        onPress={() =>
-          // navigation.navigate<any>('EditListMaster', {
-          // detailType: detailType,
-          // })
-          navigation.navigate<any>('EditListLes', {data: null})
-        }
+        onPress={() => {
+          navigation.navigate<any>('EditListLes', {data: null});
+        }}
       />
     </SafeAreaView>
   );
@@ -186,11 +126,20 @@ const ItemRow: FC<{item: any; itemType: string; onPress: () => void}> = ({
 }) => {
   return (
     <DataTable.Row>
-      <DataTable.Cell style={styles.tableCell}>{item.paket}</DataTable.Cell>
+      <DataTable.Cell style={{minWidth: 250, marginRight: 10}}>
+        {item.paket}
+      </DataTable.Cell>
       {itemType == 'Paket' && (
-        <DataTable.Cell style={styles.tableCell}>
+        <DataTable.Cell
+          style={{
+            minWidth: 100,
+            marginHorizontal: 10,
+          }}>
           {item.jumlah_pertemuan}
         </DataTable.Cell>
+      )}
+      {itemType == 'Paket' && (
+        <DataTable.Cell style={styles.tableCell}>{item.jenjang}</DataTable.Cell>
       )}
       {itemType == 'Wilayah' && (
         <>
