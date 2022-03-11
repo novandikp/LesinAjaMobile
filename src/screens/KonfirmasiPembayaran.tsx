@@ -1,4 +1,4 @@
-import React, {FC, useState, useEffect} from 'react';
+import React, {FC, useState, useEffect, useRef} from 'react';
 import {CardKeyValue, Header} from '@components';
 import {color, dimens} from '@constants';
 import {
@@ -8,7 +8,7 @@ import {
   View,
   ScrollView,
 } from 'react-native';
-import {Button, Card, Text} from 'react-native-paper';
+import {Button, Card} from 'react-native-paper';
 import {StackScreenProps} from '@react-navigation/stack';
 import {AdminDrawerParamList, AppStackParamList} from '@routes/RouteTypes';
 import {CompositeScreenProps} from '@react-navigation/core';
@@ -20,24 +20,24 @@ type ScreenProps = CompositeScreenProps<
   StackScreenProps<AppStackParamList>
 >;
 export const KonfirmasiPembayaran: FC<ScreenProps> = ({navigation}) => {
-  const [riwayat, setRiwayat] = useState([
-    // {
-    //   keterangan: 'Bayar Gaji Tutor',
-    //   wali: 'Handoko',
-    //   siswa: 'Waluyo',
-    //   biaya: 'Rp 1.200.000',
-    // },
-  ]);
+  const [riwayat, setRiwayat] = useState([]);
+  const componentMounted = useRef(true); // (3) component is mounted
+
   useEffect(() => {
     const getInitialData = async () => {
       const data = await apiGet({
         url: '/les?cari=&orderBy=siswa&sort=desc&page=1&status=BAYAR_BELUMKONFIRMASI',
       });
-      setRiwayat(data.data);
+      if (componentMounted.current) {
+        setRiwayat(data.data);
+      }
     };
     getInitialData();
-    return () => {};
-  }, []);
+    return () => {
+      componentMounted.current = false;
+    };
+  }, [riwayat]);
+
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar backgroundColor={color.bg_grey} barStyle="dark-content" />
@@ -69,7 +69,9 @@ export const KonfirmasiPembayaran: FC<ScreenProps> = ({navigation}) => {
                   <CardKeyValue
                     keyFlex={9}
                     keyName="Biaya Gaji Tutor"
-                    value={item.biaya}
+                    value={item.biaya
+                      .toFixed(2)
+                      .replace(/\d(?=(\d{3})+\.)/g, '$&,')}
                   />
                 </Card.Content>
                 <Card.Actions>

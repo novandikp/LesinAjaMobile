@@ -1,4 +1,4 @@
-import React, {FC, useEffect, useState} from 'react';
+import React, {FC, useEffect, useState, useRef} from 'react';
 import {Header, OneLineInfo, CardKeyValue} from '@components';
 import {color, dimens} from '@constants';
 import {SafeAreaView, StatusBar, StyleSheet, ScrollView} from 'react-native';
@@ -15,42 +15,21 @@ type ScreenProps = CompositeScreenProps<
 >;
 
 export const ListWalmur: FC<ScreenProps> = ({navigation}) => {
-  // const walmurList = [
-  //   {
-  //     nama: 'Hari Wibowo',
-  //     email: 'hari@gmail.com',
-  //     nomorWhatsApp: '089889889331',
-  //     alamat: 'durian runtuh',
-  //   },
-  //   {
-  //     nama: 'Ari Jayanto',
-  //     email: 'arj@void.net',
-  //     nomorWhatsApp: '08977888988',
-  //     alamat: 'cipete',
-  //   },
-  //   {
-  //     nama: 'Heri Heru',
-  //     email: 'hh@lewd.net',
-  //     nomorWhatsApp: '089778889331',
-  //     alamat: 'cisarua',
-  //   },
-  //   {
-  //     nama: 'Sitikus',
-  //     email: 'stk@mock.net',
-  //     nomorWhatsApp: '089778889331',
-  //     alamat: 'wonoplintahan',
-  //   },
-  // ];
   const [walmurList, setWalmurList] = useState([]);
+  const componentMounted = useRef(true); // (3) component is mounted
+
   useEffect(() => {
     const getInitialData = async () => {
       const walmur = await apiGet({
         url: 'admin/wali?page=1&wali=Budi&orderBy=wali&sort=ASC',
       });
-      setWalmurList(walmur.data);
+      if (componentMounted.current) {
+        setWalmurList(walmur.data);
+      }
     };
     getInitialData();
     return () => {
+      componentMounted.current = false;
       // cancelApiRequest();
     };
   }, []);

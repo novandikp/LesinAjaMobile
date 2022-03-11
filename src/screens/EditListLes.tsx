@@ -1,4 +1,4 @@
-import React, {FC, useEffect, useState} from 'react';
+import React, {FC, useEffect, useState, useRef} from 'react';
 import {ButtonFormSubmit, Header, InputChoice, InputText} from '@components';
 import {color, dimens} from '@constants';
 import {Controller, SubmitHandler, useForm} from 'react-hook-form';
@@ -40,12 +40,16 @@ export const EditListLes: FC<ScreenProps> = ({
   const idpaket = data != null ? data.idpaket : null;
   const paket = !data;
   const [listJenjang, setListJenjang] = useState([]);
+  const componentMounted = useRef(true); // (3) component is mounted
+
   const [selectedJenjang, setSelectedJenjang] = useState({jenjang: ''});
   useEffect(() => {
     const getInitialData = async () => {
       const jenjang = await apiGet({url: '/paket/jenjang'});
-      setListJenjang(jenjang.data);
-      if (data.jenjang != null) {
+      if (componentMounted.current) {
+        setListJenjang(jenjang.data);
+      }
+      if (data != null && data.jenjang != null) {
         let list = jenjang.data;
         let defaultJenjang = await list.find(
           (i: any) => i.jenjang == data.jenjang,
@@ -57,18 +61,18 @@ export const EditListLes: FC<ScreenProps> = ({
     };
     getInitialData();
     return () => {
+      componentMounted.current = false;
       // isActive = false;
     };
   }, []);
   const onSubmit: SubmitHandler<FormDataType> = async data => {
-    console.log(data);
     if (!paket) {
       const success = await apiPost({
         url: 'paket/' + idpaket,
         payload: data,
       });
       if (success) {
-        navigate('ListLes');
+        navigate('HomeAdmin');
       }
     } else {
       const success = await apiPost({
@@ -76,7 +80,7 @@ export const EditListLes: FC<ScreenProps> = ({
         payload: data,
       });
       if (success) {
-        navigate('ListLes');
+        navigate('HomeAdmin');
       }
     }
   };

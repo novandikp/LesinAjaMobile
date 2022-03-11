@@ -1,4 +1,4 @@
-import React, {FC, useEffect, useState} from 'react';
+import React, {FC, useEffect, useState, useRef} from 'react';
 import {Header, OneLineInfo, CardKeyValue, FABList, Gap} from '@components';
 import {color, dimens} from '@constants';
 import {SafeAreaView, StatusBar, StyleSheet, ScrollView} from 'react-native';
@@ -15,17 +15,21 @@ type ScreenProps = CompositeScreenProps<
 
 export const ListLes: FC<ScreenProps> = ({navigation}) => {
   const [lesList, setLesList] = useState([]);
+  const componentMounted = useRef(true); // (3) component is mounted
   useEffect(() => {
     const getInitialData = async () => {
       const data = await apiGet({
         url: '/paket?page=1&paket&orderBy=biaya&sort=ASC',
       });
-      setLesList(data.data);
+      if (componentMounted.current) {
+        setLesList(data.data);
+      }
     };
     getInitialData();
 
     return () => {
       // isActive = false;
+      componentMounted.current = false;
     };
   }, [lesList]);
   return (
