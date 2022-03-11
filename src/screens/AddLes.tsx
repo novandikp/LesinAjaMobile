@@ -427,7 +427,7 @@ export const AddLes: FC<ScreenProps> = ({navigation}) => {
                   {text: 'Wanita', value: 'Wanita'},
                   {text: 'Bebas', value: 'bebas'},
                 ]}
-                error={!!errors.preferensiTutor}
+                error={!!errors.prefrensi}
                 errorMessage="Harap pilih prefrensi tutor"
               />
             )}
