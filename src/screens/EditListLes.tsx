@@ -45,9 +45,13 @@ export const EditListLes: FC<ScreenProps> = ({
     const getInitialData = async () => {
       const jenjang = await apiGet({url: '/paket/jenjang'});
       setListJenjang(jenjang.data);
-      if (data) {
+      if (data.jenjang != null) {
+        let list = jenjang.data;
+        let defaultJenjang = await list.find(
+          (i: any) => i.jenjang == data.jenjang,
+        ).jenjang;
         setSelectedJenjang({
-          jenjang: data.jenjang,
+          jenjang: defaultJenjang,
         });
       }
     };
@@ -57,6 +61,7 @@ export const EditListLes: FC<ScreenProps> = ({
     };
   }, []);
   const onSubmit: SubmitHandler<FormDataType> = async data => {
+    console.log(data);
     if (!paket) {
       const success = await apiPost({
         url: 'paket/' + idpaket,
@@ -104,27 +109,33 @@ export const EditListLes: FC<ScreenProps> = ({
             defaultValue={data && data.paket}
           />
           {/* Jenjang */}
-          <Controller
-            control={control}
-            rules={{required: true}}
-            render={({field: {onChange}}) => (
-              <InputChoice
-                label="Jenjang"
-                toNumber={false}
-                listData={listJenjang}
-                keyMenuTitle={'jenjang'}
-                onSelect={item => {
-                  setSelectedJenjang({
-                    jenjang: item.jenjang,
-                  });
-                  onChange(item.jenjang);
-                }}
-                value={selectedJenjang.jenjang}
-              />
-            )}
-            name="jenjang"
-            defaultValue={selectedJenjang.jenjang}
-          />
+          {listJenjang && (
+            <Controller
+              control={control}
+              rules={{required: true}}
+              render={({field: {onChange}}) => (
+                <InputChoice
+                  label="Jenjang"
+                  value={selectedJenjang.jenjang}
+                  toNumber={false}
+                  error={!!errors.jenjang}
+                  errorMessage="Harap pilih jenjang"
+                  onSelect={item => {
+                    if (onChange) {
+                      setSelectedJenjang({
+                        jenjang: item.jenjang,
+                      });
+                      onChange(item.jenjang);
+                    }
+                  }}
+                  listData={listJenjang}
+                  keyMenuTitle={'jenjang'}
+                />
+              )}
+              name="jenjang"
+              defaultValue={data && data.jenjang}
+            />
+          )}
           {/* jumlah pertemuan */}
           <Controller
             control={control}
