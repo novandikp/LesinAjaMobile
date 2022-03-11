@@ -73,8 +73,6 @@ export const apiPostFile = async ({
       },
       cancelToken: source.token,
     });
-    console.log(payload);
-    console.log(data);
     // If success
     if (ok) {
       if (data.data.posisi == 'Admin') {

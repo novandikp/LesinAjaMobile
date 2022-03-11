@@ -14,7 +14,8 @@ import {
   // master_siswa,
   // PilihanLesType,
 } from '@constants';
-import {TextInput, Text, Button} from 'react-native-paper';
+import {TextInput, Text, Button,Card,
+  Checkbox,} from 'react-native-paper';
 import {Controller, useForm, SubmitHandler} from 'react-hook-form';
 import {
   SafeAreaView,
@@ -25,14 +26,12 @@ import {
 } from 'react-native';
 import {
   //Button, Text, TextInput, RadioButton,
-  Card,
-  Checkbox,
+  
 } from 'react-native-paper';
 import Modal from 'react-native-modal';
 import {StackScreenProps} from '@react-navigation/stack';
 import {AppStackParamList} from '@routes/RouteTypes';
 import {apiGet, apiPost} from '@utils';
-import {getListLest} from '@utils/getListData';
 import DatePicker from 'react-native-date-picker';
 // import MultiSelect from 'react-native-multiple-select';
 type FormDataType = {
@@ -57,7 +56,8 @@ export const AddLes: FC<ScreenProps> = ({navigation}) => {
   const [isModalVisibleDay, setModalVisibleDay] = useState(false);
   const [selectedDays, setSelectedDays] = useState<any>([]);
   const [isModalVisibleJenjang, setModalVisibleJenjang] = useState(false);
-  const [valueJenjang, setValueJenjang] = useState();
+  const [valueJenjang, setValueJenjang] = useState('');
+  const [filterJenjang, setFilterJenjang] = useState('');
   const [Days, setDays] = useState([
     {id: '00', name: 'MINGGU', status: false},
     {id: '01', name: 'SENIN', status: false},
@@ -84,13 +84,22 @@ export const AddLes: FC<ScreenProps> = ({navigation}) => {
   useEffect(() => {
     let active = true;
     const getInitialData = async () => {
-      const les = await getListLest();
+      const les = await apiGet({
+        url: '/paket/',
+        params: {
+          page: 1,
+          paket: '',
+          orderBy: 'biaya',
+          sort: 'ASC',
+          jenjang: filterJenjang,
+        },
+      });
       const murid = await apiGet({
         url: 'siswa/my?page=1&siswa=&orderBy=siswa&sort=ASC',
       });
       if (active) {
         setListMurid(murid.data);
-        setListLes(les);
+        setListLes(les.data);
       }
     };
 
@@ -99,7 +108,7 @@ export const AddLes: FC<ScreenProps> = ({navigation}) => {
       active = false;
       // cancelApiRequest();
     };
-  }, [selectedDays]);
+  }, [selectedDays, listLes, filterJenjang]);
   const onSubmit: SubmitHandler<FormDataType> = async data => {
     let hari = selectedDays.toString();
     data.hari = hari;
@@ -223,13 +232,8 @@ export const AddLes: FC<ScreenProps> = ({navigation}) => {
                         );
                       })}
                       <Button
-                        onPress={async () => {
-                          const newListLes = await apiGet({
-                            url:
-                              '/paket?page=1&paket&orderBy=biaya&sort=ASC&jenjang=' +
-                              valueJenjang,
-                          });
-                          setListLes(newListLes.data);
+                        onPress={() => {
+                          setFilterJenjang(valueJenjang);
                           setModalVisibleJenjang(false);
                         }}>
                         Pilih
@@ -425,7 +429,7 @@ export const AddLes: FC<ScreenProps> = ({navigation}) => {
                 radioItems={[
                   {text: 'Pria', value: 'Pria'},
                   {text: 'Wanita', value: 'Wanita'},
-                  {text: 'Bebas', value: 'bebas'},
+                  {text: 'Bebas', value: 'Bebas'},
                 ]}
                 error={!!errors.prefrensi}
                 errorMessage="Harap pilih prefrensi tutor"
@@ -460,7 +464,6 @@ const TotalPrice: FC<TotalPriceType> = ({hargaLes, hargaDaftar, total}) => {
   return (
     <Card style={{marginTop: dimens.standard}}>
       <Card.Title title={`Total: ${total}`} />
-
       <Card.Content style={{marginTop: dimens.small}}>
         <CardKeyValue keyName="Biaya Les" value={hargaLes} />
         {hargaDaftar && (
