@@ -41,7 +41,7 @@ type FormDataType = {
   tglles: string; // 2021-09-01
   jamles: string;
   hari: string; // SENIN,SELASA,RABU,JUMAT
-  preferensiTutor: string;
+  prefrensi: string;
 };
 type ScreenProps = StackScreenProps<AppStackParamList>;
 export const AddLes: FC<ScreenProps> = ({navigation}) => {
@@ -82,23 +82,28 @@ export const AddLes: FC<ScreenProps> = ({navigation}) => {
     formState: {errors},
   } = useForm<FormDataType>({mode: 'onChange'});
   useEffect(() => {
+    let active = true;
     const getInitialData = async () => {
       const les = await getListLest();
       const murid = await apiGet({
         url: 'siswa/my?page=1&siswa=&orderBy=siswa&sort=ASC',
       });
-      setListMurid(murid.data);
-      setListLes(les);
+      if (active) {
+        setListMurid(murid.data);
+        setListLes(les);
+      }
     };
 
     getInitialData();
     return () => {
+      active = false;
       // cancelApiRequest();
     };
   }, [selectedDays]);
   const onSubmit: SubmitHandler<FormDataType> = async data => {
     let hari = selectedDays.toString();
     data.hari = hari;
+    data.jamles = time.getHours() + ':' + time.getMinutes();
     listLes.find((i: any) =>
       i.paket == data.idpaket ? (data.idpaket = i.idpaket) : null,
     );
@@ -426,7 +431,7 @@ export const AddLes: FC<ScreenProps> = ({navigation}) => {
                 errorMessage="Harap pilih prefrensi tutor"
               />
             )}
-            name="preferensiTutor"
+            name="prefrensi"
             defaultValue={''}
           />
 
