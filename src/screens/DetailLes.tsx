@@ -65,12 +65,11 @@ export const DetailLes: FC<ScreenProps> = ({navigation, route}) => {
 
   const [coursePresenceList, setCoursePresenceList] = useState<any>([]);
   useEffect(() => {
+    let isActive = true;
     const getInitialData = async () => {
       const applyingTutor = await apiGet({
         url: '/lowongan/pelamar/' + id,
       });
-      setListApplyingTutor(applyingTutor.data);
-      setDetailLes(data);
       const jadwalles = await apiGet({
         url:
           '/jadwal/siswa/' +
@@ -80,12 +79,16 @@ export const DetailLes: FC<ScreenProps> = ({navigation, route}) => {
       if (statusles >= 3) {
         setBuktiBayar(prev => ({...prev, path: 'ada'}));
       }
-      setCoursePresenceList(jadwalles.data);
+      if (isActive) {
+        setDetailLes(data);
+        setListApplyingTutor(applyingTutor.data);
+        setCoursePresenceList(jadwalles.data);
+      }
     };
     getInitialData();
 
     return () => {
-      // isActive = false;
+      isActive = false;
     };
   });
   return (

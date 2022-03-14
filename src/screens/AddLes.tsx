@@ -14,8 +14,7 @@ import {
   // master_siswa,
   // PilihanLesType,
 } from '@constants';
-import {TextInput, Text, Button,Card,
-  Checkbox,} from 'react-native-paper';
+import {TextInput, Text, Button, Card, Checkbox} from 'react-native-paper';
 import {Controller, useForm, SubmitHandler} from 'react-hook-form';
 import {
   SafeAreaView,
@@ -24,10 +23,7 @@ import {
   View,
   ScrollView,
 } from 'react-native';
-import {
-  //Button, Text, TextInput, RadioButton,
-  
-} from 'react-native-paper';
+
 import Modal from 'react-native-modal';
 import {StackScreenProps} from '@react-navigation/stack';
 import {AppStackParamList} from '@routes/RouteTypes';

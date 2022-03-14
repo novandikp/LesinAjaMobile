@@ -1,4 +1,4 @@
-import React, {FC, useEffect, useState} from 'react';
+import React, {FC, useEffect, useState, useRef} from 'react';
 import {
   ButtonFormSubmit,
   Header,
@@ -7,7 +7,6 @@ import {
   SkeletonLoading,
 } from '@components';
 import {Card} from 'react-native-paper';
-
 import {color, dimens} from '@constants';
 import {Icon} from 'react-native-elements';
 import {Controller, SubmitHandler, useForm} from 'react-hook-form';
@@ -69,10 +68,14 @@ export const Account: FC<ScreenProps> = () => {
     idkecamatan: '',
     iddesa: '',
   });
+  const componentMounted = useRef(true); // (3) component is mounted
+
   useEffect(() => {
     const getInitialData = async () => {
       const provinsi = await getListDaerah({type: 'provinsi'});
-      setListDaerah(prev => ({...prev, provinsi}));
+      if (componentMounted.current) {
+        setListDaerah(prev => ({...prev, provinsi}));
+      }
     };
     const getPersonalData = async () => {
       const OldData = await apiGet({url: 'wali/profile'});
@@ -108,13 +111,15 @@ export const Account: FC<ScreenProps> = () => {
         let defaultDesa = await desa.find(
           (i: any) => i.id == OldData.data.iddesa,
         )?.name;
-        await setSelectedDaerah({
+        setSelectedDaerah({
           provinsi: defaultProvinsi,
           kota: defaultKota,
           kecamatan: defaultKecamatan,
           desa: defaultDesa,
         });
-        setOldData(OldData.data);
+        if (componentMounted.current) {
+          setOldData(OldData.data);
+        }
       }
       setIsLoading(false);
     };
@@ -122,6 +127,7 @@ export const Account: FC<ScreenProps> = () => {
     getInitialData();
     getPersonalData();
     return () => {
+      componentMounted.current = false;
       // cancelApiRequest();
     };
   }, []);
