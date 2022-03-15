@@ -177,7 +177,7 @@ export const Home: FC<ScreenProps> = () => {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: 'pink',
+    backgroundColor: 'white',
     flex: 1,
     padding: dimens.standard,
   },
