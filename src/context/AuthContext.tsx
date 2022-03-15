@@ -76,11 +76,6 @@ export const AuthProvider: FC = ({children}) => {
   };
 
   const register = async (posisi: number) => {
-    // POSITIONS:
-    // ADMIN = 0
-    // TUTOR = 1
-    // WALI = 2
-
     const {success, data} = await apiPost({
       url: 'auth/register',
       payload: {email: state.userInfo.user.email, posisi},

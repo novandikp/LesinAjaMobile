@@ -65,12 +65,12 @@ export const LoginGeneral: FC<ScreenProps> = ({navigation: {navigate}}) => {
     if (isRegistered) {
       setUserRole(role === 1 ? 'tutor' : 'parent', true);
     }
-    const {success} = await apiGet({url: '/access'});
-    console.log(success);
-    if (!success) {
-      setModalVisible(true);
-      logout();
-    }
+    // const {success} = await apiGet({url: '/access'});
+    // console.log(success);
+    // if (!success) {
+    //   setModalVisible(true);
+    //   logout();
+    // }
     // }
   };
 
