@@ -23,12 +23,9 @@ export const Home: FC<ScreenProps> = () => {
         <View style={styles.paragraphContainer}>
           <Text style={styles.text}>{'1.    '}</Text>
           <Text style={[styles.text, styles.rightParagraphContainer]}>
-            Biaya pendaftaran & biaya Les dibayar di awal sebagai Tanda Jadi
-            Les.
-            <Text style={[styles.boldText]}>
-              Pembayaran dilakukan setelah kami infokan data pengajarnya.
-            </Text>
-            Jika belum ada data pengajar, maka belum ada pembayaran
+            Biaya pendaftaran & biaya Les dibayar di awal sebagai <Text style={styles.boldText}> Tanda Jadi Les</Text>. 
+            Pembayaran dilakukan setelah kami infokan data pengajarnya.
+            Jika belum ada data pengajar, maka belum ada pembayaran.
           </Text>
         </View>
         <Divider />
@@ -36,8 +33,9 @@ export const Home: FC<ScreenProps> = () => {
         <View style={styles.paragraphContainer}>
           <Text style={styles.text}>{'2.    '}</Text>
           <Text style={[styles.text, styles.rightParagraphContainer]}>
-            Les berlangsung minimal 2x1 seminggu atau 8x sebulan dan maksimal 12
-            x sebulan dengan durasi 1 jam (untuk PAUD&TK) dan 1,5 jam untuk SD
+            Les berlangsung minimal 2x1 seminggu atau 8x sebulan 
+            dan maksimal 12x sebulan dengan durasi 1 jam 
+            (untuk PAUD & TK) dan 1,5 jam untuk SD
             keatas.
           </Text>
         </View>
@@ -46,7 +44,7 @@ export const Home: FC<ScreenProps> = () => {
         <View style={styles.paragraphContainer}>
           <Text style={styles.text}>{'3.    '}</Text>
           <Text style={[styles.text, styles.rightParagraphContainer]}>
-            Jika dalam sebulan pertemuan kurang dari pertemuan yang disepakati,
+            Jika dalam sebulan pertemuan kurang dari pertemuan yang disepakati, 
             maka wali murid mendapatkan
             <Text style={styles.boldText}> CASH BACK</Text> (uang kembali)
             sejumlah pertemuan yang belum terlaksana yang dibuktikan dengan
@@ -58,7 +56,7 @@ export const Home: FC<ScreenProps> = () => {
         <View style={styles.paragraphContainer}>
           <Text style={styles.text}>{'4.    '}</Text>
           <Text style={[styles.text, styles.rightParagraphContainer]}>
-            Jika ada hal-hal yang kurang berkenan dari tutor kami,mohon wali
+            Jika ada hal-hal yang kurang berkenan dari tutor kami, mohon wali
             murid infokan pada kami karena kami ingin yang terbaik untuk siswa,
             wali murid dan tutor.
           </Text>
@@ -69,7 +67,7 @@ export const Home: FC<ScreenProps> = () => {
           <Text style={styles.text}>{'5.    '}</Text>
           <Text style={[styles.text, styles.rightParagraphContainer]}>
             Jika terjadi ketidakcocokan, kami ada jaminan mencarikan tutor
-            sampai cocok .
+            sampai cocok.
           </Text>
         </View>
         <Divider />
@@ -87,7 +85,7 @@ export const Home: FC<ScreenProps> = () => {
           <Text style={styles.text}>{'7.    '}</Text>
           <Text style={[styles.text, styles.rightParagraphContainer]}>
             Jika wali murid/siswa menghendaki libur , wali murid
-            <Text style={styles.boldText}> wajib memberitahukan </Text>pada
+            <Text style={styles.boldText}> wajib </Text>memberitahukan pada
             tutor minimal 2 jam sebelumnya agar tutor tidak terlanjur datang.
           </Text>
         </View>
@@ -96,11 +94,10 @@ export const Home: FC<ScreenProps> = () => {
         <View style={styles.paragraphContainer}>
           <Text style={styles.text}>{'8.    '}</Text>
           <Text style={[styles.text, styles.rightParagraphContainer]}>
-            Jika tutor terlanjur datang namun wali murid{' '}
+            Jika tutor terlanjur datang namun wali murid meliburkan {' '}
             <Text style={styles.boldText}>
-              meliburkan tanpa pemberitahuan sebelumnya
-            </Text>{' '}
-            , maka tutor dianggap datang dan tutor berhak mengisi daftar
+            tanpa pemberitahuan sebelumnya
+            </Text>, maka tutor dianggap datang dan tutor berhak mengisi daftar
             kehadiran dan mendapatkan pembayaran .
           </Text>
         </View>
@@ -109,10 +106,10 @@ export const Home: FC<ScreenProps> = () => {
         <View style={styles.paragraphContainer}>
           <Text style={styles.text}>{'9.    '}</Text>
           <Text style={[styles.text, styles.rightParagraphContainer]}>
-            Bimbel <Text style={styles.boldText}> tidak meliburkan </Text> jika
-            ada <Text style={styles.boldText}> tanggal merah </Text>. Namun jika
+            Bimbel <Text style={styles.boldText}>tidak meliburkan</Text> jika
+            ada<Text style={styles.boldText}> tanggal merah</Text>. Namun jika
             ada jadwal les pada saat tanggal merah, wali murid bisa membuat
-            kesepakakatan dengan tutor untuk masuk atau tidak . Jika tidak
+            kesepakakatan dengan tutor untuk masuk atau tidak. Jika tidak
             masuk, bisa dibuat kesepakakatan untuk mengganti hari.
           </Text>
         </View>
@@ -142,7 +139,7 @@ export const Home: FC<ScreenProps> = () => {
         <View style={styles.paragraphContainer}>
           <Text style={styles.text}>{'12.  '}</Text>
           <Text style={[styles.text, styles.rightParagraphContainer]}>
-            Untuk{' '}
+            Untuk
             <Text style={styles.boldText}> menjaga keamanan bersama </Text>
             <Text style={styles.boldText}>
               wali murid diwajibkan menyiapkan papan tulis kecil
@@ -166,13 +163,11 @@ export const Home: FC<ScreenProps> = () => {
         <View style={styles.paragraphContainer}>
           <Text style={styles.text}>{'13.  '}</Text>
           <Text style={[styles.text, styles.rightParagraphContainer]}>
-            <Text style={styles.boldText}>
-              Wali murid diwajibkan mencocokkan wajah guru yang datang dengan
+              Wali murid <Text style={styles.boldText}>diwajibkan</Text> mencocokkan wajah guru yang datang dengan
               data yang diberikan bimbel untuk memastikan bahwa yang datang
               adalah orang yang benar. Minta guru untuk membuka masker sebentar
               lalu menutup masker lagi. Jika ada perbedaan, wali murid harap
-              segera melapor pada bimbel
-            </Text>
+              segera melapor pada bimbel.
           </Text>
         </View>
       </ScrollView>
