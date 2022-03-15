@@ -112,7 +112,7 @@ const CustomDrawerContent = (props: any) => {
       <DrawerContentScrollView {...props}>
         <Title
           style={{marginLeft: dimens.small_10, marginBottom: dimens.small_10}}>
-          Halo Admin
+          Halo Adminers
         </Title>
         <DrawerItemList {...props} />
       </DrawerContentScrollView>
