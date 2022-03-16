@@ -23,7 +23,12 @@ import {
 } from 'react-native';
 import {StackScreenProps} from '@react-navigation/stack';
 import {AppStackParamList} from '@routes/RouteTypes';
-import {apiGet, apiPostFile, getDownload, getSingleDocumentPDF} from '@utils';
+import {
+  apiGet,
+  apiPostFile,
+  checkPersimisson,
+  getSingleDocumentPDF,
+} from '@utils';
 import {getListDaerah} from '@utils/getListData';
 
 type FormDataType = {
@@ -617,9 +622,7 @@ export const AccountTutor: FC<ScreenProps> = () => {
                           name="download"
                           onPress={async () => {
                             const url = oldData.file_cv;
-                            await getDownload(url).then(res => {
-                              console.log(res);
-                            });
+                            await checkPersimisson(url);
                           }}
                         />
                       )

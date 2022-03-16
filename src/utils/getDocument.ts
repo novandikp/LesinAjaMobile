@@ -1,6 +1,11 @@
 import DocumentPicker from 'react-native-document-picker';
 import {Platform, PermissionsAndroid, Alert, ToastAndroid} from 'react-native';
-import {downloadFile, DownloadDirectoryPath} from 'react-native-fs';
+import {
+  downloadFile,
+  DownloadDirectoryPath,
+  DocumentDirectoryPath,
+  PicturesDirectoryPath,
+} from 'react-native-fs';
 // const RNFS = require('react-native-fs');
 export const getSingleDocument = async () => {
   try {
@@ -32,10 +37,10 @@ export const getSingleDocumentPDF = async () => {
     }
   }
 };
-const checkPersimisson = async () => {
+export const checkPersimisson = async (Uri: string) => {
   if (Platform.OS === 'ios') {
-    // getDownload(Uri);
-    return true;
+    getDownload(Uri);
+    // return true;
   } else {
     try {
       const granted = await PermissionsAndroid.requestMultiple([
@@ -43,10 +48,10 @@ const checkPersimisson = async () => {
         PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
       ]);
       if (granted['android.permission.READ_EXTERNAL_STORAGE'] == 'granted') {
-        // if (granted === PermissionsAndroid.RESULTS.GRANTED) {
         //   // Once user grant the permission start downloading
         console.log('Storage Permission Granted.');
-        return true;
+        getDownload(Uri);
+        // return true;
       } else {
         //   // If permission denied then show alert
         Alert.alert('Storage Permission Not Granted');
@@ -59,44 +64,42 @@ const checkPersimisson = async () => {
     }
   }
 };
-export const getDownload = async (Uri: string) => {
-  /*
+const getDownload = async (Uri: string) => {
+  /* FIXME:
  `new NativeEventEmitter()` was called with a non-null argument without the required `addListener` method.
- WARN  `new NativeEventEmitter()` was called with a non-null argument without the required `removeListeners` method.
- WARN  EventEmitter.removeListener('keyboardDidShow', ...): Method has been deprecated. Please instead use `remove()` on the subscription returned by `EventEmitter.addListener`.*/
-
-  let result = await checkPersimisson();
-  // public.image" | "image/*" | ".jpeg .jpg .png"
-  // console.log(Uri.includes('.pdf'));
-  // const ext=Uri.indexOf(".pdf")
-  // const ext = url.indexOf(".jpg") !== -1 ? ".jpg" : ".pdf";
-  if (result === true) {
-    let url;
-    if (Uri.includes('.pdf')) {
-      url = 'http://45.76.149.250:8081/cv/' + Uri;
-    } else {
-      url = 'http://45.76.149.250:8081/bukti/' + Uri;
-    }
-    //
-    await downloadFile({
-      fromUrl: url,
-      toFile: DownloadDirectoryPath + '/' + Uri,
-      background: true,
-      discretionary: true,
-      readTimeout: 600 * 1000,
-      connectionTimeout: 1000 * 10,
-    })
-      .promise.then(status => {
-        if (status.statusCode == 200) {
-          ToastAndroid.show('File telah diunduh', ToastAndroid.SHORT);
-        }
-      })
-      .catch((err: any) => {
-        console.log(err);
-        return false;
-      });
+ .WARN  `new NativeEventEmitter()` was called with a non-null argument without the required `removeListeners` method.
+ WARN  EventEmitter.removeListener('keyboardDidShow', ...): Method has been deprecated. Please instead use `remove()` on the subscription returned by `EventEmitter.addListener`*/
+  // let result = await checkPersimisson();
+  // if (result === true) {
+  let url;
+  let dir;
+  if (Uri.includes('.pdf')) {
+    url = 'http://45.76.149.250:8081/cv/' + Uri;
+    dir = DocumentDirectoryPath + '/' + Uri;
   } else {
-    console.log('result==false');
-    return false;
+    url = 'http://45.76.149.250:8081/bukti/' + Uri;
+    dir = PicturesDirectoryPath + '/' + Uri;
   }
+  console.log(DownloadDirectoryPath);
+  console.log(url);
+  await downloadFile({
+    fromUrl: url,
+    toFile: dir,
+    // toFile: DocumentDirectoryPath + '/' + Uri,
+    background: true,
+    discretionary: true,
+    readTimeout: 600 * 1000,
+    connectionTimeout: 1000 * 10,
+  })
+    .promise.then(status => {
+      if (status.statusCode == 200) {
+        // TODO: PushNotification
+        console.log('file telah diunduh');
+        ToastAndroid.show('File telah diunduh', ToastAndroid.SHORT);
+      }
+    })
+    .catch((err: any) => {
+      console.log(err);
+    });
 };
+// };
