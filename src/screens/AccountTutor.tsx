@@ -23,7 +23,7 @@ import {
 } from 'react-native';
 import {StackScreenProps} from '@react-navigation/stack';
 import {AppStackParamList} from '@routes/RouteTypes';
-import {apiGet, apiPostFile, getSingleDocumentPDF} from '@utils';
+import {apiGet, apiPostFile, getDownload, getSingleDocumentPDF} from '@utils';
 import {getListDaerah} from '@utils/getListData';
 
 type FormDataType = {
@@ -78,6 +78,7 @@ export const AccountTutor: FC<ScreenProps> = () => {
     kecamatan: '',
     desa: '',
   });
+  const [isFile, setIsFile] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [oldData, setOldData] = useState({
     idprovinsi: '',
@@ -143,6 +144,9 @@ export const AccountTutor: FC<ScreenProps> = () => {
           kecamatan: defaultKecamatan,
           desa: defaultDesa,
         });
+        if (OldData.data.file_cv != null) {
+          setIsFile(true);
+        }
         setOldData(OldData.data);
       }
       setIsLoading(false);
@@ -576,6 +580,7 @@ export const AccountTutor: FC<ScreenProps> = () => {
                     value={value}
                     error={!!errors.rekening}
                     errorMessage="Nomer rekening harus diisi"
+                    keyboardType="phone-pad"
                   />
                 )}
                 name="rekening"
@@ -594,7 +599,7 @@ export const AccountTutor: FC<ScreenProps> = () => {
                     value={value}
                     editable={false}
                     selectTextOnFocus={false}
-                    right={
+                    left={
                       <TextInput.Icon
                         name="file"
                         onPress={async () => {
@@ -606,10 +611,23 @@ export const AccountTutor: FC<ScreenProps> = () => {
                         }}
                       />
                     }
+                    right={
+                      isFile == true && (
+                        <TextInput.Icon
+                          name="download"
+                          onPress={async () => {
+                            const url = oldData.file_cv;
+                            await getDownload(url).then(res => {
+                              console.log(res);
+                            });
+                          }}
+                        />
+                      )
+                    }
                   />
                 )}
                 name="file_cv"
-                // defaultValue={oldData == null ? '' : oldData.cv}
+                defaultValue={oldData == null ? '' : oldData.file_cv}
               />
               {/* modal */}
               {isModalVisible && (
