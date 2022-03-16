@@ -60,11 +60,10 @@ const checkPersimisson = async () => {
   }
 };
 export const getDownload = async (Uri: string) => {
-  {/*
+  /*
  `new NativeEventEmitter()` was called with a non-null argument without the required `addListener` method.
  WARN  `new NativeEventEmitter()` was called with a non-null argument without the required `removeListeners` method.
- WARN  EventEmitter.removeListener('keyboardDidShow', ...): 
- Method has been deprecated. Please instead use `remove()` on the subscription returned by `EventEmitter.addListener`.*/
+ WARN  EventEmitter.removeListener('keyboardDidShow', ...): Method has been deprecated. Please instead use `remove()` on the subscription returned by `EventEmitter.addListener`.*/
 
   let result = await checkPersimisson();
   // public.image" | "image/*" | ".jpeg .jpg .png"
