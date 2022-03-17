@@ -69,9 +69,10 @@ export const DetailTutor: FC<ScreenProps> = ({navigation, route}) => {
             label="Pengalaman Mengajar"
             value="Banyak sekali pengalaman yang sangat berharga saat mengajar di kelas I Sekolah Dasar. Salah satunya adalah latar belakang siswa yang berbeda, ada yang cerdas namun pemalu atau kurang percaya diri, ada yang hiperaktif tapi dalam akademik saat diberikan tugas ia kurang menyukainya, dan ada pula yang selalu cari perhatian dan keinginannya harus selalu dituruti.\nDengan berbagai perasaan yang bercampur aduk saya ditempatkan di kelas 2. Karena pada saat itu, mereka guru-guru senior disana melihat latar belakang saya adalah seorang yang berpengalaman karena sudah pernah mengajar di TK."
           />
+          {/* TODO: GET DOWNLOAD CV */}
           <CardLabelValue
-            label="Video Microteaching"
-            value="https://www.youtube.com/channel/UCamTWDXkcyEquLV-aBzKqFA"
+            label="File CV"
+            value={'http://45.76.149.250:8081/cv/' + item.file_cv}
             isValueLink
           />
         </Card>
