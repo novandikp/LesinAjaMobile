@@ -24,48 +24,44 @@ import {apiGet, apiPost} from '../utils/api';
 type ScreenProps = StackScreenProps<AppStackParamList, 'DetailLowongan'>;
 export const DetailLowongan: FC<ScreenProps> = ({route, navigation}) => {
   const {item}: any = route.params;
-  // const jadwalLes = [
-  //   1630991440, 1631074240, 1631074240, 1631074240, 1631074240, 1631074240,
-  //   1631074240, 1631074240,
-  // ];
   const [jadwalLes, setJadwalLes] = useState([]);
-  const days = [
-    {
-      id: '0',
-      name: 'MINGGU',
-    },
-    {
-      id: '1',
-      name: 'SENIN',
-    },
-    {
-      id: '2',
-      name: 'SELASA',
-    },
-    {
-      id: '3',
-      name: 'RABU',
-    },
-    {
-      id: '4',
-      name: 'KAMIS',
-    },
-    {
-      id: '5',
-      name: 'JUMAT',
-    },
-    {
-      id: '6',
-      name: 'SABTU',
-    },
-  ];
+  const [statusapply, setStatusApply] = useState('');
+  // const days = [
+  //   {
+  //     id: '0',
+  //     name: 'MINGGU',
+  //   },
+  //   {
+  //     id: '1',
+  //     name: 'SENIN',
+  //   },
+  //   {
+  //     id: '2',
+  //     name: 'SELASA',
+  //   },
+  //   {
+  //     id: '3',
+  //     name: 'RABU',
+  //   },
+  //   {
+  //     id: '4',
+  //     name: 'KAMIS',
+  //   },
+  //   {
+  //     id: '5',
+  //     name: 'JUMAT',
+  //   },
+  //   {
+  //     id: '6',
+  //     name: 'SABTU',
+  //   },
+  // ];
   useEffect(() => {
     const getInitialData = async () => {
-      // console.log(item.idsiswa);
-      // console.log(item.hari);
-      // if (item.hari != null) {
-      //   setJadwalLes(item.hari);
-      // }
+      const status = await apiGet({url: 'lowongan/status/' + item.idlowongan});
+      console.log(status.data.statusapply);
+      setStatusApply(status.data.statusapply);
+      // setStatusLowongan({statusLowongan:status.data.statusapply});
     };
     getInitialData();
     return () => {
@@ -73,9 +69,6 @@ export const DetailLowongan: FC<ScreenProps> = ({route, navigation}) => {
     };
   }, []);
 
-  // const submit = async idlowongan => {
-
-  // };
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar backgroundColor={color.bg_grey} barStyle="dark-content" />
@@ -103,7 +96,7 @@ export const DetailLowongan: FC<ScreenProps> = ({route, navigation}) => {
               value={item.gaji.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')}
             />
             <CardLabelMultipleValue label="Jadwal Les" value={jadwalLes} />
-            {item.statuslowongan == 0 && (
+            {statusapply == 'BELUM DIAMBIL' && (
               <Button
                 style={{marginTop: dimens.standard}}
                 onPress={async () => {
@@ -120,44 +113,14 @@ export const DetailLowongan: FC<ScreenProps> = ({route, navigation}) => {
                 Ambil Lowongan
               </Button>
             )}
-            {item.statuslowongan == 1 && (
+            {statusapply != 'BELUM DIAMBIL' && (
               <Text
                 style={{
                   textAlign: 'center',
                   color: color.green_500,
                   marginTop: dimens.standard,
                 }}>
-                Menunggu Konfirmasi Wali Murid
-              </Text>
-            )}
-            {item.statuslowongan == 2 && (
-              <Text
-                style={{
-                  textAlign: 'center',
-                  color: color.green_500,
-                  marginTop: dimens.standard,
-                }}>
-                Lowongan Telah Diambil
-              </Text>
-            )}
-            {item.statuslowongan == 3 && (
-              <Text
-                style={{
-                  textAlign: 'center',
-                  color: color.green_500,
-                  marginTop: dimens.standard,
-                }}>
-                Lowongan Telah Dikonfirmasi
-              </Text>
-            )}
-            {item.statuslowongan == 4 && (
-              <Text
-                style={{
-                  textAlign: 'center',
-                  color: color.green_500,
-                  marginTop: dimens.standard,
-                }}>
-                Lowongan Telah Dibatalkan
+                {statusapply}
               </Text>
             )}
 
