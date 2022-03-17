@@ -130,7 +130,9 @@ export const KonfirmasiPembayaran: FC<ScreenProps> = ({navigation}) => {
                       color={color.green_500}
                       // style={{paddingRight: 20}}
                       onPress={() => {
-                        checkPersimisson(item.bukti);
+                        if (item.bukti != null) {
+                          checkPersimisson(item.bukti);
+                        }
                       }}
                     />
                   </View>
@@ -152,14 +154,12 @@ export const KonfirmasiPembayaran: FC<ScreenProps> = ({navigation}) => {
                   uri: 'http://45.76.149.250:8081/bukti/' + uriPicture,
                 }}
                 style={{
-                  // backgroundColor: 'red',
-                  // maxheight: 300,
-                  // maxwidth: 300,
-                  // minWidth: 100,
-                  // minHeight: 100,
+                  width: 300,
+                  height: 300,
                   alignSelf: 'center',
-                  width: 100,
-                  height: 100,
+                  alignItems: 'center',
+                  marginTop: dimens.small,
+                  marginHorizontal: dimens.standard,
                 }}
               />
             )}
