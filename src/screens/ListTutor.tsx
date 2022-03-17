@@ -16,37 +16,18 @@ type ScreenProps = CompositeScreenProps<
 >;
 
 export const ListTutor: FC<ScreenProps> = ({navigation}) => {
-  // const tutorList = [
-  //   {
-  //     nama: 'Nico Prakoso',
-  //     email: 'nico@null.net',
-  //     nomorWhatsApp: '089778889331',
-  //     alamat: 'bojong kidul',
-  //   },
-  //   {
-  //     nama: 'Akbar Wibowo',
-  //     email: 'akbar@void.net',
-  //     nomorWhatsApp: '089778889331',
-  //     alamat: 'bojong lor',
-  //   },
-  //   {
-  //     nama: 'Prasetyo',
-  //     email: 'pras@lewd.net',
-  //     nomorWhatsApp: '089778889331',
-  //     alamat: 'bojong utara',
-  //   },
-  //   {
-  //     nama: 'Wendy Akbar',
-  //     email: 'wendy@mock.net',
-  //     nomorWhatsApp: '089778889331',
-  //     alamat: 'bojong tenggara',
-  //   },
-  // ];
   const [tutorList, setTutorList] = useState([]);
   useEffect(() => {
     const getInitialData = async () => {
       const tutor = await apiGet({
-        url: 'admin/guru?page=1&guru=Budi&orderBy=guru&sort=ASC',
+        // ?page=1&guru=Budi&orderBy=guru&sort=ASC
+        url: 'admin/guru',
+        params: {
+          page: '1',
+          guru: '',
+          orderBy: 'guru',
+          sort: 'ASC',
+        },
       });
       setTutorList(tutor.data);
     };

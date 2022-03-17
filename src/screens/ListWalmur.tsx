@@ -21,7 +21,14 @@ export const ListWalmur: FC<ScreenProps> = ({navigation}) => {
   useEffect(() => {
     const getInitialData = async () => {
       const walmur = await apiGet({
-        url: 'admin/wali?page=1&wali=Budi&orderBy=wali&sort=ASC',
+        // ?page=1&wali=Budi&orderBy=wali&sort=ASC
+        url: 'admin/wali',
+        params: {
+          page: '1',
+          wali: '',
+          orderBy: 'wali',
+          sort: 'ASC',
+        },
       });
       if (componentMounted.current) {
         setWalmurList(walmur.data);
