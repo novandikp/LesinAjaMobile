@@ -1,5 +1,6 @@
 import React, {FC, useState, useEffect, useRef} from 'react';
-import {CardKeyValue, Header} from '@components';
+import {CardKeyValue, Header, SkeletonLoading} from '@components';
+import {useIsFocused} from '@react-navigation/core';
 import {color, dimens} from '@constants';
 import {
   SafeAreaView,
@@ -7,6 +8,7 @@ import {
   StyleSheet,
   View,
   ScrollView,
+
 } from 'react-native';
 import {Button, Card} from 'react-native-paper';
 import {StackScreenProps} from '@react-navigation/stack';
@@ -20,9 +22,11 @@ type ScreenProps = CompositeScreenProps<
   StackScreenProps<AppStackParamList>
 >;
 export const KonfirmasiPembayaran: FC<ScreenProps> = ({navigation}) => {
-  const [riwayat, setRiwayat] = useState([]);
+  const [riwayat, setRiwayat] = useState<any>([]);
   const componentMounted = useRef(true); // (3) component is mounted
-
+  const [isLoading, setIsLoading] = useState(true);
+  const [isRefreshing, setIsRefreshing] = useState(true);
+  const isFocus = useIsFocused();
   useEffect(() => {
     const getInitialData = async () => {
       const data = await apiGet({
@@ -30,13 +34,17 @@ export const KonfirmasiPembayaran: FC<ScreenProps> = ({navigation}) => {
       });
       if (componentMounted.current) {
         setRiwayat(data.data);
+        setIsLoading(false);
+        setIsRefreshing(false);
       }
     };
-    getInitialData();
+    if (isRefreshing || isLoading || isFocus) {
+      getInitialData();
+    }
     return () => {
       componentMounted.current = false;
     };
-  }, [riwayat]);
+  }, [isFocus, isLoading, isRefreshing, riwayat]);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -46,7 +54,12 @@ export const KonfirmasiPembayaran: FC<ScreenProps> = ({navigation}) => {
 
       <ScrollView contentContainerStyle={{flexGrow: 1}}>
         <View style={{flex: 1, padding: dimens.standard}}>
-          {riwayat.map((item: any, key) => {
+        {isLoading || isRefreshing ? (
+            <SkeletonLoading />
+          ) : (
+               <>
+          {
+            riwayat.map((item: any, key: number) => {
             return (
               <Card key={key} style={{marginBottom: 10}}>
                 <Card.Title title={'Pembayaran pada ananda ' + item.siswa} />
@@ -82,7 +95,8 @@ export const KonfirmasiPembayaran: FC<ScreenProps> = ({navigation}) => {
                         payload: {},
                       });
                       if (konfirmasi) {
-                        navigation.navigate('HomeAdmin');
+                        //setIsLoading(true)
+                        navigation.navigate('KonfirmasiPembayaran');
                       }
                     }}>
                     Konfirmasi
@@ -103,6 +117,7 @@ export const KonfirmasiPembayaran: FC<ScreenProps> = ({navigation}) => {
               </Card>
             );
           })}
+            </>)}
         </View>
       </ScrollView>
     </SafeAreaView>
