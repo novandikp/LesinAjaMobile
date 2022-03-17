@@ -146,6 +146,9 @@ const StudentItem: FC<{item: LesType; onPress: () => void}> = ({
     if (item.statusles === 4) {
       return {text: 'Les telah berjalan', bgColor: color.green_500};
     }
+    if (item.statusles === 5) {
+      return {text: 'Pembayaran ditolak', bgColor: color.red};
+    }
     return null;
   };
 
