@@ -76,9 +76,6 @@ export const DetailLes: FC<ScreenProps> = ({navigation, route}) => {
           data.idsiswa +
           '?cari=&orderBy=siswa&sort=desc&page=1',
       });
-      if (statusles >= 3) {
-        setBuktiBayar(prev => ({...prev, path: 'ada'}));
-      }
       if (isActive) {
         setDetailLes(data);
         setListApplyingTutor(applyingTutor.data);
@@ -137,6 +134,31 @@ export const DetailLes: FC<ScreenProps> = ({navigation, route}) => {
           </Card>
         )}
         {statusles == 2 && (
+          <Card style={{marginTop: dimens.standard}}>
+            <Card.Title
+              title="Anda Belum Membayar Biaya Les"
+              subtitle="Biaya Les: Rp 200.000"
+              titleStyle={{color: '#EF4444'}}
+              subtitleStyle={{fontSize: dimens.medium_14}}
+            />
+            {buktiBayar.path !== '' && (
+              <Card.Cover
+                source={{uri: buktiBayar.path}}
+                style={{
+                  marginTop: dimens.small,
+                  marginHorizontal: dimens.standard,
+                }}
+              />
+            )}
+            <Card.Actions>
+              <Button disabled={isLoading} onPress={onPressUploadBuktiBayar}>
+                {buktiBayar.path === '' ? 'Unggah Bukti Pembayaran' : 'Kirim'}
+              </Button>
+              {isLoading && <ActivityIndicator animating={isLoading} />}
+            </Card.Actions>
+          </Card>
+        )}
+        {statusles == 5 && (
           <Card style={{marginTop: dimens.standard}}>
             <Card.Title
               title="Anda Belum Membayar Biaya Les"
