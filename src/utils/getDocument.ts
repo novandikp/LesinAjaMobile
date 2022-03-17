@@ -2,10 +2,16 @@ import DocumentPicker from 'react-native-document-picker';
 import {Platform, PermissionsAndroid, Alert, ToastAndroid} from 'react-native';
 import {
   downloadFile,
-  DownloadDirectoryPath,
   DocumentDirectoryPath,
   PicturesDirectoryPath,
 } from 'react-native-fs';
+/* FIXME:
+  `new NativeEventEmitter()` was called with a non-null argument without the required `addListener` method.
+  .WARN  `new NativeEventEmitter()` was called with a non-null argument without the required `removeListeners` method.
+  WARN  EventEmitter.removeListener('keyboardDidShow', ...): Method has been deprecated. Please instead use `remove()` on the subscription returned by `EventEmitter.addListener`*/
+import {LogBox} from 'react-native';
+
+LogBox.ignoreLogs(['EventEmitter.removeListener']);
 // const RNFS = require('react-native-fs');
 export const getSingleDocument = async () => {
   try {
@@ -65,14 +71,9 @@ export const checkPersimisson = async (Uri: string) => {
   }
 };
 const getDownload = async (Uri: string) => {
-  /* FIXME:
- `new NativeEventEmitter()` was called with a non-null argument without the required `addListener` method.
- .WARN  `new NativeEventEmitter()` was called with a non-null argument without the required `removeListeners` method.
- WARN  EventEmitter.removeListener('keyboardDidShow', ...): Method has been deprecated. Please instead use `remove()` on the subscription returned by `EventEmitter.addListener`*/
-  // let result = await checkPersimisson();
   // if (result === true) {
   let url;
-  let dir;
+  let dir = '';
   if (Uri.includes('.pdf')) {
     url = 'http://45.76.149.250:8081/cv/' + Uri;
     dir = DocumentDirectoryPath + '/' + Uri;
@@ -80,8 +81,6 @@ const getDownload = async (Uri: string) => {
     url = 'http://45.76.149.250:8081/bukti/' + Uri;
     dir = PicturesDirectoryPath + '/' + Uri;
   }
-  console.log(DownloadDirectoryPath);
-  console.log(url);
   await downloadFile({
     fromUrl: url,
     toFile: dir,
@@ -96,6 +95,7 @@ const getDownload = async (Uri: string) => {
         // TODO: PushNotification
         console.log('file telah diunduh');
         ToastAndroid.show('File telah diunduh', ToastAndroid.SHORT);
+        ToastAndroid.show('CEK' + dir, ToastAndroid.LONG);
       }
     })
     .catch((err: any) => {

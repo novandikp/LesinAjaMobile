@@ -8,25 +8,36 @@ import {
   View,
   ScrollView,
 } from 'react-native';
+import {Icon, Image} from 'react-native-elements';
 import {Button, Card} from 'react-native-paper';
 import {StackScreenProps} from '@react-navigation/stack';
 import {AdminDrawerParamList, AppStackParamList} from '@routes/RouteTypes';
 import {CompositeScreenProps} from '@react-navigation/core';
 import {DrawerScreenProps} from '@react-navigation/drawer';
-import {apiGet, apiPost} from '@utils';
-
+import {apiGet, apiPost, checkPersimisson} from '@utils';
+import Modal from 'react-native-modal';
 type ScreenProps = CompositeScreenProps<
   DrawerScreenProps<AdminDrawerParamList, 'RiwayatPembayaran'>,
   StackScreenProps<AppStackParamList>
 >;
 export const KonfirmasiPembayaran: FC<ScreenProps> = ({navigation}) => {
   const [riwayat, setRiwayat] = useState([]);
+  const [modalImage, setModalImage] = useState(false);
+  const [uriPicture, setUriPicture] = useState('');
   const componentMounted = useRef(true); // (3) component is mounted
 
   useEffect(() => {
     const getInitialData = async () => {
       const data = await apiGet({
-        url: '/les?cari=&orderBy=siswa&sort=desc&page=1&status=BAYAR_BELUMKONFIRMASI',
+        // ?cari=&orderBy=siswa&sort=desc&page=1&status=BAYAR_BELUMKONFIRMASI
+        url: '/les',
+        params: {
+          cari: '',
+          orderBy: 'siswa',
+          sort: 'desc',
+          page: '1',
+          status: 'BAYAR_BELUMKONFIRMASI',
+        },
       });
       if (componentMounted.current) {
         setRiwayat(data.data);
@@ -36,7 +47,7 @@ export const KonfirmasiPembayaran: FC<ScreenProps> = ({navigation}) => {
     return () => {
       componentMounted.current = false;
     };
-  }, [riwayat]);
+  }, [riwayat, uriPicture, modalImage]);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -74,6 +85,7 @@ export const KonfirmasiPembayaran: FC<ScreenProps> = ({navigation}) => {
                       .replace(/\d(?=(\d{3})+\.)/g, '$&,')}
                   />
                 </Card.Content>
+                {/* TODO: BUAT BUTTON TAMPILAN IMG */}
                 <Card.Actions>
                   <Button
                     onPress={async () => {
@@ -99,11 +111,62 @@ export const KonfirmasiPembayaran: FC<ScreenProps> = ({navigation}) => {
                     }}>
                     Tolak
                   </Button>
+                  <View style={{marginRight: 20}}>
+                    <Icon
+                      name="eye"
+                      type="font-awesome"
+                      color={color.green_500}
+                      onPress={() => {
+                        setUriPicture(item.bukti);
+                        setModalImage(true);
+                      }}
+                    />
+                  </View>
+
+                  <View style={{marginRight: 30}}>
+                    <Icon
+                      name="download"
+                      type="font-awesome"
+                      color={color.green_500}
+                      // style={{paddingRight: 20}}
+                      onPress={() => {
+                        checkPersimisson(item.bukti);
+                      }}
+                    />
+                  </View>
                 </Card.Actions>
               </Card>
             );
           })}
         </View>
+        {modalImage && (
+          <Modal
+            isVisible={modalImage}
+            onBackdropPress={() => {
+              setModalImage(false);
+              setUriPicture('');
+            }}>
+            {uriPicture && (
+              <Image
+                source={{
+                  uri: 'http://45.76.149.250:8081/bukti/' + uriPicture,
+                }}
+                style={{
+                  // backgroundColor: 'red',
+                  // maxheight: 300,
+                  // maxwidth: 300,
+                  // minWidth: 100,
+                  // minHeight: 100,
+                  alignSelf: 'center',
+                  width: 100,
+                  height: 100,
+                }}
+              />
+            )}
+            {/* <Text>test</Text> */}
+            {/* </View> */}
+          </Modal>
+        )}
       </ScrollView>
     </SafeAreaView>
   );
