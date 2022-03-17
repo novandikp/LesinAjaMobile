@@ -71,10 +71,14 @@ export const DetailLes: FC<ScreenProps> = ({navigation, route}) => {
         url: '/lowongan/pelamar/' + id,
       });
       const jadwalles = await apiGet({
-        url:
-          '/jadwal/siswa/' +
-          data.idsiswa +
-          '?cari=&orderBy=siswa&sort=desc&page=1',
+        url: '/jadwal/siswa/' + data.idsiswa,
+        params: {
+          cari: '',
+          orderBy: 'tglabsen',
+          sort: 'asc',
+          page: '1',
+        },
+        // '?cari=&orderBy=siswa&sort=desc&page=1',
       });
       if (isActive) {
         setDetailLes(data);
