@@ -74,9 +74,8 @@ export const AccountTutor: FC<ScreenProps> = () => {
     kecamatan: [],
     desa: [],
   });
-  const [file, setFile] = useState<any>();
+  const [file, setFile] = useState<any>(null);
   const [isModalVisible, setModalVisible] = useState(false);
-
   const [selectedDaerah, setSelectedDaerah] = useState({
     provinsi: '',
     kota: '',
@@ -166,11 +165,14 @@ export const AccountTutor: FC<ScreenProps> = () => {
 
   const onSubmit: SubmitHandler<FormDataType> = async data => {
     const newCV = new FormData();
-    newCV.append('file_cv[0][file]', {
-      name: file?.name,
-      type: file?.type,
-      uri: Platform.OS === 'ios' ? file?.uri.replace('file://', '') : file?.uri,
-    });
+    if (file != null) {
+      newCV.append('file_cv[0][file]', {
+        name: file?.name,
+        type: file?.type,
+        uri:
+          Platform.OS === 'ios' ? file?.uri.replace('file://', '') : file?.uri,
+      });
+    }
     newCV.append('alamat', data.alamat);
     listDaerah.provinsi.find((i: any) =>
       i.name == data.idprovinsi ? (data.idprovinsi = i.id) : null,
@@ -202,7 +204,6 @@ export const AccountTutor: FC<ScreenProps> = () => {
       url: '/guru/profile/',
       payload: newCV,
     });
-    console.log(success);
     if (success) {
       setModalVisible(true);
     }
