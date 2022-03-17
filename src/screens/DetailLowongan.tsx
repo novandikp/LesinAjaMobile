@@ -59,7 +59,6 @@ export const DetailLowongan: FC<ScreenProps> = ({route, navigation}) => {
   useEffect(() => {
     const getInitialData = async () => {
       const status = await apiGet({url: 'lowongan/status/' + item.idlowongan});
-      console.log(status.data.statusapply);
       setStatusApply(status.data.statusapply);
       // setStatusLowongan({statusLowongan:status.data.statusapply});
     };
