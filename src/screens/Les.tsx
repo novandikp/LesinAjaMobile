@@ -14,7 +14,6 @@ import {
   StatusBar,
   StyleSheet,
   View,
-  // ScrollView,
   FlatList,
   ListRenderItemInfo,
 } from 'react-native';
@@ -54,6 +53,7 @@ export const Les: FC<ScreenProps> = ({navigation}) => {
   const [displayButton, setDiplayButton] = useState(false);
   const componentMounted = useRef(true); // (3) component is mounted
   const [loadingData, setLoadingData] = useState(false);
+  const [isLoadMoreData, setLoadMoreData] = useState(false);
   const loadMoreData = async () => {
     let NextPage = page + 1;
     await apiGet({
@@ -62,7 +62,7 @@ export const Les: FC<ScreenProps> = ({navigation}) => {
         page: NextPage,
         cari: '',
         status: '',
-        orderBy: 'siswa',
+        orderBy: 'idles',
         sort: 'desc',
       },
     }).then(res => {
@@ -90,21 +90,27 @@ export const Les: FC<ScreenProps> = ({navigation}) => {
           page: 1,
           cari: '',
           status: '',
-          orderBy: 'siswa',
+          orderBy: 'idles',
           sort: 'desc',
         },
       });
       if (componentMounted.current) {
-        if (data.data.length == 10) {
-          setDiplayButton(true);
-          setButtonLoadMore(false);
-        }
         setListData(data.data);
         console.log('component mounted current');
       }
       if (isActive) {
         if (listData.length > 1) {
-          setListData(listData);
+          if (isLoadMoreData) {
+            setListData(listData);
+          } else {
+            setListData(data.data);
+          }
+          if (data.data.length == 10) {
+            setDiplayButton(true);
+            setButtonLoadMore(false);
+          }
+        } else {
+          setListData(data.data);
         }
         setIsLoading(false);
         setIsRefreshing(false);
@@ -153,6 +159,7 @@ export const Les: FC<ScreenProps> = ({navigation}) => {
                   <Button
                     loading={loadingData}
                     onPress={() => {
+                      setLoadMoreData(true);
                       setLoadingData(true);
                       loadMoreData();
                     }}
