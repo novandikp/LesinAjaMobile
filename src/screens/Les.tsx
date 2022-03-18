@@ -66,8 +66,8 @@ export const Les: FC<ScreenProps> = ({navigation}) => {
         sort: 'desc',
       },
     }).then(res => {
-      console.log(res.data.length);
-      if (res.data.length == 0) {
+      // console.log(res.data.length);
+      if (res.data == null) {
         setLoadingData(false);
         return setDiplayButton(false);
       }
