@@ -1,6 +1,6 @@
-import React, {FC, useContext} from 'react';
-import {Header} from '@components';
-import {color, dimens} from '@constants';
+import React, { FC, useContext } from 'react';
+import { Header } from '@components';
+import { color, dimens } from '@constants';
 import {
   SafeAreaView,
   StatusBar,
@@ -8,20 +8,20 @@ import {
   ScrollView,
   View,
 } from 'react-native';
-import {Button} from 'react-native-paper';
-import {AuthContext} from '@context/AuthContext';
-import {MaterialBottomTabScreenProps} from '@react-navigation/material-bottom-tabs';
-import {AppStackParamList, MainTabParamList} from '@routes/RouteTypes';
-import {CompositeScreenProps} from '@react-navigation/native';
-import {StackScreenProps} from '@react-navigation/stack';
+import { Button, Text } from 'react-native-paper';
+import { AuthContext } from '@context/AuthContext';
+import { MaterialBottomTabScreenProps } from '@react-navigation/material-bottom-tabs';
+import { AppStackParamList, MainTabParamList } from '@routes/RouteTypes';
+import { CompositeScreenProps } from '@react-navigation/native';
+import { StackScreenProps } from '@react-navigation/stack';
 
 type ScreenProps = CompositeScreenProps<
   MaterialBottomTabScreenProps<MainTabParamList, 'Settings'>,
   StackScreenProps<AppStackParamList>
 >;
-export const Settings: FC<ScreenProps> = ({navigation}) => {
+export const Settings: FC<ScreenProps> = ({ navigation }) => {
   const {
-    state: {userRole},
+    state: { userRole },
     logout,
   } = useContext(AuthContext);
 
@@ -31,8 +31,8 @@ export const Settings: FC<ScreenProps> = ({navigation}) => {
 
       <Header noBackButton title="Pengaturan" />
 
-      <ScrollView contentContainerStyle={{flexGrow: 1}}>
-        <View style={{flex: 1}}>
+      <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+        <View style={{ flex: 1 }}>
           <Button
             contentStyle={styles.settingsItem}
             labelStyle={styles.settingsText}
@@ -62,10 +62,11 @@ export const Settings: FC<ScreenProps> = ({navigation}) => {
             paddingVertical: dimens.tiny_6,
             marginBottom: dimens.standard,
           }}
-          labelStyle={{fontSize: dimens.standard_18, color: color.error_text}}
+          labelStyle={{ fontSize: dimens.standard_18, color: color.error_text }}
           onPress={logout}>
           Keluar
         </Button>
+        
       </ScrollView>
     </SafeAreaView>
   );

@@ -28,11 +28,12 @@ export const KonfirmasiPembayaran: FC<ScreenProps> = ({navigation}) => {
   const [isRefreshing, setIsRefreshing] = useState(true);
   const isFocus = useIsFocused();
   useEffect(() => {
+    let active = true
     const getInitialData = async () => {
       const data = await apiGet({
         url: '/les?cari=&orderBy=siswa&sort=desc&page=1&status=BAYAR_BELUMKONFIRMASI',
       });
-      if (componentMounted.current) {
+      if (active) {
         setRiwayat(data.data);
         setIsLoading(false);
         setIsRefreshing(false);
@@ -42,7 +43,7 @@ export const KonfirmasiPembayaran: FC<ScreenProps> = ({navigation}) => {
       getInitialData();
     }
     return () => {
-      componentMounted.current = false;
+      active = false;
     };
   }, [isFocus, isLoading, isRefreshing, riwayat]);
 
