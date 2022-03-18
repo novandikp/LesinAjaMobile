@@ -74,11 +74,12 @@ const getDownload = async (Uri: string) => {
   // if (result === true) {
   let url;
   let dir = '';
+  let baseURL = 'http://45.76.149.250/';
   if (Uri.includes('.pdf')) {
-    url = 'http://45.76.149.250:8081/cv/' + Uri;
+    url = baseURL + 'cv/' + Uri;
     dir = DocumentDirectoryPath + '/' + Uri;
   } else {
-    url = 'http://45.76.149.250:8081/bukti/' + Uri;
+    url = baseURL + 'bukti/' + Uri;
     dir = PicturesDirectoryPath + '/' + Uri;
   }
   await downloadFile({

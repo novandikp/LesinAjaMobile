@@ -8,7 +8,7 @@ import {lsKey} from '@constants';
 
 // apisauce instance with base url
 const api = create({
-  baseURL: 'http://45.76.149.250:8081/',
+  baseURL: 'http://45.76.149.250/',
 });
 
 // for cancel request
