@@ -1,10 +1,10 @@
 import React, {FC, useEffect, useState, useRef} from 'react';
-import {Header, OneLineInfo, CardKeyValue} from '@components';
+import {Header, OneLineInfo, CardKeyValue, SkeletonLoading} from '@components';
 import {color, dimens} from '@constants';
 import {SafeAreaView, StatusBar, StyleSheet, ScrollView} from 'react-native';
 import {AdminDrawerParamList, AppStackParamList} from '@routes/RouteTypes';
 import {StackScreenProps} from '@react-navigation/stack';
-import {CompositeScreenProps} from '@react-navigation/native';
+import {CompositeScreenProps, useIsFocused} from '@react-navigation/native';
 import {MaterialBottomTabScreenProps} from '@react-navigation/material-bottom-tabs';
 import {Card} from 'react-native-paper';
 import {apiGet} from '@utils';
@@ -15,6 +15,9 @@ type ScreenProps = CompositeScreenProps<
 >;
 
 export const ListWalmur: FC<ScreenProps> = ({navigation}) => {
+  const [Loading, setIsLoading] = useState(true);
+  const [isRefreshing, setIsRefreshing] = useState(false);
+  const isFocus = useIsFocused();
   const [walmurList, setWalmurList] = useState([]);
   const componentMounted = useRef(true); // (3) component is mounted
 
@@ -27,23 +30,26 @@ export const ListWalmur: FC<ScreenProps> = ({navigation}) => {
         setWalmurList(walmur.data);
       }
     };
-    getInitialData();
+    if (isRefreshing || Loading || isFocus) {
+      getInitialData();}
     return () => {
       componentMounted.current = false;
       // cancelApiRequest();
     };
-  }, []);
+  }, [isFocus, Loading, isRefreshing]);
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar backgroundColor={color.bg_grey} barStyle="dark-content" />
-
       <Header
         noBackButton
         withFilter
         title="Daftar Wali Murid"
         onPressFilter={() => {}}
       />
-
+        {Loading || isRefreshing ? (
+                <SkeletonLoading />
+              ) : (
+  
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         <OneLineInfo info="Klik item untuk melihat detail" />
         {walmurList.map((item: any, index: number) => {
@@ -64,9 +70,9 @@ export const ListWalmur: FC<ScreenProps> = ({navigation}) => {
             </Card>
           );
         })}
-      </ScrollView>
+      </ScrollView>)}
     </SafeAreaView>
-  );
+  ); 
 };
 
 const styles = StyleSheet.create({
