@@ -1,4 +1,4 @@
-import React, {FC, useState, useEffect} from 'react';
+import React, {FC, useState, useEffect, useRef} from 'react';
 import {
   CardKeyValue,
   EmptyData,
@@ -14,9 +14,11 @@ import {
   StatusBar,
   StyleSheet,
   View,
-  ScrollView,
+  // ScrollView,
+  FlatList,
+  ListRenderItemInfo,
 } from 'react-native';
-import {Card, Chip} from 'react-native-paper';
+import {Card, Chip, Button} from 'react-native-paper';
 import dayjs from 'dayjs';
 import {CompositeScreenProps} from '@react-navigation/native';
 import {AppStackParamList, MainTabParamList} from '@routes/RouteTypes';
@@ -34,9 +36,7 @@ type LesType = {
   tglMulai: number | null;
   tglSelesai: number | null;
   statusles: number | null;
-  // tutor: string | null;
-  // sudahBayar: boolean;
-  // menungguTutor: boolean;
+  idles: string;
 };
 
 type ScreenProps = CompositeScreenProps<
@@ -48,17 +48,64 @@ export const Les: FC<ScreenProps> = ({navigation}) => {
   const [listData, setListData] = useState<any>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isRefreshing, setIsRefreshing] = useState(false);
+  const [page, setPage] = useState(1);
   const isFocus = useIsFocused();
-
+  const [buttonLoadMore, setButtonLoadMore] = useState(true);
+  const [displayButton, setDiplayButton] = useState(false);
+  const componentMounted = useRef(true); // (3) component is mounted
+  const [loadingData, setLoadingData] = useState(false);
+  const loadMoreData = async () => {
+    let NextPage = page + 1;
+    await apiGet({
+      url: '/les/histori',
+      params: {
+        page: NextPage,
+        cari: '',
+        status: '',
+        orderBy: 'siswa',
+        sort: 'desc',
+      },
+    }).then(res => {
+      console.log(res.data.length);
+      if (res.data.length == 0) {
+        setLoadingData(false);
+        return setDiplayButton(false);
+      }
+      setListData(listData.concat(res.data));
+      if (res.data.length < 10) {
+        setDiplayButton(false);
+      } else if (res.data.length == 10) {
+        setButtonLoadMore(false);
+        setPage(NextPage);
+      }
+      setLoadingData(false);
+    });
+  };
   useEffect(() => {
     let isActive = true;
-
     const getInitialData = async () => {
       const data = await apiGet({
-        url: '/les/histori?status&cari&orderBy=siswa&sort=desc&page=1',
+        url: '/les/histori',
+        params: {
+          page: 1,
+          cari: '',
+          status: '',
+          orderBy: 'siswa',
+          sort: 'desc',
+        },
       });
-      if (isActive) {
+      if (componentMounted.current) {
+        if (data.data.length == 10) {
+          setDiplayButton(true);
+          setButtonLoadMore(false);
+        }
         setListData(data.data);
+        console.log('component mounted current');
+      }
+      if (isActive) {
+        if (listData.length > 1) {
+          setListData(listData);
+        }
         setIsLoading(false);
         setIsRefreshing(false);
       }
@@ -68,44 +115,64 @@ export const Les: FC<ScreenProps> = ({navigation}) => {
       getInitialData();
     }
     return () => {
+      componentMounted.current = false;
       isActive = false;
     };
-  }, [isRefreshing, isLoading, isFocus]);
+  }, [isRefreshing, isLoading, isFocus, listData]);
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar backgroundColor={color.bg_grey} barStyle="dark-content" />
-      <Header
-        noBackButton
-        // withFilter
-        title="Daftar Les"
-        // onPressFilter={() => {
-        //   // alert('Belum jadi');
-        // }}
-      />
+      <Header noBackButton title="Daftar Les" />
 
-      <ScrollView contentContainerStyle={styles.scrollContainer}>
-        {isLoading || isRefreshing ? (
-          <SkeletonLoading />
-        ) : listData == null ? (
-          <EmptyData />
-        ) : (
-          <>
-            <OneLineInfo info="Klik item untuk melihat detail" />
-            {listData.map((item: any, index: number) => {
-              return (
-                <StudentItem
-                  key={index}
-                  item={item}
-                  onPress={() => {
-                    navigation.navigate<any>('DetailLes', {data: item});
-                  }}
-                />
-              );
-            })}
-          </>
-        )}
-        <Gap y={72} />
-      </ScrollView>
+      {/* <ScrollView contentContainerStyle={styles.scrollContainer}> */}
+      {isLoading || isRefreshing ? (
+        <SkeletonLoading />
+      ) : listData == null ? (
+        <EmptyData />
+      ) : (
+        <>
+          <OneLineInfo info="Klik item untuk melihat detail" />
+          <FlatList
+            contentContainerStyle={styles.scrollContainer}
+            data={listData}
+            keyExtractor={(item: LesType) => item.idles}
+            renderItem={({item}: ListRenderItemInfo<LesType>) => (
+              <StudentItem
+                key={item.idles}
+                item={item}
+                onPress={() => {
+                  navigation.navigate<any>('DetailLes', {data: item});
+                }}
+              />
+            )}
+            extraData={listData}
+            onEndReachedThreshold={0.1}
+            ListFooterComponent={
+              <View>
+                {displayButton && (
+                  <Button
+                    loading={loadingData}
+                    onPress={() => {
+                      setLoadingData(true);
+                      loadMoreData();
+                    }}
+                    mode="contained"
+                    disabled={buttonLoadMore}
+                    style={{
+                      marginTop: 10,
+                      alignSelf: 'center',
+                      marginHorizontal: 10,
+                    }}>
+                    Load More Data
+                  </Button>
+                )}
+              </View>
+            }
+          />
+        </>
+      )}
+      <Gap y={72} />
+      {/* </ScrollView> */}
 
       {/* Add button */}
       <FABList
