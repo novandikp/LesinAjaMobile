@@ -42,7 +42,7 @@ type ScreenProps = StackScreenProps<AppStackParamList>;
 export const AddLes: FC<ScreenProps> = ({navigation}) => {
   const [listLes, setListLes] = useState([]);
   const [listMurid, setListMurid] = useState([]);
-  const [Open, setOpen] = useState(false);
+  const [Open, setOpen] = useState(false);const [disabled, setDisabled] = useState(false);
   const today = new Date();
   today.setDate(today.getDate() + 1);
   const [biaya, setBiaya] = useState(0);
@@ -106,6 +106,7 @@ export const AddLes: FC<ScreenProps> = ({navigation}) => {
     };
   }, [selectedDays, listLes, filterJenjang]);
   const onSubmit: SubmitHandler<FormDataType> = async data => {
+    setDisabled(true)
     let hari = selectedDays.toString();
     data.hari = hari;
     data.jamles = time.getHours() + ':' + time.getMinutes();
@@ -445,7 +446,7 @@ export const AddLes: FC<ScreenProps> = ({navigation}) => {
       </ScrollView>
 
       {/* Submit button */}
-      <ButtonFormSubmit text="Kirim" onPress={handleSubmit(onSubmit)} />
+      <ButtonFormSubmit disabled={disabled} text="Kirim" onPress={handleSubmit(onSubmit)} />
     </SafeAreaView>
   );
 };
