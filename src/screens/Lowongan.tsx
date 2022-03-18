@@ -58,6 +58,7 @@ export const Lowongan: FC<ScreenProps> = ({navigation}) => {
   const [prefrensi, setPrefrensi] = useState();
   const [idkabupaten, setIdKabupaten] = useState();
   const [buttonLoadMore, setButtonLoadMore] = useState(true);
+  const [displayButton, setDisplayButton] = useState(false);
   const componentMounted = useRef(true); // (3) component is mounted
   const [isRefreshing, setIsRefreshing] = useState(true);
   const loadMoreData = async () => {
@@ -72,16 +73,20 @@ export const Lowongan: FC<ScreenProps> = ({navigation}) => {
         jenjang: filterJenjang,
         prefrensi: filterPrefrensi,
       },
-    }).then(res => {
-      setLowonganList(lowonganList.concat(res.data));
-      if (res.data.length < 10) {
-        setButtonLoadMore(true);
-        setIsRefreshing(true);
-      } else if (res.data.length == 10) {
-        setButtonLoadMore(false);
-      }
-    });
-    // setPage(NextPage);
+    })
+      .then(res => {
+        setLowonganList(lowonganList.concat(res.data));
+        if (res.data.length < 10) {
+          // setButtonLoadMore(true);
+          setDisplayButton(false);
+        } else if (res.data.length == 10) {
+          setButtonLoadMore(false);
+          setPage(NextPage);
+        }
+      })
+      .catch((err: any) => {
+        console.log(err);
+      });
   };
   useEffect(() => {
     let isActive = true;
@@ -102,18 +107,22 @@ export const Lowongan: FC<ScreenProps> = ({navigation}) => {
         const dataJenjang = await apiGet({url: '/paket/jenjang'});
         if (lowonganKabupaten.data.length == 10) {
           setButtonLoadMore(false);
+          setDisplayButton(true);
         }
-        if (componentMounted) {
+        if (componentMounted.current) {
+          setLowonganList(lowonganKabupaten.data);
           setIdKabupaten(tutor.data.idkecamatan);
+          console.log('component mounted current');
         }
         if (isActive) {
-          setLowonganList(lowonganKabupaten.data);
+          console.log('isActive');
+          setLowonganList(lowonganList);
           setListJenjang(dataJenjang.data);
           setIsRefreshing(false);
-          // setLowonganList(lowonganList.concat(lowonganKabupaten.data));
         }
       } else if (tutor.data.idkecamatan == null) {
         if (isActive) {
+          console.log('tutor data null');
           setLowonganList(null);
         }
       }
@@ -121,10 +130,9 @@ export const Lowongan: FC<ScreenProps> = ({navigation}) => {
     if (isRefreshing) {
       getInitialData();
     }
-    // loadMoreData();
     return () => {
+      componentMounted.current = false;
       isActive = false;
-      // cancelApiRequest();
     };
   }, [
     lowonganList,
@@ -132,7 +140,7 @@ export const Lowongan: FC<ScreenProps> = ({navigation}) => {
     filterJenjang,
     filterPrefrensi,
     page,
-    // isRefreshing,
+    isRefreshing,
   ]);
   return (
     <SafeAreaView style={styles.container}>
@@ -235,21 +243,7 @@ export const Lowongan: FC<ScreenProps> = ({navigation}) => {
       </Modal>
 
       {lowonganList != null ? (
-        // lowonganList.map((item: any, index: number) => {
-        //   return (
-        //     <NestedCard
-        //       key={index}
-        //       title={'' + item.paket + ' ' + item.jenjang}
-        //       subtitle={`${item.jumlah_pertemuan} pertemuan `}
-        //       additionalText={
-        //         'Rp.' + item.gaji.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')
-        //       }
-        //       onPress={() => {
-        //         navigation.navigate<any>('DetailLowongan', {item});
-        //       }}
-        //     />
-        //   );
-        // })
+        // <View>
         <FlatList
           contentContainerStyle={styles.scrollContainer}
           data={lowonganList}
@@ -267,22 +261,26 @@ export const Lowongan: FC<ScreenProps> = ({navigation}) => {
               }}
             />
           )}
-          onEndReachedThreshold={0.5}
+          extraData={lowonganList}
+          onEndReachedThreshold={0.1}
           ListFooterComponent={
-            <Button
-              onPress={() => {
-                loadMoreData();
-              }}
-              mode="contained"
-              disabled={buttonLoadMore}
-              // disabled={true}
-              style={{
-                alignSelf: 'center',
-                // backgroundColor: color.green_500,
-                marginHorizontal: 10,
-              }}>
-              Load More Data
-            </Button>
+            <View>
+              {displayButton && (
+                <Button
+                  onPress={() => {
+                    loadMoreData();
+                  }}
+                  mode="contained"
+                  disabled={buttonLoadMore}
+                  style={{
+                    marginTop: 10,
+                    alignSelf: 'center',
+                    marginHorizontal: 10,
+                  }}>
+                  Load More Data
+                </Button>
+              )}
+            </View>
           }
         />
       ) : (
