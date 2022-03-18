@@ -1,6 +1,6 @@
 import React, {FC, useState, useEffect} from 'react';
 
-import {Header, OneLineInfo, CardKeyValue} from '@components';
+import {Header, OneLineInfo, CardKeyValue, SkeletonLoading} from '@components';
 import {color, dimens} from '@constants';
 import {SafeAreaView, StatusBar, StyleSheet, ScrollView} from 'react-native';
 import {AdminDrawerParamList, AppStackParamList} from '@routes/RouteTypes';
@@ -9,6 +9,7 @@ import {CompositeScreenProps} from '@react-navigation/native';
 import {MaterialBottomTabScreenProps} from '@react-navigation/material-bottom-tabs';
 import {Card} from 'react-native-paper';
 import {apiGet} from '@utils';
+import {useIsFocused} from '@react-navigation/core';
 
 type ScreenProps = CompositeScreenProps<
   MaterialBottomTabScreenProps<AdminDrawerParamList, 'ListTutor'>,
@@ -16,6 +17,9 @@ type ScreenProps = CompositeScreenProps<
 >;
 
 export const ListTutor: FC<ScreenProps> = ({navigation}) => {
+  const [Loading, setIsLoading] = useState(true);
+  const [isRefreshing, setIsRefreshing] = useState(false);
+  const isFocus = useIsFocused();
   // const tutorList = [
   //   {
   //     nama: 'Nico Prakoso',
@@ -51,11 +55,13 @@ export const ListTutor: FC<ScreenProps> = ({navigation}) => {
       setTutorList(tutor.data);
     };
 
-    getInitialData();
+    if (isRefreshing || Loading || isFocus) {
+      getInitialData();}
+
     return () => {
       // cancelApiRequest();
     };
-  }, []);
+  }, [isFocus, Loading, isRefreshing]);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -67,6 +73,9 @@ export const ListTutor: FC<ScreenProps> = ({navigation}) => {
         title="Daftar Tutor"
         onPressFilter={() => {}}
       />
+        {Loading || isRefreshing ? (
+                        <SkeletonLoading />
+                      ) : (
 
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         <OneLineInfo info="Klik item untuk melihat detail" />
@@ -88,7 +97,7 @@ export const ListTutor: FC<ScreenProps> = ({navigation}) => {
             </Card>
           );
         })}
-      </ScrollView>
+      </ScrollView> )}
     </SafeAreaView>
   );
 };
