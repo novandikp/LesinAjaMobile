@@ -1,5 +1,5 @@
 import React, {FC, useState, useEffect} from 'react';
-import {CardKeyValue, Gap, Header, NestedCard} from '@components';
+import {CardKeyValue, Gap, Header, NestedCard, SkeletonLoading} from '@components';
 import {color, dimens} from '@constants';
 import {
   SafeAreaView,
@@ -18,9 +18,13 @@ import {
 import {StackScreenProps} from '@react-navigation/stack';
 import {AppStackParamList} from '@routes/RouteTypes';
 import {getSingleDocument, apiGet, apiPostFile} from '@utils';
+import {useIsFocused} from '@react-navigation/core';
 
 type ScreenProps = StackScreenProps<AppStackParamList, 'DetailLes'>;
 export const DetailLes: FC<ScreenProps> = ({navigation, route}) => {
+  const [Loading, setIsLoading] = useState(true);
+  const [isRefreshing, setIsRefreshing] = useState(false);
+  const isFocus = useIsFocused();
   const {data}: any = route.params;
   let id = data.idles;
   const bayar = data.biaya;
@@ -85,18 +89,22 @@ export const DetailLes: FC<ScreenProps> = ({navigation, route}) => {
         setCoursePresenceList(jadwalles.data);
       }
     };
-    getInitialData();
+    if (isRefreshing || isLoading || isFocus) {
+      getInitialData();
+    }
 
     return () => {
       isActive = false;
     };
-  });
+  }, [isFocus, isLoading, isRefreshing]);
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar backgroundColor={color.bg_grey} barStyle="dark-content" />
 
       <Header title="Detail Les" />
-
+      {Loading || isRefreshing ? (
+            <SkeletonLoading />
+          ) : (
       <ScrollView
         contentContainerStyle={{flexGrow: 1, padding: dimens.standard}}>
         {/* About Les */}
@@ -238,7 +246,7 @@ export const DetailLes: FC<ScreenProps> = ({navigation, route}) => {
           </Card>
         )}
         <Gap y={dimens.standard} />
-      </ScrollView>
+      </ScrollView>)}
     </SafeAreaView>
   );
 };
