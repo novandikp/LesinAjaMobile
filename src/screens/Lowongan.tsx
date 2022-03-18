@@ -132,7 +132,7 @@ export const Lowongan: FC<ScreenProps> = ({navigation}) => {
     filterJenjang,
     filterPrefrensi,
     page,
-    isRefreshing,
+    // isRefreshing,
   ]);
   return (
     <SafeAreaView style={styles.container}>
@@ -267,12 +267,7 @@ export const Lowongan: FC<ScreenProps> = ({navigation}) => {
               }}
             />
           )}
-          // refreshControl={isRefreshing}
-          // onEndReached={() => {
-          //   loadMoreData();
-          // }}
-          extraData={lowonganList}
-          onEndReachedThreshold={0.1}
+          onEndReachedThreshold={0.5}
           ListFooterComponent={
             <Button
               onPress={() => {
