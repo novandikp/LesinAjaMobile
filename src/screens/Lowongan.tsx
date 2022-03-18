@@ -1,5 +1,5 @@
 import React, {FC, useState, useEffect, useRef} from 'react';
-import {Header, NestedCard, OneLineInfo} from '@components';
+import {Header, NestedCard, OneLineInfo, SkeletonLoading} from '@components';
 import {color, dimens} from '@constants';
 import {
   SafeAreaView,
@@ -18,6 +18,7 @@ import {CompositeScreenProps} from '@react-navigation/native';
 import {MaterialBottomTabScreenProps} from '@react-navigation/material-bottom-tabs';
 import {apiGet} from '@utils';
 import {Picker} from '@react-native-picker/picker';
+import {useIsFocused} from '@react-navigation/core';
 
 type ScreenProps = CompositeScreenProps<
   MaterialBottomTabScreenProps<MainTabParamList, 'Lowongan'>,
@@ -61,6 +62,10 @@ export const Lowongan: FC<ScreenProps> = ({navigation}) => {
   const [displayButton, setDisplayButton] = useState(false);
   const componentMounted = useRef(true); // (3) component is mounted
   const [isRefreshing, setIsRefreshing] = useState(true);
+  const [loadingData, setLoadingData] = useState(false);
+  const isFocus = useIsFocused();
+  const [isLoading, setIsLoading] = useState(true);
+
   const loadMoreData = async () => {
     let NextPage = page + 1;
     await apiGet({
@@ -75,10 +80,15 @@ export const Lowongan: FC<ScreenProps> = ({navigation}) => {
       },
     })
       .then(res => {
+        if (res.data.length == 0) {
+          setLoadingData(false);
+          return setDisplayButton(false);
+        }
         setLowonganList(lowonganList.concat(res.data));
         if (res.data.length < 10) {
-          // setButtonLoadMore(true);
-          setDisplayButton(false);
+          // setLoadingData(false);
+          console.log('its should close buton');
+          return setDisplayButton(false);
         } else if (res.data.length == 10) {
           setButtonLoadMore(false);
           setPage(NextPage);
@@ -105,19 +115,23 @@ export const Lowongan: FC<ScreenProps> = ({navigation}) => {
           },
         });
         const dataJenjang = await apiGet({url: '/paket/jenjang'});
-        if (lowonganKabupaten.data.length == 10) {
-          setButtonLoadMore(false);
-          setDisplayButton(true);
-        }
         if (componentMounted.current) {
+          if (lowonganKabupaten.data.length == 10) {
+            setButtonLoadMore(false);
+            setDisplayButton(true);
+          }
           setLowonganList(lowonganKabupaten.data);
           setIdKabupaten(tutor.data.idkecamatan);
           console.log('component mounted current');
         }
         if (isActive) {
-          console.log('isActive');
-          setLowonganList(lowonganList);
+          console.log('test');
+
+          if (lowonganList.length > 1) {
+            setLowonganList(lowonganList);
+          }
           setListJenjang(dataJenjang.data);
+          setIsLoading(false);
           setIsRefreshing(false);
         }
       } else if (tutor.data.idkecamatan == null) {
@@ -127,7 +141,7 @@ export const Lowongan: FC<ScreenProps> = ({navigation}) => {
         }
       }
     };
-    if (isRefreshing) {
+    if (isRefreshing || isLoading || isFocus) {
       getInitialData();
     }
     return () => {
@@ -141,6 +155,8 @@ export const Lowongan: FC<ScreenProps> = ({navigation}) => {
     filterPrefrensi,
     page,
     isRefreshing,
+    isLoading,
+    isFocus,
   ]);
   return (
     <SafeAreaView style={styles.container}>
@@ -241,9 +257,9 @@ export const Lowongan: FC<ScreenProps> = ({navigation}) => {
           </Button>
         </Card>
       </Modal>
-
-      {lowonganList != null ? (
-        // <View>
+      {isLoading || isRefreshing ? (
+        <SkeletonLoading />
+      ) : lowonganList.length >= 1 ? (
         <FlatList
           contentContainerStyle={styles.scrollContainer}
           data={lowonganList}
@@ -265,9 +281,11 @@ export const Lowongan: FC<ScreenProps> = ({navigation}) => {
           onEndReachedThreshold={0.1}
           ListFooterComponent={
             <View>
-              {displayButton && (
+              {displayButton == true && (
                 <Button
+                  loading={loadingData}
                   onPress={() => {
+                    setLoadingData(true);
                     loadMoreData();
                   }}
                   mode="contained"
@@ -283,7 +301,7 @@ export const Lowongan: FC<ScreenProps> = ({navigation}) => {
             </View>
           }
         />
-      ) : (
+      ) : lowonganList == null ? (
         <View
           style={{
             flex: 1,
@@ -305,25 +323,26 @@ export const Lowongan: FC<ScreenProps> = ({navigation}) => {
             Harap isi data diri
           </Subheading>
         </View>
-      )}
-      {lowonganList.length == 0 && (
-        <View
-          style={{
-            flex: 1,
-            justifyContent: 'center',
-            alignItems: 'center',
-            paddingBottom: dimens.massive,
-          }}>
-          <MaterialCommunityIcons
-            name="database-remove"
-            size={130}
-            style={{color: 'grey'}}
-          />
+      ) : (
+        lowonganList.length == 0 && (
+          <View
+            style={{
+              flex: 1,
+              justifyContent: 'center',
+              alignItems: 'center',
+              paddingBottom: dimens.massive,
+            }}>
+            <MaterialCommunityIcons
+              name="database-remove"
+              size={130}
+              style={{color: 'grey'}}
+            />
 
-          <Headline style={{textAlign: 'center', marginTop: dimens.large}}>
-            Belum ada data.
-          </Headline>
-        </View>
+            <Headline style={{textAlign: 'center', marginTop: dimens.large}}>
+              Belum ada data.
+            </Headline>
+          </View>
+        )
       )}
       {/* </ScrollView> */}
     </SafeAreaView>
