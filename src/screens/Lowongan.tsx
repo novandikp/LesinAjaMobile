@@ -65,7 +65,6 @@ export const Lowongan: FC<ScreenProps> = ({navigation}) => {
   const [loadingData, setLoadingData] = useState(false);
   const isFocus = useIsFocused();
   const [isLoading, setIsLoading] = useState(true);
-
   const loadMoreData = async () => {
     let NextPage = page + 1;
     await apiGet({
@@ -102,6 +101,7 @@ export const Lowongan: FC<ScreenProps> = ({navigation}) => {
     let isActive = true;
     const getInitialData = async () => {
       const tutor = await apiGet({url: '/guru/profile'});
+      setFilterPrenfrensi(tutor.data.jeniskelaminguru);
       if (tutor.data.idkecamatan != null) {
         const lowonganKabupaten = await apiGet({
           url: '/lowongan/' + tutor.data.idkecamatan,
@@ -111,7 +111,7 @@ export const Lowongan: FC<ScreenProps> = ({navigation}) => {
             orderBy: 'idlowongan',
             sort: 'ASC',
             jenjang: filterJenjang,
-            prefrensi: filterPrefrensi,
+            prefrensi: tutor.data.jeniskelaminguru,
           },
         });
         const dataJenjang = await apiGet({url: '/paket/jenjang'});
@@ -138,6 +138,8 @@ export const Lowongan: FC<ScreenProps> = ({navigation}) => {
         if (isActive) {
           console.log('tutor data null');
           setLowonganList(null);
+          setIsLoading(false);
+          setIsRefreshing(false);
         }
       }
     };
@@ -226,7 +228,7 @@ export const Lowongan: FC<ScreenProps> = ({navigation}) => {
               maxHeight: 40,
             }}>
             {/* {' '} */}
-            <Text
+            {/* <Text
               style={{
                 fontSize: 15,
                 flex: 1,
@@ -244,13 +246,13 @@ export const Lowongan: FC<ScreenProps> = ({navigation}) => {
               <Picker.Item label="Wanita" value="Wanita" />
               <Picker.Item label="Pria" value="Pria" />
               <Picker.Item label="Bebas" value="Bebas" />
-            </Picker>
+            </Picker> */}
           </View>
           <Button
             style={{maxWidth: 100, alignSelf: 'flex-end', marginRight: 20}}
             onPress={() => {
               setFilterJenjang(jenjang);
-              setFilterPrenfrensi(prefrensi);
+              // setFilterPrenfrensi(prefrensi);
               setModalFilter(false);
             }}>
             ok
@@ -259,48 +261,6 @@ export const Lowongan: FC<ScreenProps> = ({navigation}) => {
       </Modal>
       {isLoading || isRefreshing ? (
         <SkeletonLoading />
-      ) : lowonganList.length >= 1 ? (
-        <FlatList
-          contentContainerStyle={styles.scrollContainer}
-          data={lowonganList}
-          keyExtractor={(item: ItemType) => item.idlowongan}
-          renderItem={({item}: ListRenderItemInfo<ItemType>) => (
-            <NestedCard
-              key={item.idlowongan}
-              title={'' + item.paket + ' ' + item.jenjang + ' ' + item.siswa}
-              subtitle={`${item.jumlah_pertemuan} pertemuan `}
-              additionalText={
-                'Rp.' + item.gaji.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')
-              }
-              onPress={() => {
-                navigation.navigate<any>('DetailLowongan', {item});
-              }}
-            />
-          )}
-          extraData={lowonganList}
-          onEndReachedThreshold={0.1}
-          ListFooterComponent={
-            <View>
-              {displayButton == true && (
-                <Button
-                  loading={loadingData}
-                  onPress={() => {
-                    setLoadingData(true);
-                    loadMoreData();
-                  }}
-                  mode="contained"
-                  disabled={buttonLoadMore}
-                  style={{
-                    marginTop: 10,
-                    alignSelf: 'center',
-                    marginHorizontal: 10,
-                  }}>
-                  Load More Data
-                </Button>
-              )}
-            </View>
-          }
-        />
       ) : lowonganList == null ? (
         <View
           style={{
@@ -323,25 +283,67 @@ export const Lowongan: FC<ScreenProps> = ({navigation}) => {
             Harap isi data diri
           </Subheading>
         </View>
+      ) : lowonganList.length == 0 ? (
+        <View
+          style={{
+            flex: 1,
+            justifyContent: 'center',
+            alignItems: 'center',
+            paddingBottom: dimens.massive,
+          }}>
+          <MaterialCommunityIcons
+            name="database-remove"
+            size={130}
+            style={{color: 'grey'}}
+          />
+          <Headline style={{textAlign: 'center', marginTop: dimens.large}}>
+            Belum ada data.
+          </Headline>
+        </View>
       ) : (
-        lowonganList.length == 0 && (
-          <View
-            style={{
-              flex: 1,
-              justifyContent: 'center',
-              alignItems: 'center',
-              paddingBottom: dimens.massive,
-            }}>
-            <MaterialCommunityIcons
-              name="database-remove"
-              size={130}
-              style={{color: 'grey'}}
-            />
-
-            <Headline style={{textAlign: 'center', marginTop: dimens.large}}>
-              Belum ada data.
-            </Headline>
-          </View>
+        lowonganList.length >= 1 && (
+          <FlatList
+            contentContainerStyle={styles.scrollContainer}
+            data={lowonganList}
+            keyExtractor={(item: ItemType) => item.idlowongan}
+            renderItem={({item}: ListRenderItemInfo<ItemType>) => (
+              <NestedCard
+                key={item.idlowongan}
+                title={'' + item.paket + ' ' + item.jenjang + ' ' + item.siswa}
+                subtitle={`${item.jumlah_pertemuan} pertemuan `}
+                additionalText={
+                  'Rp.' +
+                  item.gaji.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')
+                }
+                onPress={() => {
+                  navigation.navigate<any>('DetailLowongan', {item});
+                }}
+              />
+            )}
+            extraData={lowonganList}
+            onEndReachedThreshold={0.1}
+            ListFooterComponent={
+              <View>
+                {displayButton == true && (
+                  <Button
+                    loading={loadingData}
+                    onPress={() => {
+                      setLoadingData(true);
+                      loadMoreData();
+                    }}
+                    mode="contained"
+                    disabled={buttonLoadMore}
+                    style={{
+                      marginTop: 10,
+                      alignSelf: 'center',
+                      marginHorizontal: 10,
+                    }}>
+                    Load More Data
+                  </Button>
+                )}
+              </View>
+            }
+          />
         )
       )}
       {/* </ScrollView> */}
