@@ -84,7 +84,7 @@ export const Home: FC<ScreenProps> = () => {
         <View style={styles.paragraphContainer}>
           <Text style={styles.text}>{'7.    '}</Text>
           <Text style={[styles.text, styles.rightParagraphContainer]}>
-            Jika wali murid/siswa menghendaki libur , wali murid
+            Jika wali murid/siswa menghendaki libur, wali murid
             <Text style={styles.boldText}> wajib </Text>memberitahukan pada
             tutor minimal 2 jam sebelumnya agar tutor tidak terlanjur datang.
           </Text>
@@ -94,7 +94,7 @@ export const Home: FC<ScreenProps> = () => {
         <View style={styles.paragraphContainer}>
           <Text style={styles.text}>{'8.    '}</Text>
           <Text style={[styles.text, styles.rightParagraphContainer]}>
-            Jika tutor terlanjur datang namun wali murid meliburkan {' '}
+            Jika tutor terlanjur datang namun wali murid meliburkan{' '}
             <Text style={styles.boldText}>
             tanpa pemberitahuan sebelumnya
             </Text>, maka tutor dianggap datang dan tutor berhak mengisi daftar
@@ -127,11 +127,9 @@ export const Home: FC<ScreenProps> = () => {
         <View style={styles.paragraphContainer}>
           <Text style={styles.text}>{'11.  '}</Text>
           <Text style={[styles.text, styles.rightParagraphContainer]}>
-            Wali Murid <Text style={styles.boldText}>wajib</Text> untuk{' '}
-            <Text style={styles.boldText}>
+            Wali Murid<Text style={styles.boldText}> wajib</Text> untuk
               memantau laporan perkembangan siswa
-            </Text>{' '}
-            dan memberi tanda tangan pada daftar hadir tutor.
+              dan memberi tanda tangan pada daftar hadir tutor.
           </Text>
         </View>
         <Divider />
@@ -140,22 +138,14 @@ export const Home: FC<ScreenProps> = () => {
           <Text style={styles.text}>{'12.  '}</Text>
           <Text style={[styles.text, styles.rightParagraphContainer]}>
             Untuk
-            <Text style={styles.boldText}> menjaga keamanan bersama </Text>
-            <Text style={styles.boldText}>
-              wali murid diwajibkan menyiapkan papan tulis kecil
-            </Text>{' '}
-            agar ada jarak antara tutor dan siswa,{' '}
-            <Text style={styles.boldText}>
-              menyiapkan hand sanitizer , memakaikan masker/faceshield
-            </Text>{' '}
-            pada{' '}
-            <Text style={styles.boldText}>anak saat les berlangsung .</Text>{' '}
-            Wali murid juga <Text style={styles.boldText}> diwajibkan</Text>{' '}
-            untuk{' '}
-            <Text style={styles.boldText}>
+            menjaga keamanan bersama wali murid
+            <Text style={styles.boldText}> diwajibkan </Text>
+              menyiapkan papan tulis kecil agar ada jarak antara tutor dan siswa,
+              menyiapkan hand sanitizer, memakaikan masker/faceshield
+              pada anak saat les berlangsung.
+            Wali murid juga<Text style={styles.boldText}> diwajibkan</Text> untuk
               memastikan bahwa tutor menjalankan protokol kesehatan sesuai
-              anjuran pemerintah .
-            </Text>
+              anjuran pemerintah.
           </Text>
         </View>
         <Divider />
@@ -185,6 +175,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   rightParagraphContainer: {
+    textAlign:'justify',
     flex: 1,
   },
   boldText: {

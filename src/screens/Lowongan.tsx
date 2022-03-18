@@ -1,5 +1,5 @@
 import React, {FC, useState, useEffect} from 'react';
-import {Header, NestedCard, OneLineInfo} from '@components';
+import {Header, NestedCard, OneLineInfo, SkeletonLoading} from '@components';
 import {color, dimens} from '@constants';
 import {
   SafeAreaView,
@@ -17,7 +17,7 @@ import {CompositeScreenProps} from '@react-navigation/native';
 import {MaterialBottomTabScreenProps} from '@react-navigation/material-bottom-tabs';
 import {apiGet} from '@utils';
 import {Picker} from '@react-native-picker/picker';
-
+import {useIsFocused} from '@react-navigation/core';
 type ScreenProps = CompositeScreenProps<
   MaterialBottomTabScreenProps<MainTabParamList, 'Lowongan'>,
   StackScreenProps<AppStackParamList>
@@ -35,6 +35,10 @@ export const Lowongan: FC<ScreenProps> = ({navigation}) => {
   const [listJenjang, setListJenjang] = useState([]);
   const [jenjang, setJenjang] = useState();
   const [prefrensi, setPrefrensi] = useState();
+  const [isLoading, setIsLoading] = useState(true);
+  const [isRefreshing, setIsRefreshing] = useState(false);
+  const [selectedStudent, setSelectedStudent] = useState({id: 0, nama: ''});
+  const isFocus = useIsFocused();
 
   useEffect(() => {
     let isActive = true;
@@ -57,6 +61,8 @@ export const Lowongan: FC<ScreenProps> = ({navigation}) => {
         if (isActive) {
           setListJenjang(dataJenjang.data);
           setLowonganList(lowonganKabupaten.data);
+          setIsLoading(false);
+          setIsRefreshing(false);
         }
       } else if (tutor.data.idkecamatan == null) {
         if (isActive) {
@@ -64,12 +70,14 @@ export const Lowongan: FC<ScreenProps> = ({navigation}) => {
         }
       }
     };
-    getInitialData();
+    if (isRefreshing || isLoading || isFocus) {
+      getInitialData();
+    }
     return () => {
       isActive = false;
       // cancelApiRequest();
     };
-  }, [lowonganList, listJenjang, filterJenjang, filterPrefrensi, page]);
+  }, [lowonganList, listJenjang, filterJenjang, filterPrefrensi, page, isFocus, isLoading, isRefreshing]);
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar backgroundColor={color.bg_grey} barStyle="dark-content" />
@@ -80,7 +88,9 @@ export const Lowongan: FC<ScreenProps> = ({navigation}) => {
         withFilter={true}
         onPressFilter={() => setModalFilter(true)}
       />
-
+       {isLoading || isRefreshing ? (
+            <SkeletonLoading />
+          ) : (
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         <OneLineInfo info="Klik item untuk melihat detail" />
         <Modal
@@ -231,7 +241,7 @@ export const Lowongan: FC<ScreenProps> = ({navigation}) => {
             </Headline>
           </View>
         )}
-      </ScrollView>
+      </ScrollView>)}
     </SafeAreaView>
   );
 };

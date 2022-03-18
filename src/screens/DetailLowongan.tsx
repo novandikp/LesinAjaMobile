@@ -127,7 +127,7 @@ export const DetailLowongan: FC<ScreenProps> = ({route, navigation}) => {
                   color: color.green_500,
                   marginTop: dimens.standard,
                 }}>
-                Menunggu Konfirmasi Wali Murid
+                Menunggu Konfirmasi dari Wali Murid
               </Text>
             )}
             {item.statuslowongan == 2 && (
