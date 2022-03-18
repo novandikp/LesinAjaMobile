@@ -54,7 +54,7 @@ export const InputChoice: FC<ComponentProps> = props => {
               placeholder="Cari data..."
               onChangeText={setKeyword}
               value={keyword}
-            />
+            />lakukan pengecekan disini
             <ScrollView
               contentContainerStyle={{padding: dimens.standard, flexGrow: 1}}>
               {searchedData.map((item, index) => {
