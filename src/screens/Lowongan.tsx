@@ -128,7 +128,6 @@ export const Lowongan: FC<ScreenProps> = ({navigation}) => {
             setLowonganList(lowonganList);
           } else {
             if (lowonganKabupaten.data.length == 10) {
-              // console.log('tt');
               setButtonLoadMore(false);
               setDisplayButton(true);
             }
@@ -300,10 +299,13 @@ export const Lowongan: FC<ScreenProps> = ({navigation}) => {
           renderItem={({item}: ListRenderItemInfo<ItemType>) => (
             <NestedCard
               key={item.idlowongan}
-              title={'' + item.paket + ' ' + item.jenjang + ' ' + item.siswa}
-              subtitle={`${item.jumlah_pertemuan} pertemuan `}
+              title={'' + item.paket + ' ' + item.jenjang}
+              subtitle={`${item.jumlah_pertemuan} pertemuan`
+            // item.siswa
+            }
               additionalText={
-                'Rp.' + item.gaji.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')
+                'Gaji Rp.' +
+                item.gaji.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')
               }
               onPress={() => {
                 navigation.navigate<any>('DetailLowongan', {item});
