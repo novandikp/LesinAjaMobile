@@ -20,8 +20,9 @@ export const getSingleDocument = async () => {
     const [res]: any = await DocumentPicker.pick({
       type: [DocumentPicker.types.images],
     });
-
-    return res;
+    if (res.size < 2500000) {
+      return res;
+    }
   } catch (err: any) {
     if (DocumentPicker.isCancel(err)) {
       // User cancelled the picker, exit any dialogs or menus and move on
@@ -35,8 +36,9 @@ export const getSingleDocumentPDF = async () => {
     const [res]: any = await DocumentPicker.pick({
       type: [DocumentPicker.types.pdf],
     });
-
-    return res;
+    if (res.size < 2500000) {
+      return res;
+    }
   } catch (err: any) {
     if (DocumentPicker.isCancel(err)) {
       // User cancelled the picker, exit any dialogs or menus and move on

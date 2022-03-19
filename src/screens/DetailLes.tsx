@@ -141,7 +141,7 @@ export const DetailLes: FC<ScreenProps> = ({navigation, route}) => {
           <Card style={{marginTop: dimens.standard}}>
             <Card.Title
               title="Anda Belum Membayar Biaya Les"
-              subtitle="Biaya Les: Rp 200.000"
+              subtitle="Biaya Les: Rp 200.000 (Ukuran maks.2mb)"
               titleStyle={{color: '#EF4444'}}
               subtitleStyle={{fontSize: dimens.medium_14}}
             />
@@ -151,6 +151,8 @@ export const DetailLes: FC<ScreenProps> = ({navigation, route}) => {
                 style={{
                   marginTop: dimens.small,
                   marginHorizontal: dimens.standard,
+                  // height: 500,
+                  // resizeMode: 'contain',
                 }}
               />
             )}
@@ -166,7 +168,7 @@ export const DetailLes: FC<ScreenProps> = ({navigation, route}) => {
           <Card style={{marginTop: dimens.standard}}>
             <Card.Title
               title="Anda Belum Membayar Biaya Les"
-              subtitle="Biaya Les: Rp 200.000"
+              subtitle="Biaya Les: Rp 200.000 (Ukuran maks.2mb)"
               titleStyle={{color: '#EF4444'}}
               subtitleStyle={{fontSize: dimens.medium_14}}
             />

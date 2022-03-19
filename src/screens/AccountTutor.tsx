@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import React, { FC, useEffect, useState } from 'react';
+import React, {FC, useEffect, useState} from 'react';
 import {
   ButtonFormSubmit,
   Header,
@@ -7,11 +7,11 @@ import {
   InputText,
   SkeletonLoading,
 } from '@components';
-import { TextInput } from 'react-native-paper';
-import { color, dimens } from '@constants';
-import { Card } from 'react-native-paper';
-import { Controller, SubmitHandler, useForm } from 'react-hook-form';
-import { Icon } from 'react-native-elements';
+import {TextInput} from 'react-native-paper';
+import {color, dimens} from '@constants';
+import {Card} from 'react-native-paper';
+import {Controller, SubmitHandler, useForm} from 'react-hook-form';
+import {Icon} from 'react-native-elements';
 import Modal from 'react-native-modal';
 import {
   SafeAreaView,
@@ -22,15 +22,15 @@ import {
   ScrollView,
   Platform,
 } from 'react-native';
-import { StackScreenProps } from '@react-navigation/stack';
-import { AppStackParamList } from '@routes/RouteTypes';
+import {StackScreenProps} from '@react-navigation/stack';
+import {AppStackParamList} from '@routes/RouteTypes';
 import {
   apiGet,
   apiPostFile,
   checkPersimisson,
   getSingleDocumentPDF,
 } from '@utils';
-import { getListDaerah } from '@utils/getListData';
+import {getListDaerah} from '@utils/getListData';
 
 type FormDataType = {
   idprovinsi: string;
@@ -56,19 +56,19 @@ type ScreenProps = StackScreenProps<AppStackParamList, 'Account'>;
 
 export const AccountTutor: FC<ScreenProps> = () => {
   const listJenis = [
-    { id: '00', name: 'Wanita' },
-    { id: '01', name: 'Pria' },
+    {id: '00', name: 'Wanita'},
+    {id: '01', name: 'Pria'},
   ];
   const listBank = [
-    { id: '00', name: 'BCA' },
-    { id: '01', name: 'BRI' },
-    { id: '02', name: 'BNI' },
+    {id: '00', name: 'BCA'},
+    {id: '01', name: 'BRI'},
+    {id: '02', name: 'BNI'},
   ];
   const {
     control,
     handleSubmit,
-    formState: { errors },
-  } = useForm<FormDataType>({ mode: 'onChange' });
+    formState: {errors},
+  } = useForm<FormDataType>({mode: 'onChange'});
   const [listDaerah, setListDaerah] = useState({
     provinsi: [],
     kota: [],
@@ -78,7 +78,7 @@ export const AccountTutor: FC<ScreenProps> = () => {
   const [file, setFile] = useState<any>(null);
   const [isModalVisible, setModalVisible] = useState(false);
   const [isLoadingSubmit, setLoadingSubmit] = useState(false);
-  const [isDisabled, setDisabled] = useState(false)
+  const [isDisabled, setDisabled] = useState(false);
   const [selectedDaerah, setSelectedDaerah] = useState({
     provinsi: '',
     kota: '',
@@ -108,11 +108,11 @@ export const AccountTutor: FC<ScreenProps> = () => {
   });
   useEffect(() => {
     const getInitialData = async () => {
-      const provinsi = await getListDaerah({ type: 'provinsi' });
-      setListDaerah(prev => ({ ...prev, provinsi }));
+      const provinsi = await getListDaerah({type: 'provinsi'});
+      setListDaerah(prev => ({...prev, provinsi}));
     };
     const getPersonalData = async () => {
-      const OldData = await apiGet({ url: '/guru/profile' });
+      const OldData = await apiGet({url: '/guru/profile'});
       if (OldData.data.idprovinsi != null && OldData.data.idkecamatan != null) {
         let kota = await getListDaerah({
           type: 'kota',
@@ -126,7 +126,7 @@ export const AccountTutor: FC<ScreenProps> = () => {
           type: 'desa',
           idParent: OldData.data.idkecamatan,
         });
-        let provinsi = await getListDaerah({ type: 'provinsi' });
+        let provinsi = await getListDaerah({type: 'provinsi'});
         setListDaerah({
           provinsi: provinsi,
           kota: kota,
@@ -207,12 +207,12 @@ export const AccountTutor: FC<ScreenProps> = () => {
     newCV.append('telp', data.telp);
     newCV.append('jeniskelaminguru', data.jeniskelaminguru);
     console.log(data);
-    const { success } = await apiPostFile({
+    const {success} = await apiPostFile({
       url: '/guru/profile/',
       payload: newCV,
     });
     if (success) {
-      setDisabled(false)
+      setDisabled(false);
       setLoadingSubmit(false);
       setModalVisible(true);
     }
@@ -227,13 +227,13 @@ export const AccountTutor: FC<ScreenProps> = () => {
         <SkeletonLoading />
       ) : (
         <>
-          <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
-            <View style={{ flex: 1, padding: dimens.standard }}>
+          <ScrollView contentContainerStyle={{flexGrow: 1}}>
+            <View style={{flex: 1, padding: dimens.standard}}>
               {/* Nama */}
               <Controller
                 control={control}
-                rules={{ required: true }}
-                render={({ field: { onChange, onBlur, value } }) => (
+                rules={{required: true}}
+                render={({field: {onChange, onBlur, value}}) => (
                   <InputText
                     autoCapitalize="words"
                     label="Nama"
@@ -247,14 +247,14 @@ export const AccountTutor: FC<ScreenProps> = () => {
                 )}
                 name="guru"
                 defaultValue={oldData == null ? '' : oldData.guru}
-              // defaultValue=""
+                // defaultValue=""
               />
 
               {/* No telp */}
               <Controller
                 control={control}
-                rules={{ required: true }}
-                render={({ field: { onChange, onBlur, value } }) => (
+                rules={{required: true}}
+                render={({field: {onChange, onBlur, value}}) => (
                   <InputText
                     label="Nomor WhatsApp"
                     placeholder="Masukkan nomor WhatsApp Anda"
@@ -274,8 +274,8 @@ export const AccountTutor: FC<ScreenProps> = () => {
               {listDaerah.provinsi && (
                 <Controller
                   control={control}
-                  rules={{ required: true }}
-                  render={({ field: { onChange } }) => (
+                  rules={{required: true}}
+                  render={({field: {onChange}}) => (
                     <InputChoice
                       toNumber={false}
                       label="Domisili - Provinsi"
@@ -294,7 +294,7 @@ export const AccountTutor: FC<ScreenProps> = () => {
                             kecamatan: '',
                             desa: '',
                           });
-                          setListDaerah(prev => ({ ...prev, kota }));
+                          setListDaerah(prev => ({...prev, kota}));
                           onChange(item.name);
                         }
                       }}
@@ -304,7 +304,7 @@ export const AccountTutor: FC<ScreenProps> = () => {
                   )}
                   name="idprovinsi"
                   defaultValue={selectedDaerah.provinsi}
-                // )}
+                  // )}
                 />
               )}
 
@@ -313,8 +313,8 @@ export const AccountTutor: FC<ScreenProps> = () => {
               {listDaerah.kota && (
                 <Controller
                   control={control}
-                  rules={{ required: true }}
-                  render={({ field: { onChange } }) => (
+                  rules={{required: true}}
+                  render={({field: {onChange}}) => (
                     <InputChoice
                       toNumber={false}
                       label="Domisili - Kota"
@@ -332,7 +332,7 @@ export const AccountTutor: FC<ScreenProps> = () => {
                           type: 'kecamatan',
                           idParent: item.id,
                         });
-                        setListDaerah(prev => ({ ...prev, kecamatan }));
+                        setListDaerah(prev => ({...prev, kecamatan}));
                         onChange(item.name);
                       }}
                       listData={listDaerah.kota}
@@ -342,7 +342,7 @@ export const AccountTutor: FC<ScreenProps> = () => {
                   name="idkabupaten"
                   defaultValue={selectedDaerah.kota}
 
-                // }
+                  // }
                 />
               )}
               {/* kecamatan */}
@@ -350,8 +350,8 @@ export const AccountTutor: FC<ScreenProps> = () => {
               {listDaerah.kecamatan && (
                 <Controller
                   control={control}
-                  rules={{ required: true }}
-                  render={({ field: { onChange } }) => (
+                  rules={{required: true}}
+                  render={({field: {onChange}}) => (
                     <InputChoice
                       label="Domisili - Kecamatan"
                       toNumber={false}
@@ -370,7 +370,7 @@ export const AccountTutor: FC<ScreenProps> = () => {
                           type: 'desa',
                           idParent: item.id,
                         });
-                        setListDaerah(prev => ({ ...prev, desa }));
+                        setListDaerah(prev => ({...prev, desa}));
                       }}
                       listData={listDaerah.kecamatan}
                       keyMenuTitle="name"
@@ -386,8 +386,8 @@ export const AccountTutor: FC<ScreenProps> = () => {
               {listDaerah.desa && (
                 <Controller
                   control={control}
-                  rules={{ required: true }}
-                  render={({ field: { onChange } }) => (
+                  rules={{required: true}}
+                  render={({field: {onChange}}) => (
                     <InputChoice
                       label="Domisili - Kelurahan"
                       toNumber={false}
@@ -414,8 +414,8 @@ export const AccountTutor: FC<ScreenProps> = () => {
               {/* Alamat */}
               <Controller
                 control={control}
-                rules={{ required: true }}
-                render={({ field: { onChange, onBlur, value } }) => (
+                rules={{required: true}}
+                render={({field: {onChange, onBlur, value}}) => (
                   <InputText
                     label="Alamat lengkap Rumah"
                     placeholder="Contoh: jalan, RT, RW"
@@ -433,8 +433,8 @@ export const AccountTutor: FC<ScreenProps> = () => {
               {/* Univ */}
               <Controller
                 control={control}
-                rules={{ required: true }}
-                render={({ field: { onChange, onBlur, value } }) => (
+                rules={{required: true}}
+                render={({field: {onChange, onBlur, value}}) => (
                   <InputText
                     label="Perguruan Tinggi"
                     placeholder="Masukkan Perguruan Tinggi Anda"
@@ -451,8 +451,8 @@ export const AccountTutor: FC<ScreenProps> = () => {
               {/* JURUSAN */}
               <Controller
                 control={control}
-                rules={{ required: true }}
-                render={({ field: { onChange, onBlur, value } }) => (
+                rules={{required: true}}
+                render={({field: {onChange, onBlur, value}}) => (
                   <InputText
                     label="Jurusan"
                     placeholder="Masukkan Jurusan Anda"
@@ -469,8 +469,8 @@ export const AccountTutor: FC<ScreenProps> = () => {
               {/* Mapel */}
               <Controller
                 control={control}
-                rules={{ required: true }}
-                render={({ field: { onChange, onBlur, value } }) => (
+                rules={{required: true}}
+                render={({field: {onChange, onBlur, value}}) => (
                   <InputText
                     label="Mata Pelajaran"
                     placeholder="Masukkan Mapel yang Anda Kuasai"
@@ -486,8 +486,8 @@ export const AccountTutor: FC<ScreenProps> = () => {
               />
               <Controller
                 control={control}
-                rules={{ required: true }}
-                render={({ field: { onChange, onBlur, value } }) => (
+                rules={{required: true}}
+                render={({field: {onChange, onBlur, value}}) => (
                   <InputText
                     label="Pernah Mengajar"
                     placeholder="Pernah Mengajar"
@@ -503,8 +503,8 @@ export const AccountTutor: FC<ScreenProps> = () => {
               />
               <Controller
                 control={control}
-                rules={{ required: true }}
-                render={({ field: { onChange, onBlur, value } }) => (
+                rules={{required: true}}
+                render={({field: {onChange, onBlur, value}}) => (
                   <InputText
                     label="Lokasi Mengajar"
                     placeholder="Lokasi Mengajar"
@@ -520,8 +520,8 @@ export const AccountTutor: FC<ScreenProps> = () => {
               />
               <Controller
                 control={control}
-                rules={{ required: true }}
-                render={({ field: { onChange, onBlur, value } }) => (
+                rules={{required: true}}
+                render={({field: {onChange, onBlur, value}}) => (
                   <InputText
                     label="Lama Mengajar"
                     placeholder="Lama Mengajar"
@@ -538,8 +538,8 @@ export const AccountTutor: FC<ScreenProps> = () => {
               {listBank && (
                 <Controller
                   control={control}
-                  rules={{ required: true }}
-                  render={({ field: { onChange, value } }) => (
+                  rules={{required: true}}
+                  render={({field: {onChange, value}}) => (
                     <InputChoice
                       toNumber={false}
                       label="Bank Rekening"
@@ -562,8 +562,8 @@ export const AccountTutor: FC<ScreenProps> = () => {
               {listJenis && (
                 <Controller
                   control={control}
-                  rules={{ required: true }}
-                  render={({ field: { onChange, value } }) => (
+                  rules={{required: true}}
+                  render={({field: {onChange, value}}) => (
                     <InputChoice
                       label="Jenis Kelamin"
                       toNumber={false}
@@ -585,8 +585,8 @@ export const AccountTutor: FC<ScreenProps> = () => {
               )}
               <Controller
                 control={control}
-                rules={{ required: true }}
-                render={({ field: { onChange, onBlur, value } }) => (
+                rules={{required: true}}
+                render={({field: {onChange, onBlur, value}}) => (
                   <InputText
                     label="No. rekening"
                     placeholder="Nomer Rekening"
@@ -603,13 +603,13 @@ export const AccountTutor: FC<ScreenProps> = () => {
               />
               <Controller
                 control={control}
-                rules={{ required: true }}
-                render={({ field: { onChange, value } }) => (
+                rules={{required: true}}
+                render={({field: {onChange, value}}) => (
                   <TextInput
-                    style={{ backgroundColor: 'white', marginBottom: 10 }}
-                    placeholder="Unggah File CV Anda (*.pdf)"
+                    style={{backgroundColor: 'white', marginBottom: 10}}
+                    placeholder="Unggah File CV Anda (*.pdf/maks 2mb)"
                     error={!!errors.file_cv}
-                    label="Unggah File CV Anda (*.pdf)"
+                    label="Unggah File CV Anda (*.pdf/maks 2mb)"
                     // errorMessage={'File CV harus diupload'}
                     value={value}
                     editable={false}
@@ -669,7 +669,7 @@ export const AccountTutor: FC<ScreenProps> = () => {
                           name="check"
                           solid={true}
                           size={100}
-                          style={{ textAlign: 'center' }}
+                          style={{textAlign: 'center'}}
                         />
                       </View>
                       <Text
@@ -701,9 +701,7 @@ export const AccountTutor: FC<ScreenProps> = () => {
             isLoading={isLoadingSubmit}
             isDisable={isDisabled}
             text="Simpan"
-            onPress={
-              handleSubmit(onSubmit)
-            }
+            onPress={handleSubmit(onSubmit)}
           />
         </>
       )}
