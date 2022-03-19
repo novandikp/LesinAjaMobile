@@ -1,5 +1,5 @@
 import React, {FC, useState, useEffect, useRef} from 'react';
-import {CardKeyValue, Header} from '@components';
+import {CardKeyValue, Gap, Header} from '@components';
 import {color, dimens} from '@constants';
 import {
   SafeAreaView,
@@ -111,7 +111,8 @@ export const KonfirmasiPembayaran: FC<ScreenProps> = ({navigation}) => {
                     }}>
                     Tolak
                   </Button>
-                  <View style={{marginRight: 20}}>
+                  <Gap x={100} />
+                  <View>
                     <Icon
                       name="eye"
                       type="font-awesome"
@@ -122,8 +123,8 @@ export const KonfirmasiPembayaran: FC<ScreenProps> = ({navigation}) => {
                       }}
                     />
                   </View>
-
-                  <View style={{marginRight: 30}}>
+                  <Gap x={20} />
+                  <View>
                     <Icon
                       name="download"
                       type="font-awesome"
@@ -150,12 +151,13 @@ export const KonfirmasiPembayaran: FC<ScreenProps> = ({navigation}) => {
             }}>
             {uriPicture && (
               <Image
+                resizeMode="cover"
                 source={{
-                  uri: 'http://45.76.149.250:8081/bukti/' + uriPicture,
+                  uri: 'http://45.76.149.250/bukti/' + uriPicture,
                 }}
                 style={{
-                  width: 300,
-                  height: 300,
+                  height: '100%',
+                  aspectRatio: 1,
                   alignSelf: 'center',
                   alignItems: 'center',
                   marginTop: dimens.small,
