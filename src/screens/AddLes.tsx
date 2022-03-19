@@ -147,6 +147,7 @@ export const AddLes: FC<ScreenProps> = ({navigation}) => {
                   error={!!errors.idsiswa}
                   errorMessage="Harap pilih murid yang akan diikuti"
                   onSelect={item => {
+                    setFilterJenjang(item.jenjang);
                     onChange(item.siswa);
                   }}
                   listData={listMurid}
