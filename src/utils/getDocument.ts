@@ -10,8 +10,10 @@ import {
   .WARN  `new NativeEventEmitter()` was called with a non-null argument without the required `removeListeners` method.
   WARN  EventEmitter.removeListener('keyboardDidShow', ...): Method has been deprecated. Please instead use `remove()` on the subscription returned by `EventEmitter.addListener`*/
 import {LogBox} from 'react-native';
-
+LogBox.ignoreLogs(['new NativeEventEmitter']);
+// LogBox.ignoreLogs(['EventEmitter.addListeners']);
 LogBox.ignoreLogs(['EventEmitter.removeListener']);
+
 // const RNFS = require('react-native-fs');
 export const getSingleDocument = async () => {
   try {
