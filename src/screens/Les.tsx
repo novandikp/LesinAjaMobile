@@ -3,7 +3,6 @@ import {
   CardKeyValue,
   EmptyData,
   FABList,
-  Gap,
   Header,
   OneLineInfo,
   SkeletonLoading,
@@ -99,17 +98,13 @@ export const Les: FC<ScreenProps> = ({navigation}) => {
         console.log('component mounted current');
       }
       if (isActive) {
-        if (listData.length > 1) {
-          if (isLoadMoreData) {
-            setListData(listData);
-          } else {
-            setListData(data.data);
-          }
+        if (isLoadMoreData) {
+          setListData(listData);
+        } else {
           if (data.data.length == 10) {
             setDiplayButton(true);
             setButtonLoadMore(false);
           }
-        } else {
           setListData(data.data);
         }
         setIsLoading(false);
@@ -124,7 +119,7 @@ export const Les: FC<ScreenProps> = ({navigation}) => {
       componentMounted.current = false;
       isActive = false;
     };
-  }, [isRefreshing, isLoading, isFocus, listData]);
+  }, [isRefreshing, isLoading, isFocus, listData, isLoadMoreData]);
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar backgroundColor={color.bg_grey} barStyle="dark-content" />
@@ -137,8 +132,10 @@ export const Les: FC<ScreenProps> = ({navigation}) => {
         <EmptyData />
       ) : (
         <>
-          <OneLineInfo info="Klik item untuk melihat detail" />
           <FlatList
+            ListHeaderComponent={
+              <OneLineInfo info="Klik item untuk melihat detail" />
+            }
             contentContainerStyle={styles.scrollContainer}
             data={listData}
             keyExtractor={(item: LesType) => item.idles}
@@ -154,7 +151,11 @@ export const Les: FC<ScreenProps> = ({navigation}) => {
             extraData={listData}
             onEndReachedThreshold={0.1}
             ListFooterComponent={
-              <View>
+              <View
+                style={{
+                  // padding: dimens.standard,
+                  paddingVertical: dimens.small,
+                }}>
                 {displayButton && (
                   <Button
                     loading={loadingData}
@@ -178,7 +179,7 @@ export const Les: FC<ScreenProps> = ({navigation}) => {
           />
         </>
       )}
-      <Gap y={72} />
+      {/* <Gap y={72} /> */}
       {/* </ScrollView> */}
 
       {/* Add button */}
