@@ -50,13 +50,13 @@ type ItemType = {
 };
 export const Lowongan: FC<ScreenProps> = ({navigation}) => {
   const [lowonganList, setLowonganList] = useState<any>([]);
-  const [filterJenjang, setFilterJenjang] = useState();
+  const [filterJenjang, setFilterJenjang] = useState<any>();
   const [filterPrefrensi, setFilterPrenfrensi] = useState();
   const [page, setPage] = useState(1);
   const [modalFilter, setModalFilter] = useState(false);
   const [listJenjang, setListJenjang] = useState([]);
   const [jenjang, setJenjang] = useState();
-  // const [prefrensi, setPrefrensi] = useState();
+  const [filterOn, setFilterOn] = useState(false);
   const [idkabupaten, setIdKabupaten] = useState();
   const [buttonLoadMore, setButtonLoadMore] = useState(true);
   const [displayButton, setDisplayButton] = useState(false);
@@ -125,14 +125,20 @@ export const Lowongan: FC<ScreenProps> = ({navigation}) => {
         }
         if (isActive) {
           if (isLoadMoreData) {
-            setLowonganList(lowonganList);
+            if (filterOn == true) {
+              setLowonganList(lowonganKabupaten.data);
+            } else {
+              setLowonganList(lowonganList);
+            }
           } else {
-            if (lowonganKabupaten.data.length == 10) {
+            setLowonganList(lowonganKabupaten.data);
+            if (lowonganList.length == 10) {
               setButtonLoadMore(false);
               setDisplayButton(true);
             }
-            setLowonganList(lowonganKabupaten.data);
           }
+          setListJenjang(dataJenjang.data);
+          setFilterOn(false);
           setIsLoading(false);
           setIsRefreshing(false);
         }
@@ -162,6 +168,7 @@ export const Lowongan: FC<ScreenProps> = ({navigation}) => {
     isLoading,
     isFocus,
     isLoadMoreData,
+    filterOn,
   ]);
   return (
     <SafeAreaView style={styles.container}>
@@ -174,8 +181,6 @@ export const Lowongan: FC<ScreenProps> = ({navigation}) => {
         onPressFilter={() => setModalFilter(true)}
       />
 
-      {/* <ScrollView contentContainerStyle={styles.scrollContainer}> */}
-      {/* <OneLineInfo info="Klik item untuk melihat detail" /> */}
       <Modal
         isVisible={modalFilter}
         onBackdropPress={() => setModalFilter(false)}>
@@ -223,43 +228,26 @@ export const Lowongan: FC<ScreenProps> = ({navigation}) => {
               })}
             </Picker>
           </View>
-
-          <View
-            style={{
-              marginHorizontal: 20,
-              flexDirection: 'row',
-              maxHeight: 40,
-            }}>
-            {/* {' '} */}
-            {/* <Text
-              style={{
-                fontSize: 15,
-                flex: 1,
-                paddingTop: 20,
+          <Card.Actions style={{alignContent: 'flex-end'}}>
+            <Button
+              onPress={() => {
+                // let string = '';
+                setFilterJenjang(null);
+                setFilterOn(true);
+                setIsRefreshing(true);
+                setModalFilter(false);
               }}>
-              Prefrensi:
-            </Text>
-            <Picker
-              style={{flex: 2}}
-              mode="dropdown"
-              // mode="dialog"
-              selectedValue={prefrensi}
-              itemStyle={{height: 10, backgroundColor: 'white'}}
-              onValueChange={itemValue => setPrefrensi(itemValue)}>
-              <Picker.Item label="Wanita" value="Wanita" />
-              <Picker.Item label="Pria" value="Pria" />
-              <Picker.Item label="Bebas" value="Bebas" />
-            </Picker> */}
-          </View>
-          <Button
-            style={{maxWidth: 100, alignSelf: 'flex-end', marginRight: 20}}
-            onPress={() => {
-              setFilterJenjang(jenjang);
-              // setFilterPrenfrensi(prefrensi);
-              setModalFilter(false);
-            }}>
-            ok
-          </Button>
+              reset
+            </Button>
+            <Button
+              onPress={() => {
+                setFilterJenjang(jenjang);
+                setFilterOn(true);
+                setModalFilter(false);
+              }}>
+              ok
+            </Button>
+          </Card.Actions>
         </Card>
       </Modal>
       {isLoading || isRefreshing ? (
@@ -300,9 +288,10 @@ export const Lowongan: FC<ScreenProps> = ({navigation}) => {
             <NestedCard
               key={item.idlowongan}
               title={'' + item.paket + ' ' + item.jenjang}
-              subtitle={`${item.jumlah_pertemuan} pertemuan`
-            // item.siswa
-            }
+              subtitle={
+                `${item.jumlah_pertemuan} pertemuan`
+                // item.siswa
+              }
               additionalText={
                 'Gaji Rp.' +
                 item.gaji.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')
