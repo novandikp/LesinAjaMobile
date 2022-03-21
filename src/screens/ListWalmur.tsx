@@ -5,7 +5,6 @@ import {
   SafeAreaView,
   StatusBar,
   StyleSheet,
-  ScrollView,
   FlatList,
   ListRenderItemInfo,
   View,
@@ -109,7 +108,7 @@ export const ListWalmur: FC<ScreenProps> = ({navigation}) => {
       componentMounted.current = false;
       isActive = false;
     };
-  }, []);
+  }, [isFocus, isLoadMoreData, isLoading, isRefreshing, walmurList]);
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar backgroundColor={color.bg_grey} barStyle="dark-content" />
