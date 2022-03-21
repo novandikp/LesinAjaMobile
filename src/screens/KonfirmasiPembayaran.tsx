@@ -110,9 +110,9 @@ export const KonfirmasiPembayaran: FC<ScreenProps> = ({navigation}) => {
                             url: 'les/konfirmasi/' + item.idles,
                             payload: {},
                           });
-                          if (konfirmasi) {
-                            navigation.navigate('HomeAdmin');
-                          }
+                          // if (konfirmasi) {
+                          //   navigation.navigate('HomeAdmin');
+                          // }
                         }}>
                         Konfirmasi
                       </Button>
@@ -122,9 +122,9 @@ export const KonfirmasiPembayaran: FC<ScreenProps> = ({navigation}) => {
                             url: '/les/tolak/' + item.idles,
                             payload: {},
                           });
-                          if (tolak) {
-                            navigation.navigate('HomeAdmin');
-                          }
+                          // if (tolak) {
+                          //   navigation.navigate('HomeAdmin');
+                          // }
                         }}>
                         Tolak
                       </Button>
