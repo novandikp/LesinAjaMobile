@@ -14,15 +14,15 @@ import {StackScreenProps} from '@react-navigation/stack';
 import {AdminDrawerParamList, AppStackParamList} from '@routes/RouteTypes';
 import {CompositeScreenProps} from '@react-navigation/core';
 import {DrawerScreenProps} from '@react-navigation/drawer';
-import {apiGet, apiPost, checkPersimisson} from '@utils';
 import Modal from 'react-native-modal';
+import {apiGet, apiPost, checkPersimisson} from '@utils';
 import {useIsFocused} from '@react-navigation/core';
 
 type ScreenProps = CompositeScreenProps<
   DrawerScreenProps<AdminDrawerParamList, 'RiwayatPembayaran'>,
   StackScreenProps<AppStackParamList>
 >;
-export const KonfirmasiPembayaran: FC<ScreenProps> = ({navigation}) => {
+export const KonfirmasiPembayaran: FC<ScreenProps> = ({}) => {
   const [riwayat, setRiwayat] = useState([]);
   const [modalImage, setModalImage] = useState(false);
   const [uriPicture, setUriPicture] = useState('');
@@ -106,7 +106,7 @@ export const KonfirmasiPembayaran: FC<ScreenProps> = ({navigation}) => {
                     <View style={{flexDirection: 'row'}}>
                       <Button
                         onPress={async () => {
-                          const konfirmasi = await apiPost({
+                          await apiPost({
                             url: 'les/konfirmasi/' + item.idles,
                             payload: {},
                           });
@@ -118,7 +118,7 @@ export const KonfirmasiPembayaran: FC<ScreenProps> = ({navigation}) => {
                       </Button>
                       <Button
                         onPress={async () => {
-                          const tolak = await apiPost({
+                          await apiPost({
                             url: '/les/tolak/' + item.idles,
                             payload: {},
                           });
