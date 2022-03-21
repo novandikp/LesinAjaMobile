@@ -1,4 +1,4 @@
-import React, {FC, useState, useEffect} from 'react';
+import React, {FC, useState, useEffect, useContext} from 'react';
 import {Header, Gap, CardKeyValue} from '@components';
 import {color, dimens} from '@constants';
 import {
@@ -14,7 +14,7 @@ import {AppStackParamList} from '@routes/RouteTypes';
 import DatePicker from 'react-native-date-picker';
 // import dayjs from 'dayjs';
 import {apiPost} from '@utils';
-
+import {AuthContext} from '@context/AuthContext';
 type ScreenProps = StackScreenProps<AppStackParamList, 'DetailPresensi'>;
 export const DetailPresensi: FC<ScreenProps> = ({navigation, route}) => {
   const {data}: any = route.params;
@@ -25,19 +25,27 @@ export const DetailPresensi: FC<ScreenProps> = ({navigation, route}) => {
   const date = new Date();
   const [Open, setOpen] = useState(false);
   const [disabledAbsen, setDisabledAbsen] = useState(false);
+  const [disabledAbsenWali, setDisabledAbsenWali] = useState(false);
+
   const handleRating = async (count: number) => {
     setRatingCount(count);
   };
-
+  const {
+    state: {userRole},
+  } = useContext(AuthContext);
   useEffect(() => {
     const getInitialData = () => {
+      // console.log(userRole);
       if (data.flagabsen == 1) {
         setDisabledAbsen(true);
+      }
+      if (data.flagabsenwali == 1) {
+        setDisabledAbsenWali(true);
       }
     };
     getInitialData();
     return;
-  }, [ratingCount, ratingColor]);
+  }, [ratingCount, ratingColor, data.flagabsen, data.flagabsenwali]);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -70,46 +78,86 @@ export const DetailPresensi: FC<ScreenProps> = ({navigation, route}) => {
             />
             <CardKeyValue keyFlex={10} keyName="Tutor" value={data.guru} />
             {/* <Paragraph style={styles.presenceStatus}>Selesai</Paragraph> */}
-            <Button
-              disabled={disabledAbsen}
-              style={{marginTop: dimens.standard}}
-              onPress={async () => {
-                const newData = {};
-                const {success} = await apiPost({
-                  url: '/les/absen/' + data.idabsen,
-                  payload: newData,
-                });
-                if (success) {
-                  navigation.navigate<any>('MainTabs');
+            <View style={{flexDirection: 'row', justifyContent: 'flex-end'}}>
+              <Button
+                disabled={
+                  userRole == 'tutor' ? disabledAbsen : disabledAbsenWali
                 }
-              }}>
-              Selesai
-            </Button>
+                style={{marginTop: dimens.standard}}
+                onPress={async () => {
+                  // if (userRole == 'parent') {
+                  const {success} = await apiPost({
+                    url: '/les/present/' + data.idabsen,
+                    payload: {keterangan: 'ada'},
+                  });
+
+                  if (success) {
+                    navigation.navigate<any>('MainTabs');
+                  }
+                  // } else if (userRole == 'tutor') {
+                  //   const {success} = await apiPost({
+                  //     url: '/les/present/' + data.idabsen,
+                  //     payload: {keterangan: 'ada'},
+                  //   });
+                  //   if (success) {
+                  //     navigation.navigate<any>('MainTabs');
+                  //   }
+                  // }
+                }}>
+                {/* {userRole == 'parent' ? 'Selesai' : 'Hadir'}
+                 */}
+                hadir
+              </Button>
+              {/* {userRole == 'tutor' && ( */}
+              <Button
+                disabled={
+                  userRole == 'tutor' ? disabledAbsen : disabledAbsenWali
+                }
+                style={{marginTop: dimens.standard}}
+                onPress={async () => {
+                  const {success} = await apiPost({
+                    url: '/les/absen' + data.idabsen,
+                    payload: {keterangan: 'absen'},
+                  });
+                  if (success) {
+                    navigation.navigate<any>('MainTabs');
+                  }
+                }}>
+                Absen
+              </Button>
+              {/* )} */}
+            </View>
             <Gap y={dimens.standard} />
 
             {/* if not over */}
-            <Paragraph style={{fontSize: dimens.standard}}>
-              {tanggalPertemuan}
-            </Paragraph>
-            <Gap y={dimens.tiny} />
-            <Divider />
-            <Gap y={dimens.tiny} />
+            {userRole == 'parent' && (
+              <>
+                <Paragraph style={{fontSize: dimens.standard}}>
+                  {tanggalPertemuan}
+                </Paragraph>
+                <Gap y={dimens.tiny} />
+                <Divider />
+                <Gap y={dimens.tiny} />
 
-            <CardKeyValue
-              keyFlex={10}
-              keyName="Les"
-              value={data.paket + ' ' + data.jenjang + ' ' + data.kelas}
-            />
-            <CardKeyValue keyFlex={10} keyName="Tutor" value={data.guru} />
-            <Button
-              disabled={disabledAbsen}
-              style={{marginTop: dimens.standard}}
-              icon="pencil-outline"
-              onPress={() => {
-                setOpen(true);
-              }}>
-              Edit tanggal pertemuan
-            </Button>
+                <CardKeyValue
+                  keyFlex={10}
+                  keyName="Les"
+                  value={data.paket + ' ' + data.jenjang + ' ' + data.kelas}
+                />
+                <CardKeyValue keyFlex={10} keyName="Tutor" value={data.guru} />
+                <Button
+                  disabled={
+                    userRole == 'tutor' ? disabledAbsen : disabledAbsenWali
+                  }
+                  style={{marginTop: dimens.standard}}
+                  icon="pencil-outline"
+                  onPress={() => {
+                    setOpen(true);
+                  }}>
+                  Edit tanggal pertemuan
+                </Button>
+              </>
+            )}
             {Open == true && (
               <DatePicker
                 modal
