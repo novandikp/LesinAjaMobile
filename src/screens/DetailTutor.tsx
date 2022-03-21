@@ -84,7 +84,7 @@ export const DetailTutor: FC<ScreenProps> = ({navigation, route}) => {
           {/* TODO: GET DOWNLOAD CV */}
           <CardLabelValue
             label="File CV"
-            value={'http://45.76.149.250:8081/cv/' + item.file_cv}
+            value={'http://45.76.149.250/cv/' + item.file_cv}
             isValueLink
           />
         </Card>
