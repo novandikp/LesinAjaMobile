@@ -219,7 +219,7 @@ const StudentItem: FC<{item: LesType; onPress: () => void}> = ({
   return (
     <Card style={{marginTop: dimens.standard}} onPress={onPress}>
       <Card.Title
-        title={item.paket + item.jenjang}
+        title={item.paket + ' ' + item.jenjang}
         subtitle={`${jmlhPertemuan} Pertemuan`}
         // /${item.totalPertemuan}
       />
