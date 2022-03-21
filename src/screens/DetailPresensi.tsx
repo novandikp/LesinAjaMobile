@@ -130,34 +130,32 @@ export const DetailPresensi: FC<ScreenProps> = ({navigation, route}) => {
             <Gap y={dimens.standard} />
 
             {/* if not over */}
-            {userRole == 'parent' && (
-              <>
-                <Paragraph style={{fontSize: dimens.standard}}>
-                  {tanggalPertemuan}
-                </Paragraph>
-                <Gap y={dimens.tiny} />
-                <Divider />
-                <Gap y={dimens.tiny} />
+            {/* {userRole == 'parent' && ( */}
+            {/* <> */}
+            <Paragraph style={{fontSize: dimens.standard}}>
+              {tanggalPertemuan}
+            </Paragraph>
+            <Gap y={dimens.tiny} />
+            <Divider />
+            <Gap y={dimens.tiny} />
 
-                <CardKeyValue
-                  keyFlex={10}
-                  keyName="Les"
-                  value={data.paket + ' ' + data.jenjang + ' ' + data.kelas}
-                />
-                <CardKeyValue keyFlex={10} keyName="Tutor" value={data.guru} />
-                <Button
-                  disabled={
-                    userRole == 'tutor' ? disabledAbsen : disabledAbsenWali
-                  }
-                  style={{marginTop: dimens.standard}}
-                  icon="pencil-outline"
-                  onPress={() => {
-                    setOpen(true);
-                  }}>
-                  Edit tanggal pertemuan
-                </Button>
-              </>
-            )}
+            <CardKeyValue
+              keyFlex={10}
+              keyName="Les"
+              value={data.paket + ' ' + data.jenjang + ' ' + data.kelas}
+            />
+            <CardKeyValue keyFlex={10} keyName="Tutor" value={data.guru} />
+            <Button
+              disabled={userRole == 'tutor' ? disabledAbsen : disabledAbsenWali}
+              style={{marginTop: dimens.standard}}
+              icon="pencil-outline"
+              onPress={() => {
+                setOpen(true);
+              }}>
+              Edit tanggal pertemuan
+            </Button>
+            {/* </> */}
+            {/* )} */}
             {Open == true && (
               <DatePicker
                 modal
