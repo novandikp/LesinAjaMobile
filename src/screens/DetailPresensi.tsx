@@ -292,6 +292,7 @@ export const DetailPresensi: FC<ScreenProps> = ({navigation, route}) => {
                   onChangeText={text => {
                     setKeterangan(text);
                   }}
+                  label={'Kritik dan saran dalam pertemuan ini:'}
                   mode="outlined"
                 />
                 <View
