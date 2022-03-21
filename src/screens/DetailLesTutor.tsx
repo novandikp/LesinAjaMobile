@@ -25,7 +25,7 @@ export const DetailLesTutor: FC<ScreenProps> = ({navigation, route}) => {
     let isActive = true;
     const getInitialData = async () => {
       const jadwalles = await apiGet({
-        url: '/jadwal/siswa/' + data.idsiswa,
+        url: '/jadwal/les/' + data.idles,
       });
       if (isActive) {
         setCoursePresenceList(jadwalles.data);
@@ -41,8 +41,7 @@ export const DetailLesTutor: FC<ScreenProps> = ({navigation, route}) => {
     return () => {
       isActive = false;
     };
-  });
-  // console.log();
+  }, [data.idles, isFocus, isLoading, isRefreshing]);
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar backgroundColor={color.bg_grey} barStyle="dark-content" />
@@ -99,7 +98,6 @@ export const DetailLesTutor: FC<ScreenProps> = ({navigation, route}) => {
                   <NestedCard
                     key={index}
                     title={new Date(item.tglabsen).toLocaleDateString()}
-                    // subtitle={new Date(item.tglabsen).getTime()}
                     subtitle="-"
                     additionalText={
                       item.flagabsen == 1 ? 'Sudah absen' : 'Belum absen'
