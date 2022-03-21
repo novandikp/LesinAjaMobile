@@ -15,6 +15,7 @@ import {
   Button,
   IconButton,
   TextInput,
+  HelperText,
 } from 'react-native-paper';
 import {StackScreenProps} from '@react-navigation/stack';
 import {AppStackParamList} from '@routes/RouteTypes';
@@ -55,6 +56,7 @@ export const DetailPresensi: FC<ScreenProps> = ({navigation, route}) => {
   const [disabledAbsen, setDisabledAbsen] = useState(false);
   const [disabledAbsenWali, setDisabledAbsenWali] = useState(false);
   const [Keterangan, setKeterangan] = useState('');
+  const [ratingModul, setRatingModul] = useState(false);
   const [hiddenButtonAbsen, setHiddenButtonAbsen] = useState(true);
   const [inputKeterangan, setInputKeterangan] = useState(false);
   const handleRating = async (count: number) => {
@@ -283,6 +285,13 @@ export const DetailPresensi: FC<ScreenProps> = ({navigation, route}) => {
                     onPress={() => handleRating(5)}
                   />
                 </View>
+                {ratingModul && (
+                  <HelperText
+                    style={{paddingLeft: 0, fontSize: dimens.medium_14}}
+                    type="error">
+                    Harap isi rating
+                  </HelperText>
+                )}
               </>
             )}
             {inputKeterangan && (
@@ -311,12 +320,28 @@ export const DetailPresensi: FC<ScreenProps> = ({navigation, route}) => {
                   <Button
                     onPress={async () => {
                       console.log(Keterangan);
-                      const {success} = await apiPost({
-                        url: '/les/present/' + data.idabsen,
-                        payload: {keterangan: Keterangan},
-                      });
-                      if (success) {
-                        navigation.navigate<any>('MainTabs');
+                      if (userRole == 'tutor') {
+                        const {success} = await apiPost({
+                          url: '/les/present/' + data.idabsen,
+                          payload: {keterangan: Keterangan},
+                        });
+                        if (success) {
+                          navigation.navigate<any>('MainTabs');
+                        }
+                      } else if (userRole == 'parent') {
+                        if (ratingCount == 0) {
+                          return setRatingModul(true);
+                        }
+                        const {success} = await apiPost({
+                          url: '/les/present/' + data.idabsen,
+                          payload: {
+                            keterangan: Keterangan,
+                            rating: ratingCount,
+                          },
+                        });
+                        if (success) {
+                          navigation.navigate<any>('MainTabs');
+                        }
                       }
                     }}>
                     Kirim
