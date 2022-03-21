@@ -12,7 +12,6 @@ import {
   StatusBar,
   StyleSheet,
   View,
-  ScrollView,
   FlatList,
   ListRenderItemInfo,
 } from 'react-native';
@@ -124,7 +123,7 @@ export const LesTutor: FC<ScreenProps> = ({navigation}) => {
     return () => {
       isActive = false;
     };
-  }, []);
+  }, [isFocus, isLoadMoreData, isLoading, isRefreshing, lesItems]);
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar backgroundColor={color.bg_grey} barStyle="dark-content" />
