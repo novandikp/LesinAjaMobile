@@ -2,11 +2,12 @@ import React, {FC, useContext, useEffect, useState} from 'react';
 import {ButtonFormSubmit, CardLabelValue, Gap, Header} from '@components';
 import {color, dimens} from '@constants';
 import {SafeAreaView, StatusBar, StyleSheet, ScrollView} from 'react-native';
-import {Avatar, Card, Divider, Subheading, Title} from 'react-native-paper';
+import {Card, Divider, Subheading, Title} from 'react-native-paper';
 import {StackScreenProps} from '@react-navigation/stack';
 import {AppStackParamList} from '@routes/RouteTypes';
 import {AuthContext} from '@context/AuthContext';
 import {apiPost} from '@utils';
+import {Icon} from 'react-native-elements';
 
 type ScreenProps = StackScreenProps<AppStackParamList, 'DetailTutor'>;
 export const DetailTutor: FC<ScreenProps> = ({navigation, route}) => {
@@ -21,7 +22,7 @@ export const DetailTutor: FC<ScreenProps> = ({navigation, route}) => {
     };
     getInitialData();
     return () => {};
-  }, []);
+  }, [data]);
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar backgroundColor={color.bg_grey} barStyle="dark-content" />
@@ -32,9 +33,15 @@ export const DetailTutor: FC<ScreenProps> = ({navigation, route}) => {
         contentContainerStyle={{flexGrow: 1, padding: dimens.standard}}>
         <Card style={styles.contentContainer}>
           {/* Profile Photo */}
-          <Avatar.Image
+          {/* <Avatar.Image
             size={160}
             source={{uri: 'http://placekitten.com/200/200'}}
+            style={{alignSelf: 'center'}}
+          /> */}
+          <Icon
+            size={160}
+            name="user"
+            type="font-awesome"
             style={{alignSelf: 'center'}}
           />
           <Title style={{textAlign: 'center'}}>{item.guru}</Title>

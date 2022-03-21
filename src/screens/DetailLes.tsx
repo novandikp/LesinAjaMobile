@@ -9,7 +9,7 @@ import {
   Platform,
 } from 'react-native';
 import {
-  Avatar,
+  // Avatar,
   Button,
   Card,
   Subheading,
@@ -18,6 +18,7 @@ import {
 import {StackScreenProps} from '@react-navigation/stack';
 import {AppStackParamList} from '@routes/RouteTypes';
 import {getSingleDocument, apiGet, apiPostFile} from '@utils';
+import {Icon} from 'react-native-elements';
 
 type ScreenProps = StackScreenProps<AppStackParamList, 'DetailLes'>;
 export const DetailLes: FC<ScreenProps> = ({navigation, route}) => {
@@ -71,7 +72,7 @@ export const DetailLes: FC<ScreenProps> = ({navigation, route}) => {
         url: '/lowongan/pelamar/' + id,
       });
       const jadwalles = await apiGet({
-        url: '/jadwal/siswa/' + data.idsiswa,
+        url: '/jadwal/les/' + data.idles,
         params: {
           cari: '',
           orderBy: 'tglabsen',
@@ -104,7 +105,7 @@ export const DetailLes: FC<ScreenProps> = ({navigation, route}) => {
         <Card>
           <Card.Title
             title={detailLes.kelas + ' ' + detailLes.jenjang}
-            subtitle="5/8 Pertemuan"
+            subtitle={detailLes.jumlah_pertemuan + ' Pertemuan'}
           />
           <Card.Content>
             <CardKeyValue
@@ -122,7 +123,9 @@ export const DetailLes: FC<ScreenProps> = ({navigation, route}) => {
               }
               keyFlex={8}
             />
-            <CardKeyValue keyName="Tgl Selesai" value="-" keyFlex={8} />
+            <CardKeyValue keyName="Hari" value={detailLes.hari} keyFlex={8} />
+
+            {/* <CardKeyValue keyName="Tgl Selesai" value="-" keyFlex={8} /> */}
           </Card.Content>
         </Card>
 
@@ -222,13 +225,22 @@ export const DetailLes: FC<ScreenProps> = ({navigation, route}) => {
                     onPress={() => {
                       navigation.navigate<any>('DetailTutor', {data: item});
                     }}
-                    left={props => (
-                      <Avatar.Image
-                        {...props}
-                        size={45}
-                        source={{uri: 'http://placekitten.com/100/100'}}
-                      />
-                    )}
+                    left={
+                      // props
+                      () => (
+                        // <Avatar.Image
+                        //   {...props}
+                        //   size={45}
+                        //   source={{uri: 'http://placekitten.com/100/100'}}
+                        // />
+                        <Icon
+                          // {...props}
+                          name="user"
+                          type="font-awesome"
+                          size={45}
+                        />
+                      )
+                    }
                   />
                 );
               })}
@@ -251,7 +263,7 @@ export const DetailLes: FC<ScreenProps> = ({navigation, route}) => {
                   <NestedCard
                     key={index}
                     title={new Date(item.tglabsen).toLocaleDateString()}
-                    // subtitle={item.waktu}
+                    // subtitle={}
                     subtitle="-"
                     additionalText={
                       item.flagabsen == 1 ? 'Sudah absen' : 'Belum absen'
