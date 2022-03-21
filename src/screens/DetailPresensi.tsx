@@ -86,10 +86,10 @@ export const DetailPresensi: FC<ScreenProps> = ({navigation, route}) => {
   useEffect(() => {
     const getInitialData = () => {
       // console.log(userRole);
-      if (data.flagabsen == 1) {
+      if (data.flagabsen != 0) {
         setDisabledAbsen(true);
       }
-      if (data.flagabsenwali == 1) {
+      if (data.flagabsenwali != 0) {
         setDisabledAbsenWali(true);
       }
     };
@@ -131,6 +131,8 @@ export const DetailPresensi: FC<ScreenProps> = ({navigation, route}) => {
             <Paragraph style={{fontSize: dimens.standard}}>
               {data.flagabsenwali == 1
                 ? 'Wali sudah mengisi data hadir'
+                : data.flagabsenwali == 2
+                ? 'Anda absen, tidak dapat untuk hadir'
                 : 'Wali belum mengisi data hadir'}
             </Paragraph>
 
@@ -150,8 +152,9 @@ export const DetailPresensi: FC<ScreenProps> = ({navigation, route}) => {
                   style={{marginTop: dimens.standard}}
                   onPress={async () => {
                     const {success} = await apiPost({
-                      url: '/les/absen' + data.idabsen,
-                      payload: {keterangan: 'tidak hadir'},
+                      url: '/les/absent/' + data.idabsen,
+                      // payload: {},
+                      payload: {keterangan: 'tidak hadir', rating: 0},
                     });
                     if (success) {
                       navigation.navigate<any>('MainTabs');
@@ -179,6 +182,8 @@ export const DetailPresensi: FC<ScreenProps> = ({navigation, route}) => {
             <Paragraph style={{fontSize: dimens.standard}}>
               {data.flagabsen == 1
                 ? 'Tutor sudah mengisi data hadir'
+                : data.flagabsenwali == 2
+                ? 'Anda absen, tidak dapat untuk hadir'
                 : 'Tutor belum mengisi data hadir'}
             </Paragraph>
             {userRole == 'tutor' && hiddenButtonAbsen && (
@@ -197,8 +202,8 @@ export const DetailPresensi: FC<ScreenProps> = ({navigation, route}) => {
                   style={{marginTop: dimens.standard}}
                   onPress={async () => {
                     const {success} = await apiPost({
-                      url: '/les/absen' + data.idabsen,
-                      payload: {keterangan: 'tidak hadir'},
+                      url: '/les/absent/' + data.idabsen,
+                      payload: {keterangan: 'tidak hadir', rating: 0},
                     });
                     if (success) {
                       navigation.navigate<any>('MainTabs');
