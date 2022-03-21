@@ -266,7 +266,7 @@ export const DetailLes: FC<ScreenProps> = ({navigation, route}) => {
                     // subtitle={}
                     subtitle="-"
                     additionalText={
-                      item.flagabsen == 1 ? 'Sudah absen' : 'Belum absen'
+                      item.flagabsenwali == 1 ? 'Sudah absen' : 'Belum absen'
                     }
                     onPress={() => {
                       navigation.navigate<any>('DetailPresensi', {data: item});
