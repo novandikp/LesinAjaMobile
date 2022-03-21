@@ -74,7 +74,7 @@ export const Les: FC<ScreenProps> = ({navigation}) => {
       if (res.data.length < 10) {
         setDiplayButton(false);
       } else if (res.data.length == 10) {
-        setButtonLoadMore(false);
+        setLoadingData(false);
         setPage(NextPage);
       }
       setLoadingData(false);

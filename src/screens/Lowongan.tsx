@@ -5,8 +5,8 @@ import {
   SafeAreaView,
   StatusBar,
   StyleSheet,
-  FlatList,
   View,
+  FlatList,
   ListRenderItemInfo,
 } from 'react-native';
 import {Headline, Subheading, Card, Button, Text} from 'react-native-paper';
@@ -93,7 +93,8 @@ export const Lowongan: FC<ScreenProps> = ({navigation}) => {
           console.log('its should close buton');
           return setDisplayButton(false);
         } else if (res.data.length == 10) {
-          setButtonLoadMore(false);
+          setLoadingData(false);
+          // setButtonLoadMore(false);
           setPage(NextPage);
         }
       })
