@@ -43,7 +43,7 @@ export const Home: FC<ScreenProps> = () => {
         </View>
         <Divider />
 
-        <View style={styles.paragraphContainer}>
+        {/* <View style={styles.paragraphContainer}>
           <Text style={styles.text}>{'3.    '}</Text>
           <Text style={[styles.text, styles.rightParagraphContainer]}>
             Jika dalam sebulan pertemuan kurang dari pertemuan yang disepakati,
@@ -53,10 +53,10 @@ export const Home: FC<ScreenProps> = () => {
             lembar bukti daftar hadir tutor.
           </Text>
         </View>
-        <Divider />
+        <Divider /> */}
 
         <View style={styles.paragraphContainer}>
-          <Text style={styles.text}>{'4.    '}</Text>
+          <Text style={styles.text}>{'3.    '}</Text>
           <Text style={[styles.text, styles.rightParagraphContainer]}>
             Jika ada hal-hal yang kurang berkenan dari tutor kami,mohon wali
             murid infokan pada kami karena kami ingin yang terbaik untuk siswa,
@@ -66,7 +66,7 @@ export const Home: FC<ScreenProps> = () => {
         <Divider />
 
         <View style={styles.paragraphContainer}>
-          <Text style={styles.text}>{'5.    '}</Text>
+          <Text style={styles.text}>{'4.    '}</Text>
           <Text style={[styles.text, styles.rightParagraphContainer]}>
             Jika terjadi ketidakcocokan, kami ada jaminan mencarikan tutor
             sampai cocok .
@@ -75,7 +75,7 @@ export const Home: FC<ScreenProps> = () => {
         <Divider />
 
         <View style={styles.paragraphContainer}>
-          <Text style={styles.text}>{'6.    '}</Text>
+          <Text style={styles.text}>{'5.    '}</Text>
           <Text style={[styles.text, styles.rightParagraphContainer]}>
             Jika wali murid menghendaki libur, wali murid bisa membuat
             kesepakatan untuk ganti hari dengan tutor yang bersangkutan.
@@ -84,7 +84,7 @@ export const Home: FC<ScreenProps> = () => {
         <Divider />
 
         <View style={styles.paragraphContainer}>
-          <Text style={styles.text}>{'7.    '}</Text>
+          <Text style={styles.text}>{'6.    '}</Text>
           <Text style={[styles.text, styles.rightParagraphContainer]}>
             Jika wali murid/siswa menghendaki libur , wali murid
             <Text style={styles.boldText}> wajib memberitahukan </Text>pada
@@ -94,7 +94,7 @@ export const Home: FC<ScreenProps> = () => {
         <Divider />
 
         <View style={styles.paragraphContainer}>
-          <Text style={styles.text}>{'8.    '}</Text>
+          <Text style={styles.text}>{'7.    '}</Text>
           <Text style={[styles.text, styles.rightParagraphContainer]}>
             Jika tutor terlanjur datang namun wali murid{' '}
             <Text style={styles.boldText}>
@@ -107,7 +107,7 @@ export const Home: FC<ScreenProps> = () => {
         <Divider />
 
         <View style={styles.paragraphContainer}>
-          <Text style={styles.text}>{'9.    '}</Text>
+          <Text style={styles.text}>{'8.    '}</Text>
           <Text style={[styles.text, styles.rightParagraphContainer]}>
             Bimbel <Text style={styles.boldText}> tidak meliburkan </Text> jika
             ada <Text style={styles.boldText}> tanggal merah </Text>. Namun jika
@@ -119,7 +119,7 @@ export const Home: FC<ScreenProps> = () => {
         <Divider />
 
         <View style={styles.paragraphContainer}>
-          <Text style={styles.text}>{'10.  '}</Text>
+          <Text style={styles.text}>{'9.  '}</Text>
           <Text style={[styles.text, styles.rightParagraphContainer]}>
             Jika wali murid menghendaki tambahan jam, ada tambahan fee yang
             disesuaikan dengan durasi.
@@ -128,7 +128,7 @@ export const Home: FC<ScreenProps> = () => {
         <Divider />
 
         <View style={styles.paragraphContainer}>
-          <Text style={styles.text}>{'11.  '}</Text>
+          <Text style={styles.text}>{'10.  '}</Text>
           <Text style={[styles.text, styles.rightParagraphContainer]}>
             Wali Murid <Text style={styles.boldText}>wajib</Text> untuk{' '}
             <Text style={styles.boldText}>
@@ -140,7 +140,7 @@ export const Home: FC<ScreenProps> = () => {
         <Divider />
 
         <View style={styles.paragraphContainer}>
-          <Text style={styles.text}>{'12.  '}</Text>
+          <Text style={styles.text}>{'11.  '}</Text>
           <Text style={[styles.text, styles.rightParagraphContainer]}>
             Untuk{' '}
             <Text style={styles.boldText}> menjaga keamanan bersama </Text>
@@ -164,7 +164,7 @@ export const Home: FC<ScreenProps> = () => {
         <Divider />
 
         <View style={styles.paragraphContainer}>
-          <Text style={styles.text}>{'13.  '}</Text>
+          <Text style={styles.text}>{'12.  '}</Text>
           <Text style={[styles.text, styles.rightParagraphContainer]}>
             <Text style={styles.boldText}>
               Wali murid diwajibkan mencocokkan wajah guru yang datang dengan
