@@ -55,7 +55,7 @@ export const Lowongan: FC<ScreenProps> = ({navigation}) => {
   const [modalFilter, setModalFilter] = useState(false);
   const [listJenjang, setListJenjang] = useState([]);
   const [jenjang, setJenjang] = useState();
-  const [idkabupaten, setIdKabupaten] = useState();
+  const [idkecamatan, setIdKecamatan] = useState();
   //update data
   const [page, setPage] = useState(1);
   const [filterOn, setFilterOn] = useState(false);
@@ -70,9 +70,10 @@ export const Lowongan: FC<ScreenProps> = ({navigation}) => {
   const [isLoadMoreData, setLoadMoreData] = useState(false);
 
   const loadMoreData = async () => {
+    console.log(idkecamatan);
     let NextPage = page + 1;
     await apiGet({
-      url: '/lowongan/' + idkabupaten,
+      url: '/lowongan/' + idkecamatan,
       params: {
         page: NextPage,
         cari: '',
@@ -89,12 +90,11 @@ export const Lowongan: FC<ScreenProps> = ({navigation}) => {
         }
         setLowonganList(lowonganList.concat(res.data));
         if (res.data.length < 10) {
-          // setLoadingData(false);
           console.log('its should close buton');
           return setDisplayButton(false);
         } else if (res.data.length == 10) {
           setLoadingData(false);
-          // setButtonLoadMore(false);
+          setButtonLoadMore(false);
           setPage(NextPage);
         }
       })
@@ -122,7 +122,7 @@ export const Lowongan: FC<ScreenProps> = ({navigation}) => {
         const dataJenjang = await apiGet({url: '/paket/jenjang'});
         if (componentMounted.current) {
           setLowonganList(lowonganKabupaten.data);
-          setIdKabupaten(tutor.data.idkecamatan);
+          setIdKecamatan(tutor.data.idkecamatan);
           setListJenjang(dataJenjang.data);
           console.log('component mounted current');
         }
@@ -134,12 +134,13 @@ export const Lowongan: FC<ScreenProps> = ({navigation}) => {
               setLowonganList(lowonganList);
             }
           } else {
-            setLowonganList(lowonganKabupaten.data);
-            if (lowonganList.length == 10) {
+            if (lowonganKabupaten.data.length == 10) {
               setButtonLoadMore(false);
               setDisplayButton(true);
             }
+            setLowonganList(lowonganKabupaten.data);
           }
+          setIdKecamatan(tutor.data.idkecamatan);
           setListJenjang(dataJenjang.data);
           setFilterOn(false);
           setIsLoading(false);
