@@ -54,7 +54,10 @@ export const DetailLesTutor: FC<ScreenProps> = ({navigation, route}) => {
           contentContainerStyle={{flexGrow: 1, padding: dimens.standard}}>
           {/* About Les */}
           <Card>
-            <Card.Title title="IPA kelas 5 SD" subtitle="5/8 Pertemuan" />
+            <Card.Title
+              title={data.paket + ' ' + data.kelas + ' ' + data.jenjang}
+              subtitle={data.jumlah_pertemuan + ' pertemuan'}
+            />
             <Card.Content>
               <CardKeyValue keyName="Siswa" value={data.siswa} keyFlex={8} />
               <CardKeyValue keyName="Tutor" value="-" keyFlex={8} />
@@ -100,7 +103,11 @@ export const DetailLesTutor: FC<ScreenProps> = ({navigation, route}) => {
                     title={new Date(item.tglabsen).toLocaleDateString()}
                     subtitle="-"
                     additionalText={
-                      item.flagabsen == 1 ? 'Sudah absen' : 'Belum absen'
+                      item.flagabsen == 1
+                        ? 'Tutor sudah mengisi absen'
+                        : item.flagabsen == 2
+                        ? 'Tutor tidak hadir'
+                        : 'Tutor belum mengisi absen'
                     }
                     onPress={() => {
                       navigation.navigate<any>('DetailPresensi', {data: item});
