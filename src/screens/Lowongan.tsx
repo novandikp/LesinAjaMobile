@@ -52,17 +52,19 @@ export const Lowongan: FC<ScreenProps> = ({navigation}) => {
   const [lowonganList, setLowonganList] = useState<any>([]);
   const [filterJenjang, setFilterJenjang] = useState<any>();
   const [filterPrefrensi, setFilterPrenfrensi] = useState();
-  const [page, setPage] = useState(1);
   const [modalFilter, setModalFilter] = useState(false);
   const [listJenjang, setListJenjang] = useState([]);
   const [jenjang, setJenjang] = useState();
-  const [filterOn, setFilterOn] = useState(false);
   const [idkabupaten, setIdKabupaten] = useState();
+  //update data
+  const [page, setPage] = useState(1);
+  const [filterOn, setFilterOn] = useState(false);
   const [buttonLoadMore, setButtonLoadMore] = useState(true);
   const [displayButton, setDisplayButton] = useState(false);
+  const [loadingData, setLoadingData] = useState(false);
+  // Loading page
   const componentMounted = useRef(true); // (3) component is mounted
   const [isRefreshing, setIsRefreshing] = useState(true);
-  const [loadingData, setLoadingData] = useState(false);
   const isFocus = useIsFocused();
   const [isLoading, setIsLoading] = useState(true);
   const [isLoadMoreData, setLoadMoreData] = useState(false);
@@ -217,6 +219,7 @@ export const Lowongan: FC<ScreenProps> = ({navigation}) => {
               selectedValue={jenjang}
               itemStyle={{height: 10, backgroundColor: 'white'}}
               onValueChange={itemValue => setJenjang(itemValue)}>
+              <Picker.Item label="SEMUA" value="SEMUA" />
               {listJenjang.map((item: any, index: number) => {
                 return (
                   <Picker.Item
@@ -228,26 +231,39 @@ export const Lowongan: FC<ScreenProps> = ({navigation}) => {
               })}
             </Picker>
           </View>
-          <Card.Actions style={{alignContent: 'flex-end'}}>
-            <Button
-              onPress={() => {
-                // let string = '';
+          {/* <Card.Actions style={{alignContent: 'flex-end'}}> */}
+          {/* <Button
+            onPress={() => {
+              // let string = '';
+              setFilterJenjang(null);
+              setFilterOn(true);
+              setIsRefreshing(true);
+              setModalFilter(false);
+            }}>
+            reset
+          </Button> */}
+          <Button
+            style={{alignSelf: 'flex-end'}}
+            onPress={() => {
+              if (jenjang == null) {
                 setFilterJenjang(null);
                 setFilterOn(true);
                 setIsRefreshing(true);
                 setModalFilter(false);
-              }}>
-              reset
-            </Button>
-            <Button
-              onPress={() => {
+              } else if (jenjang == 'SEMUA') {
+                setFilterJenjang(null);
+                setFilterOn(true);
+                setIsRefreshing(true);
+                setModalFilter(false);
+              } else {
                 setFilterJenjang(jenjang);
                 setFilterOn(true);
                 setModalFilter(false);
-              }}>
-              ok
-            </Button>
-          </Card.Actions>
+              }
+            }}>
+            ok
+          </Button>
+          {/* </Card.Actions> */}
         </Card>
       </Modal>
       {isLoading || isRefreshing ? (
