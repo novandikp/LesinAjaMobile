@@ -37,10 +37,6 @@ export const DetailWalmur: FC<ScreenProps> = ({route}) => {
           <Gap y={dimens.tiny} />
 
           <CardLabelValue
-            label="Jenis Kelamin"
-            value={item.jeniskelamin != null ? item.jeniskelamin : '-'}
-          />
-          <CardLabelValue
             label="Email"
             value={item.email != null ? item.email : '-'}
           />
