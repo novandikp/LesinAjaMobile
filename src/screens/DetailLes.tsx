@@ -134,9 +134,8 @@ export const DetailLes: FC<ScreenProps> = ({navigation, route}) => {
 
             <CardKeyValue 
               keyName="No. rekening"
-              value={detailLes.siswa !=null? detailLes.siswa : '-'}
+              value={'-'}
               keyFlex={100}
-              
             />
           </Card.Content>
         </Card>
