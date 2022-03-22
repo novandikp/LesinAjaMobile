@@ -142,6 +142,7 @@ export const LesTutor: FC<ScreenProps> = ({navigation}) => {
       ) : (
         <>
           <FlatList
+            style={{flexGrow: 1, padding: dimens.standard}}
             ListHeaderComponent={
               <>
                 <OneLineInfo info="Klik item untuk melihat detail" />
