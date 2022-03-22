@@ -119,6 +119,7 @@ export const DetailLes: FC<ScreenProps> = ({navigation, route}) => {
               value={detailLes.siswa != null ? detailLes.siswa : '-'}
               keyFlex={8}
             />
+
             <CardKeyValue keyName="Tutor" value="-" keyFlex={8} />
             <CardKeyValue
               keyName="Tgl Mulai"
@@ -130,6 +131,13 @@ export const DetailLes: FC<ScreenProps> = ({navigation, route}) => {
               keyFlex={8}
             />
             <CardKeyValue keyName="Tgl Selesai" value="-" keyFlex={8} />
+
+            <CardKeyValue 
+              keyName="No. rekening"
+              value={detailLes.siswa !=null? detailLes.siswa : '-'}
+              keyFlex={100}
+              
+            />
           </Card.Content>
         </Card>
 
