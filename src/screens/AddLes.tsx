@@ -53,6 +53,7 @@ export const AddLes: FC<ScreenProps> = ({navigation}) => {
   const [selectedDays, setSelectedDays] = useState<any>([]);
   const [isModalVisibleJenjang, setModalVisibleJenjang] = useState(false);
   const [valueJenjang, setValueJenjang] = useState('');
+  const [currentPaket, setCurrentPaket] = useState(null);
   const [filterJenjang, setFilterJenjang] = useState('');
   const [Days, setDays] = useState([
     {id: '00', name: 'MINGGU', status: false},
@@ -147,7 +148,9 @@ export const AddLes: FC<ScreenProps> = ({navigation}) => {
                   error={!!errors.idsiswa}
                   errorMessage="Harap pilih murid yang akan diikuti"
                   onSelect={item => {
-                    setFilterJenjang(item.jenjang);
+                    if (currentPaket == null) {
+                      setFilterJenjang(item.jenjang);
+                    }
                     onChange(item.siswa);
                   }}
                   listData={listMurid}
@@ -173,6 +176,7 @@ export const AddLes: FC<ScreenProps> = ({navigation}) => {
                     errorMessage="Harap pilih les yang akan diikuti"
                     onSelect={item => {
                       setBiaya(item.biaya);
+                      setCurrentPaket(item.paket);
                       onChange(item.paket);
                     }}
                     onIconPress={() => {
