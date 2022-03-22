@@ -69,8 +69,8 @@ export const AddLes: FC<ScreenProps> = ({navigation}) => {
     {id: '02', jenjang: 'SD', status: false},
     {id: '03', jenjang: 'SMP', status: false},
     {id: '04', jenjang: 'SMA', status: false},
-    {id: '05', jenjang: 'UMUM', status: false},
-    {id: '06', jenjang: 'AGAMA', status: false},
+    {id: '05', jenjang: 'Umum', status: false},
+    {id: '06', jenjang: 'Agama', status: false},
   ]);
   const {
     control,
