@@ -3,6 +3,7 @@ import {Platform, PermissionsAndroid, Alert, ToastAndroid} from 'react-native';
 import {
   downloadFile,
   DocumentDirectoryPath,
+  DownloadDirectoryPath,
   PicturesDirectoryPath,
 } from 'react-native-fs';
 /* FIXME:
@@ -81,7 +82,7 @@ const getDownload = async (Uri: string) => {
   let baseURL = 'http://45.76.149.250/';
   if (Uri.includes('.pdf')) {
     url = baseURL + 'cv/' + Uri;
-    dir = DocumentDirectoryPath + '/' + Uri;
+    dir = DownloadDirectoryPath + '/' + Uri;
   } else {
     url = baseURL + 'bukti/' + Uri;
     dir = PicturesDirectoryPath + '/' + Uri;
