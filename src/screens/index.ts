@@ -8,6 +8,7 @@ export * from './AccountTutor';
 export * from './Les';
 export * from './InputLaporan';
 export * from './Settings';
+export * from './ListStudentAdmin';
 export * from './ListStudents';
 export * from './EditStudent';
 export * from './AddLes';

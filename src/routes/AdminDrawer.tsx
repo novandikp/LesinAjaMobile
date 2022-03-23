@@ -11,6 +11,7 @@ import {
   ListLes,
   ListMaster,
   ListTutor,
+  ListStudentAdmin,
   ListWalmur,
   Laporan,
   RiwayatPembayaran,
@@ -60,6 +61,16 @@ export const AdminDrawer = () => {
         }}
       />
       <DrawerContainer.Screen
+        name="ListStudentAdmin"
+        component={ListStudentAdmin}
+        options={{
+          drawerIcon: () => (
+            <MaterialCommunityIcons name="human-male-boy" size={26} />
+          ),
+          drawerLabel: 'Daftar Siswa',
+        }}
+      />
+      <DrawerContainer.Screen
         name="ListWalmur"
         component={ListWalmur}
         options={{
@@ -82,6 +93,7 @@ export const AdminDrawer = () => {
         component={KonfirmasiPembayaran}
         options={{
           drawerIcon: () => <MaterialCommunityIcons name="check" size={26} />,
+          drawerLabel: 'Konfirmasi Pembayaran',
         }}
       />
       <DrawerContainer.Screen
@@ -89,6 +101,7 @@ export const AdminDrawer = () => {
         component={RiwayatPembayaran}
         options={{
           drawerIcon: () => <MaterialCommunityIcons name="wallet" size={26} />,
+          drawerLabel: 'Riwayat Pembayaran',
         }}
       />
       <DrawerContainer.Screen
