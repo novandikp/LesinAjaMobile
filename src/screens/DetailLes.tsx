@@ -237,7 +237,16 @@ export const DetailLes: FC<ScreenProps> = ({navigation, route}) => {
                 value={detailLes.siswa != null ? detailLes.siswa : '-'}
                 keyFlex={8}
               />
-              <CardKeyValue keyName="Tutor" value="-" keyFlex={8} />
+              <CardKeyValue
+                keyName="Tutor"
+                value={detailLes.guru != null ? detailLes.guru : '-'}
+                keyFlex={8}
+              />
+              <CardKeyValue
+                keyName="Paket"
+                value={detailLes.paket != null ? detailLes.paket : '-'}
+                keyFlex={8}
+              />
               <CardKeyValue
                 keyName="Tgl Mulai"
                 value={
