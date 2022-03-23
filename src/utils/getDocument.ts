@@ -1,9 +1,14 @@
 import DocumentPicker from 'react-native-document-picker';
-import {Platform, PermissionsAndroid, Alert, ToastAndroid} from 'react-native';
+import {
+  Platform,
+  PermissionsAndroid,
+  Alert,
+  ToastAndroid,
+  Linking,
+} from 'react-native';
 import {
   downloadFile,
-  DocumentDirectoryPath,
-  DownloadDirectoryPath,
+  ExternalStorageDirectoryPath,
   PicturesDirectoryPath,
 } from 'react-native-fs';
 /* FIXME:
@@ -82,7 +87,7 @@ const getDownload = async (Uri: string) => {
   let baseURL = 'http://45.76.149.250/';
   if (Uri.includes('.pdf')) {
     url = baseURL + 'cv/' + Uri;
-    dir = DownloadDirectoryPath + '/' + Uri;
+    dir = ExternalStorageDirectoryPath + '/Documents/' + Uri;
   } else {
     url = baseURL + 'bukti/' + Uri;
     dir = PicturesDirectoryPath + '/' + Uri;
@@ -99,13 +104,17 @@ const getDownload = async (Uri: string) => {
     .promise.then(status => {
       if (status.statusCode == 200) {
         // TODO: PushNotification
-        console.log('file telah diunduh');
         ToastAndroid.show('File telah diunduh', ToastAndroid.SHORT);
-        ToastAndroid.show('CEK' + dir, ToastAndroid.LONG);
+        ToastAndroid.show('File berada di ' + dir, ToastAndroid.LONG);
       }
     })
-    .catch((err: any) => {
-      console.log(err);
+    .catch(async (err: any) => {
+      ToastAndroid.show('Error: ' + err, ToastAndroid.SHORT);
+      if (Uri.includes('.pdf')) {
+        return await Linking.openURL(baseURL + 'cv/' + Uri);
+      } else {
+        return await Linking.openURL(baseURL + 'bukti/' + Uri);
+      }
     });
 };
 // };
