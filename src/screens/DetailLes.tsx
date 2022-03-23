@@ -43,6 +43,35 @@ type JadwalType = {
   guru: string;
   alamat_guru: string;
 };
+type applyTutor = {
+  idapplylowongan: string;
+  statusapply: string;
+  idlowongan: string;
+  idles: string;
+  idpaket: string;
+  idsiswa: string;
+  tglles: string;
+  jamles: string;
+  hari: string;
+  statusles: string;
+  paket: string;
+  jumlah_pertemuan: string;
+  biaya: string;
+  siswa: string;
+  jenjang: string;
+  kelas: string;
+  jeniskelamin: string;
+  gaji: string;
+  guru: string;
+  idguru: string;
+  jeniskelaminguru: string;
+  alamatguru: string;
+  pernahmengajar: string;
+  lamamengajar: string;
+  perguruantinggi: string;
+  jurusan: string;
+  file_cv: string;
+};
 type ScreenProps = StackScreenProps<AppStackParamList, 'DetailLes'>;
 export const DetailLes: FC<ScreenProps> = ({navigation, route}) => {
   const {data}: any = route.params;
@@ -109,7 +138,6 @@ export const DetailLes: FC<ScreenProps> = ({navigation, route}) => {
         sort: 'asc',
         page: NextPage,
       },
-      // '?cari=&orderBy=siswa&sort=desc&page=1',
     })
       .then(res => {
         if (res.data == null) {
@@ -312,7 +340,47 @@ export const DetailLes: FC<ScreenProps> = ({navigation, route}) => {
                 subtitleStyle={{fontSize: dimens.medium_14}}
               />
               <Card.Content>
-                {listApplyingTutor.map((item: any, index: number) => {
+                <FlatList
+                  style={{
+                    height: 200,
+                  }}
+                  nestedScrollEnabled={true}
+                  contentContainerStyle={{
+                    flexGrow: 1,
+                    padding: dimens.standard,
+                    paddingTop: dimens.small,
+                  }}
+                  data={listApplyingTutor}
+                  keyExtractor={(item: applyTutor) => item.idapplylowongan}
+                  renderItem={({item}: ListRenderItemInfo<applyTutor>) => (
+                    <NestedCard
+                      title={item.guru}
+                      subtitle={item.perguruantinggi}
+                      onPress={() => {
+                        navigation.navigate<any>('DetailTutor', {data: item});
+                      }}
+                      left={
+                        // props
+                        () => (
+                          // <Avatar.Image
+                          //   {...props}
+                          //   size={45}
+                          //   source={{uri: 'http://placekitten.com/100/100'}}
+                          // />
+                          <Icon
+                            // {...props}
+                            name="user"
+                            type="font-awesome"
+                            size={45}
+                          />
+                        )
+                      }
+                    />
+                  )}
+                  onEndReachedThreshold={0.1}
+                  // ListEmptyComponent=
+                />
+                {/* {listApplyingTutor.map((item: any, index: number) => {
                   return (
                     <NestedCard
                       key={index}
@@ -339,7 +407,7 @@ export const DetailLes: FC<ScreenProps> = ({navigation, route}) => {
                       }
                     />
                   );
-                })}
+                })} */}
               </Card.Content>
             </Card>
           )}
