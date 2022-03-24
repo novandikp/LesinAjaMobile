@@ -44,27 +44,28 @@ export const EditListLes: FC<ScreenProps> = ({
 
   const [selectedJenjang, setSelectedJenjang] = useState({jenjang: ''});
   useEffect(() => {
+    let isActive = true;
     const getInitialData = async () => {
       const jenjang = await apiGet({url: '/paket/jenjang'});
-      if (componentMounted.current) {
+      if (isActive) {
         setListJenjang(jenjang.data);
-      }
-      if (data != null && data.jenjang != null) {
-        let list = jenjang.data;
-        let defaultJenjang = await list.find(
-          (i: any) => i.jenjang == data.jenjang,
-        ).jenjang;
-        setSelectedJenjang({
-          jenjang: defaultJenjang,
-        });
+        if (data != null && data.jenjang != null) {
+          let list = jenjang.data;
+          let defaultJenjang = await list.find(
+            (i: any) => i.jenjang == data.jenjang,
+          ).jenjang;
+          setSelectedJenjang({
+            jenjang: defaultJenjang,
+          });
+        }
       }
     };
     getInitialData();
     return () => {
-      componentMounted.current = false;
-      // isActive = false;
+      // componentMounted.current = false;
+      isActive = false;
     };
-  }, []);
+  });
   const onSubmit: SubmitHandler<FormDataType> = async data => {
     if (!paket) {
       const success = await apiPost({
