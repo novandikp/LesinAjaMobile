@@ -109,6 +109,7 @@ const getDownload = async (Uri: string) => {
       }
     })
     .catch(async (err: any) => {
+      console.log(err);
       if (Uri.includes('.pdf')) {
         return await Linking.openURL(baseURL + 'cv/' + Uri);
       } else {
