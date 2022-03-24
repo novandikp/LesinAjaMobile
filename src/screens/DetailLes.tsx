@@ -228,7 +228,7 @@ export const DetailLes: FC<ScreenProps> = ({navigation, route}) => {
         {loading || isRefreshing ? (
           <SkeletonLoading />
         ) : (
-          <SafeAreaView style={{flexGrow: 1, padding: dimens.standard}}>
+          <SafeAreaView>
             <Card>
               <Card.Title
                 title={detailLes.kelas + ' ' + detailLes.jenjang}
