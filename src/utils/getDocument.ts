@@ -109,7 +109,6 @@ const getDownload = async (Uri: string) => {
       }
     })
     .catch(async (err: any) => {
-      ToastAndroid.show('Error: ' + err, ToastAndroid.SHORT);
       if (Uri.includes('.pdf')) {
         return await Linking.openURL(baseURL + 'cv/' + Uri);
       } else {
