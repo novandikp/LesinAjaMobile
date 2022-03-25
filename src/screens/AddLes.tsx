@@ -7,13 +7,7 @@ import {
   InputChoiceWFilter,
   InputRadio,
 } from '@components';
-import {
-  color,
-  dimens,
-  // master_pilihanles,
-  // master_siswa,
-  // PilihanLesType,
-} from '@constants';
+import {color, dimens} from '@constants';
 import {TextInput, Text, Button, Card, Checkbox} from 'react-native-paper';
 import {Controller, useForm, SubmitHandler} from 'react-hook-form';
 import {
@@ -55,6 +49,7 @@ export const AddLes: FC<ScreenProps> = ({navigation}) => {
   const [valueJenjang, setValueJenjang] = useState('');
   const [currentPaket, setCurrentPaket] = useState(null);
   const [filterJenjang, setFilterJenjang] = useState('');
+  const [disableNloading, setDisablenLoading] = useState(false);
   const [Days, setDays] = useState([
     {id: '00', name: 'MINGGU', status: false},
     {id: '01', name: 'SENIN', status: false},
@@ -107,6 +102,7 @@ export const AddLes: FC<ScreenProps> = ({navigation}) => {
     };
   }, [selectedDays, listLes, filterJenjang]);
   const onSubmit: SubmitHandler<FormDataType> = async data => {
+    setDisablenLoading(true);
     let hari = selectedDays.toString();
     data.hari = hari;
     data.jamles = time.getHours() + ':' + time.getMinutes();
@@ -450,7 +446,12 @@ export const AddLes: FC<ScreenProps> = ({navigation}) => {
       </ScrollView>
 
       {/* Submit button */}
-      <ButtonFormSubmit text="Kirim" onPress={handleSubmit(onSubmit)} />
+      <ButtonFormSubmit
+        text="Kirim"
+        isDisable={disableNloading}
+        isLoading={disableNloading}
+        onPress={handleSubmit(onSubmit)}
+      />
     </SafeAreaView>
   );
 };
