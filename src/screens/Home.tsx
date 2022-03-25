@@ -25,7 +25,7 @@ export const Home: FC<ScreenProps> = () => {
           <Text style={[styles.text, styles.rightParagraphContainer]}>
             Biaya pendaftaran & biaya Les dibayar di awal sebagai Tanda Jadi
             Les.
-            <Text style={[styles.boldText]}>
+            <Text>
               Pembayaran dilakukan setelah kami infokan data pengajarnya.
             </Text>
             Jika belum ada data pengajar, maka belum ada pembayaran
@@ -87,8 +87,8 @@ export const Home: FC<ScreenProps> = () => {
           <Text style={styles.text}>{'6.    '}</Text>
           <Text style={[styles.text, styles.rightParagraphContainer]}>
             Jika wali murid/siswa menghendaki libur , wali murid
-            <Text style={styles.boldText}> wajib memberitahukan </Text>pada
-            tutor minimal 2 jam sebelumnya agar tutor tidak terlanjur datang.
+            <Text> wajib memberitahukan </Text>pada tutor minimal 2 jam
+            sebelumnya agar tutor tidak terlanjur datang.
           </Text>
         </View>
         <Divider />
@@ -97,11 +97,9 @@ export const Home: FC<ScreenProps> = () => {
           <Text style={styles.text}>{'7.    '}</Text>
           <Text style={[styles.text, styles.rightParagraphContainer]}>
             Jika tutor terlanjur datang namun wali murid{' '}
-            <Text style={styles.boldText}>
-              meliburkan tanpa pemberitahuan sebelumnya
-            </Text>{' '}
-            , maka tutor dianggap datang dan tutor berhak mengisi daftar
-            kehadiran dan mendapatkan pembayaran .
+            <Text>meliburkan tanpa pemberitahuan sebelumnya</Text> , maka tutor
+            dianggap datang dan tutor berhak mengisi daftar kehadiran dan
+            mendapatkan pembayaran .
           </Text>
         </View>
         <Divider />
@@ -109,11 +107,11 @@ export const Home: FC<ScreenProps> = () => {
         <View style={styles.paragraphContainer}>
           <Text style={styles.text}>{'8.    '}</Text>
           <Text style={[styles.text, styles.rightParagraphContainer]}>
-            Bimbel <Text style={styles.boldText}> tidak meliburkan </Text> jika
-            ada <Text style={styles.boldText}> tanggal merah </Text>. Namun jika
-            ada jadwal les pada saat tanggal merah, wali murid bisa membuat
-            kesepakakatan dengan tutor untuk masuk atau tidak . Jika tidak
-            masuk, bisa dibuat kesepakakatan untuk mengganti hari.
+            Bimbel <Text> tidak meliburkan </Text> jika ada{' '}
+            <Text> tanggal merah </Text>. Namun jika ada jadwal les pada saat
+            tanggal merah, wali murid bisa membuat kesepakakatan dengan tutor
+            untuk masuk atau tidak . Jika tidak masuk, bisa dibuat kesepakakatan
+            untuk mengganti hari.
           </Text>
         </View>
         <Divider />
@@ -130,11 +128,9 @@ export const Home: FC<ScreenProps> = () => {
         <View style={styles.paragraphContainer}>
           <Text style={styles.text}>{'10.  '}</Text>
           <Text style={[styles.text, styles.rightParagraphContainer]}>
-            Wali Murid <Text style={styles.boldText}>wajib</Text> untuk{' '}
-            <Text style={styles.boldText}>
-              memantau laporan perkembangan siswa
-            </Text>{' '}
-            dan memberi tanda tangan pada daftar hadir tutor.
+            Wali Murid <Text>wajib</Text> untuk{' '}
+            <Text>memantau laporan perkembangan siswa</Text> dan memberi tanda
+            tangan pada daftar hadir tutor.
           </Text>
         </View>
         <Divider />
@@ -142,20 +138,15 @@ export const Home: FC<ScreenProps> = () => {
         <View style={styles.paragraphContainer}>
           <Text style={styles.text}>{'11.  '}</Text>
           <Text style={[styles.text, styles.rightParagraphContainer]}>
-            Untuk{' '}
-            <Text style={styles.boldText}> menjaga keamanan bersama </Text>
-            <Text style={styles.boldText}>
-              wali murid diwajibkan menyiapkan papan tulis kecil
-            </Text>{' '}
-            agar ada jarak antara tutor dan siswa,{' '}
-            <Text style={styles.boldText}>
+            Untuk <Text> menjaga keamanan bersama </Text>
+            <Text>wali murid diwajibkan menyiapkan papan tulis kecil</Text> agar
+            ada jarak antara tutor dan siswa,{' '}
+            <Text>
               menyiapkan hand sanitizer , memakaikan masker/faceshield
             </Text>{' '}
-            pada{' '}
-            <Text style={styles.boldText}>anak saat les berlangsung .</Text>{' '}
-            Wali murid juga <Text style={styles.boldText}> diwajibkan</Text>{' '}
-            untuk{' '}
-            <Text style={styles.boldText}>
+            pada <Text>anak saat les berlangsung .</Text> Wali murid juga{' '}
+            <Text> diwajibkan</Text> untuk{' '}
+            <Text>
               memastikan bahwa tutor menjalankan protokol kesehatan sesuai
               anjuran pemerintah .
             </Text>
@@ -166,7 +157,7 @@ export const Home: FC<ScreenProps> = () => {
         <View style={styles.paragraphContainer}>
           <Text style={styles.text}>{'12.  '}</Text>
           <Text style={[styles.text, styles.rightParagraphContainer]}>
-            <Text style={styles.boldText}>
+            <Text>
               Wali murid diwajibkan mencocokkan wajah guru yang datang dengan
               data yang diberikan bimbel untuk memastikan bahwa yang datang
               adalah orang yang benar. Minta guru untuk membuka masker sebentar
