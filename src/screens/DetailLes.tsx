@@ -29,6 +29,8 @@ import {useIsFocused} from '@react-navigation/core';
 import {StackScreenProps} from '@react-navigation/stack';
 import {AppStackParamList} from '@routes/RouteTypes';
 import {getSingleDocument, apiGet, apiPostFile} from '@utils';
+import {Picker} from '@react-native-picker/picker';
+
 import {Icon} from 'react-native-elements';
 type JadwalType = {
   idabsen: string;
@@ -74,6 +76,7 @@ type applyTutor = {
   file_cv: string;
 };
 // FIXME:VirtualizedLists should never be nested inside plain ScrollViews with the same orientation.
+
 LogBox.ignoreLogs(['VirtualizedLists should never be nested']);
 type ScreenProps = StackScreenProps<AppStackParamList, 'DetailLes'>;
 export const DetailLes: FC<ScreenProps> = ({navigation, route}) => {
@@ -101,6 +104,39 @@ export const DetailLes: FC<ScreenProps> = ({navigation, route}) => {
   const isFocus = useIsFocused();
   const [loading, setIsLoading] = useState(true);
   const [isLoadMoreData, setLoadMoreData] = useState(false);
+  const [bank, setBank] = useState(null);
+  const listRekening = [
+    {
+      Bank: 'BCA',
+      name: 'a.n Siti Aminah',
+      norek: '0181833415',
+      id: '00',
+    },
+    {
+      Bank: ' Mandiri ',
+      name: 'a.n Siti Aminah',
+      norek: '1410019573963',
+      id: '01',
+    },
+    {
+      Bank: ' BNI ',
+      name: 'a.n Siti Aminah',
+      norek: '1174432242',
+      id: '02',
+    },
+    {
+      Bank: ' BRI ',
+      name: 'a.n Siti Aminah',
+      norek: '010901074342507',
+      id: '03',
+    },
+    {
+      Bank: ' BSI ',
+      name: 'a.n SITI AMINAH',
+      norek: '7178577788',
+      id: '04',
+    },
+  ];
   const onPressUploadBuktiBayar = async () => {
     if (buktiBayar.path === '') {
       const res = await getSingleDocument();
@@ -281,35 +317,82 @@ export const DetailLes: FC<ScreenProps> = ({navigation, route}) => {
               </Card>
             )}
             {statusles == 2 && (
-              <Card style={{marginTop: dimens.standard}}>
-                <Card.Title
-                  title="Anda Belum Membayar Biaya Les"
-                  subtitle="Biaya Les: Rp 200.000 (Ukuran maks.2mb)"
-                  titleStyle={{color: '#EF4444'}}
-                  subtitleStyle={{fontSize: dimens.medium_14}}
-                />
-                {buktiBayar.path !== '' && (
-                  <Card.Cover
-                    source={{uri: buktiBayar.path}}
-                    style={{
-                      marginTop: dimens.small,
-                      marginHorizontal: dimens.standard,
-                      // height: 500,
-                      // resizeMode: 'contain',
-                    }}
+              <>
+                <Card style={{marginTop: dimens.standard}}>
+                  <Card.Title
+                    title="Anda Belum Membayar Biaya Les"
+                    subtitle="Biaya Les: Rp 200.000 (Ukuran maks.2mb)"
+                    titleStyle={{color: '#EF4444'}}
+                    subtitleStyle={{fontSize: dimens.medium_14}}
                   />
-                )}
-                <Card.Actions>
-                  <Button
-                    disabled={isLoading}
-                    onPress={onPressUploadBuktiBayar}>
-                    {buktiBayar.path === ''
-                      ? 'Unggah Bukti Pembayaran'
-                      : 'Kirim'}
-                  </Button>
-                  {isLoading && <ActivityIndicator animating={isLoading} />}
-                </Card.Actions>
-              </Card>
+                  <Picker
+                    style={{flex: 2}}
+                    mode="dropdown"
+                    selectedValue={bank}
+                    itemStyle={{height: 10, backgroundColor: 'white'}}
+                    onValueChange={itemValue => setBank(itemValue)}>
+                    <Picker.Item
+                      key={'-'}
+                      label="Pilih bank yang akan ditranfer"
+                      value={null}
+                    />
+                    {listRekening.map((item: any, index: number) => {
+                      return (
+                        <Picker.Item
+                          key={index}
+                          label={item.Bank}
+                          value={item.Bank}
+                        />
+                      );
+                    })}
+                  </Picker>
+                  {bank != null &&
+                    listRekening.map((i: any, index: number) => {
+                      if (i.Bank == bank) {
+                        return (
+                          <Card.Content key={index}>
+                            <CardKeyValue
+                              keyName="Nama"
+                              value={i.name}
+                              keyFlex={8}
+                            />
+                            <CardKeyValue
+                              keyName="Bank"
+                              value={i.Bank}
+                              keyFlex={8}
+                            />
+                            <CardKeyValue
+                              keyName="No rekening"
+                              value={i.norek}
+                              keyFlex={8}
+                            />
+                          </Card.Content>
+                        );
+                      }
+                    })}
+                  {buktiBayar.path !== '' && (
+                    <Card.Cover
+                      source={{uri: buktiBayar.path}}
+                      style={{
+                        marginTop: dimens.small,
+                        marginHorizontal: dimens.standard,
+                        // height: 500,
+                        // resizeMode: 'contain',
+                      }}
+                    />
+                  )}
+                  <Card.Actions>
+                    <Button
+                      disabled={isLoading}
+                      onPress={onPressUploadBuktiBayar}>
+                      {buktiBayar.path === ''
+                        ? 'Unggah Bukti Pembayaran'
+                        : 'Kirim'}
+                    </Button>
+                    {isLoading && <ActivityIndicator animating={isLoading} />}
+                  </Card.Actions>
+                </Card>
+              </>
             )}
             {statusles == 5 && (
               <Card style={{marginTop: dimens.standard}}>
@@ -319,6 +402,52 @@ export const DetailLes: FC<ScreenProps> = ({navigation, route}) => {
                   titleStyle={{color: '#EF4444'}}
                   subtitleStyle={{fontSize: dimens.medium_14}}
                 />
+                <Picker
+                  style={{flex: 2}}
+                  mode="dropdown"
+                  selectedValue={bank}
+                  itemStyle={{height: 10, backgroundColor: 'white'}}
+                  onValueChange={itemValue => setBank(itemValue)}>
+                  <Picker.Item
+                    key={'-'}
+                    label="Pilih bank yang akan ditranfer"
+                    value={null}
+                  />
+                  {listRekening.map((item: any, index: number) => {
+                    return (
+                      <Picker.Item
+                        key={index}
+                        label={item.Bank}
+                        value={item.Bank}
+                      />
+                    );
+                  })}
+                </Picker>
+                {bank != null &&
+                  listRekening.map((i: any, index: number) => {
+                    if (i.Bank == bank) {
+                      return (
+                        <Card.Content key={index}>
+                          <CardKeyValue
+                            keyName="Nama"
+                            value={i.name}
+                            keyFlex={8}
+                          />
+                          <CardKeyValue
+                            keyName="Bank"
+                            value={i.Bank}
+                            keyFlex={8}
+                          />
+                          <CardKeyValue
+                            keyName="No rekening"
+                            value={i.norek}
+                            keyFlex={8}
+                          />
+                        </Card.Content>
+                      );
+                    }
+                  })}
+                {/* <Card.Content></Card.Content> */}
                 {buktiBayar.path !== '' && (
                   <Card.Cover
                     source={{uri: buktiBayar.path}}
@@ -406,34 +535,6 @@ export const DetailLes: FC<ScreenProps> = ({navigation, route}) => {
                     onEndReachedThreshold={0.1}
                     // ListEmptyComponent=
                   />
-                  {/* {listApplyingTutor.map((item: any, index: number) => {
-                  return (
-                    <NestedCard
-                      key={index}
-                      title={item.guru}
-                      subtitle={item.perguruantinggi}
-                      onPress={() => {
-                        navigation.navigate<any>('DetailTutor', {data: item});
-                      }}
-                      left={
-                        // props
-                        () => (
-                          // <Avatar.Image
-                          //   {...props}
-                          //   size={45}
-                          //   source={{uri: 'http://placekitten.com/100/100'}}
-                          // />
-                          <Icon
-                            // {...props}
-                            name="user"
-                            type="font-awesome"
-                            size={45}
-                          />
-                        )
-                      }
-                    />
-                  );
-                })} */}
                 </Card.Content>
               </Card>
             )}
