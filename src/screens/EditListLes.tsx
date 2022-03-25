@@ -41,14 +41,13 @@ export const EditListLes: FC<ScreenProps> = ({
   const paket = !data;
   const [listJenjang, setListJenjang] = useState([]);
   const componentMounted = useRef(true); // (3) component is mounted
-
+  const [isLoading, setLoading] = useState(true);
   const [selectedJenjang, setSelectedJenjang] = useState({jenjang: ''});
   useEffect(() => {
     let isActive = true;
     const getInitialData = async () => {
       const jenjang = await apiGet({url: '/paket/jenjang'});
-      if (isActive) {
-        setListJenjang(jenjang.data);
+      if (componentMounted.current) {
         if (data != null && data.jenjang != null) {
           let list = jenjang.data;
           let defaultJenjang = await list.find(
@@ -57,12 +56,19 @@ export const EditListLes: FC<ScreenProps> = ({
           setSelectedJenjang({
             jenjang: defaultJenjang,
           });
+          setListJenjang(jenjang.data);
         }
       }
+      if (isActive) {
+        setListJenjang(jenjang.data);
+        setLoading(false);
+      }
     };
-    getInitialData();
+    if (isLoading) {
+      getInitialData();
+    }
     return () => {
-      // componentMounted.current = false;
+      componentMounted.current = false;
       isActive = false;
     };
   });
@@ -73,7 +79,7 @@ export const EditListLes: FC<ScreenProps> = ({
         payload: data,
       });
       if (success) {
-        navigate('HomeAdmin');
+        navigate('ListLes');
       }
     } else {
       const success = await apiPost({
@@ -81,7 +87,7 @@ export const EditListLes: FC<ScreenProps> = ({
         payload: data,
       });
       if (success) {
-        navigate('HomeAdmin');
+        navigate('ListLes');
       }
     }
   };
