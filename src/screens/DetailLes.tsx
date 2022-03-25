@@ -333,7 +333,7 @@ export const DetailLes: FC<ScreenProps> = ({navigation, route}) => {
                     onValueChange={itemValue => setBank(itemValue)}>
                     <Picker.Item
                       key={'-'}
-                      label="Pilih bank yang akan ditranfer"
+                      label="Pilih bank yang akan ditransfer"
                       value={null}
                     />
                     {listRekening.map((item: any, index: number) => {
@@ -410,7 +410,7 @@ export const DetailLes: FC<ScreenProps> = ({navigation, route}) => {
                   onValueChange={itemValue => setBank(itemValue)}>
                   <Picker.Item
                     key={'-'}
-                    label="Pilih bank yang akan ditranfer"
+                    label="Pilih bank yang akan ditransfer"
                     value={null}
                   />
                   {listRekening.map((item: any, index: number) => {
