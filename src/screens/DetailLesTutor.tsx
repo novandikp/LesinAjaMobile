@@ -84,7 +84,6 @@ export const DetailLesTutor: FC<ScreenProps> = ({navigation, route}) => {
   };
   useEffect(() => {
     let isActive = true;
-    console.log(data.idles);
     const getInitialData = async () => {
       const jadwalles = await apiGet({
         url: '/jadwal/les/' + data.idles,
