@@ -497,8 +497,10 @@ export const DetailLes: FC<ScreenProps> = ({navigation, route}) => {
                 <Card.Content>
                   <FlatList
                     style={{
-                      height: 200,
+                      // minheight: 0,
+                      maxHeight: 200,
                     }}
+                    // style={listApplyingTutor==null?0:200}
                     nestedScrollEnabled={true}
                     contentContainerStyle={{
                       flexGrow: 1,
