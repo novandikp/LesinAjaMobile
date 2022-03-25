@@ -21,9 +21,12 @@ enableScreens();
 
 // Initialization of siginin with google feature
 GoogleSignin.configure({
+  // webClientId:
+  //   '508384095334-uqi7vshb8v3krm2r7bacerjtpdfm82fa.apps.googleusercontent.com', // client ID of type WEB for your server (needed to verify user ID and offline access)
+  
   // scopes: ['https://www.googleapis.com/auth/drive.readonly'], // what API you want to access on behalf of the user, default is email and profile
   webClientId:
-    '508384095334-uqi7vshb8v3krm2r7bacerjtpdfm82fa.apps.googleusercontent.com', // client ID of type WEB for your server (needed to verify user ID and offline access)
+    '1074207251680-rfbkb2tqe7gchrk8vb1e9802en9rnsba.apps.googleusercontent.com', // client ID of type WEB for your server (needed to verify user ID and offline access)
   offlineAccess: true, // if you want to access Google API on behalf of the user FROM YOUR SERVER
   // hostedDomain: '', // specifies a hosted domain restriction
   // loginHint: '', // [iOS] The user's ID, or email address, to be prefilled in the authentication UI if possible. [See docs here](https://developers.google.com/identity/sign-in/ios/api/interface_g_i_d_sign_in.html#a0a68c7504c31ab0b728432565f6e33fd)
