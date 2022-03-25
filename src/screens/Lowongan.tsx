@@ -78,7 +78,7 @@ export const Lowongan: FC<ScreenProps> = ({navigation}) => {
         page: NextPage,
         cari: '',
         orderBy: 'idlowongan',
-        sort: 'ASC',
+        sort: 'desc',
         jenjang: filterJenjang,
         prefrensi: filterPrefrensi,
       },
@@ -114,7 +114,7 @@ export const Lowongan: FC<ScreenProps> = ({navigation}) => {
             page: 1,
             cari: '',
             orderBy: 'idlowongan',
-            sort: 'ASC',
+            sort: 'desc',
             jenjang: filterJenjang,
             prefrensi: tutor.data.jeniskelaminguru,
           },
@@ -234,16 +234,7 @@ export const Lowongan: FC<ScreenProps> = ({navigation}) => {
             </Picker>
           </View>
           {/* <Card.Actions style={{alignContent: 'flex-end'}}> */}
-          {/* <Button
-            onPress={() => {
-              // let string = '';
-              setFilterJenjang(null);
-              setFilterOn(true);
-              setIsRefreshing(true);
-              setModalFilter(false);
-            }}>
-            reset
-          </Button> */}
+
           <Button
             style={{alignSelf: 'flex-end'}}
             onPress={() => {
