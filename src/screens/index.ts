@@ -6,6 +6,8 @@ export * from './Account';
 export * from './KonfirmasiPembayaran';
 export * from './AccountTutor';
 export * from './Les';
+export * from './Latihan';
+export * from './Soal';
 export * from './InputLaporan';
 export * from './Settings';
 export * from './ListStudentAdmin';

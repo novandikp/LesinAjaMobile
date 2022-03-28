@@ -6,6 +6,7 @@ export type MainTabParamList = {
   Les: undefined;
   Settings: undefined;
   LesTutor: undefined;
+  Latihan: undefined;
   Lowongan: undefined;
 };
 
@@ -35,6 +36,8 @@ export type AppStackParamList = {
   AddLes: undefined;
   DetailLes: undefined;
   DetailTutor: undefined;
+  Latihan: undefined;
+  Soal: undefined;
   DetailPresensi: undefined;
   DetailLowongan: undefined;
   DetailLesTutor: undefined;
