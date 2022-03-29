@@ -489,13 +489,13 @@ export const AccountTutor: FC<ScreenProps> = () => {
                 rules={{required: true}}
                 render={({field: {onChange, onBlur, value}}) => (
                   <InputText
-                    label="Pernah Mengajar"
-                    placeholder="Pernah Mengajar"
+                    label="Riwayat Mengajar"
+                    placeholder="Riwayat Mengajar"
                     onBlur={onBlur}
                     onChangeText={onChange}
                     value={value}
                     error={!!errors.pernahmengajar}
-                    errorMessage="Mapel harus diisi"
+                    errorMessage="Riwayat mengajar harus diisi"
                   />
                 )}
                 name="pernahmengajar"
