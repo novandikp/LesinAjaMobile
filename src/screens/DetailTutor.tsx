@@ -77,16 +77,18 @@ export const DetailTutor: FC<ScreenProps> = ({navigation, route}) => {
             value="Banyak sekali pengalaman yang sangat berharga saat mengajar di kelas I Sekolah Dasar. Salah satunya adalah latar belakang siswa yang berbeda, ada yang cerdas namun pemalu atau kurang percaya diri, ada yang hiperaktif tapi dalam akademik saat diberikan tugas ia kurang menyukainya, dan ada pula yang selalu cari perhatian dan keinginannya harus selalu dituruti.\nDengan berbagai perasaan yang bercampur aduk saya ditempatkan di kelas 2. Karena pada saat itu, mereka guru-guru senior disana melihat latar belakang saya adalah seorang yang berpengalaman karena sudah pernah mengajar di TK."
           /> */}
           <CardLabelValue
-            label="Pernah mengajar di"
+            label="Riwayat Mengajar"
             value={item.pernahmengajar}
           />
-          <CardLabelValue label="lama mengajar" value={item.lamamengajar} />
+          <CardLabelValue label="Lama Mengajar" value={item.lamamengajar} />
           {/* TODO: GET DOWNLOAD CV */}
-          <CardLabelValue
-            label="File CV"
-            value={'http://45.76.149.250/cv/' + item.file_cv}
-            isValueLink
-          />
+          {userRole == 'admin' && (
+            <CardLabelValue
+              label="File CV"
+              value={'http://45.76.149.250/cv/' + item.file_cv}
+              isValueLink
+            />
+          )}
         </Card>
       </ScrollView>
       {/* Submit button */}
