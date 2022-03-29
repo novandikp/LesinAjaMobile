@@ -160,6 +160,13 @@ export const KonfirmasiPembayaran: FC<ScreenProps> = ({}) => {
         {modalImage && (
           <Modal
             isVisible={modalImage}
+            style={{
+              // flex: 1,
+              // width: '100%',
+              // height: '100%',
+              // marginTop: dimens.small,
+              margin: dimens.standard,
+            }}
             onBackdropPress={() => {
               setModalImage(false);
               setUriPicture('');
@@ -172,11 +179,12 @@ export const KonfirmasiPembayaran: FC<ScreenProps> = ({}) => {
                 }}
                 style={{
                   height: '100%',
-                  aspectRatio: 1,
+                  width: '100%',
                   alignSelf: 'center',
                   alignItems: 'center',
-                  marginTop: dimens.small,
-                  marginHorizontal: dimens.standard,
+                  resizeMode: 'stretch',
+                  // marginTop: dimens.small,
+                  // marginHorizontal: dimens.standard,
                 }}
               />
             )}
