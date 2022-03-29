@@ -135,6 +135,16 @@ export const DetailPresensi: FC<ScreenProps> = ({navigation, route}) => {
                 ? 'Anda absen, tidak dapat untuk hadir'
                 : 'Wali belum mengisi data hadir'}
             </Paragraph>
+            {data.keteranganwali != null && (
+              <View>
+                <Paragraph style={{fontSize: dimens.standard}}>
+                  Kritik dan saran dari wali :{' '}
+                </Paragraph>
+                <Paragraph style={{fontSize: dimens.standard}}>
+                  {data.keteranganwali}
+                </Paragraph>
+              </View>
+            )}
 
             {userRole == 'parent' && hiddenButtonAbsen && (
               <View style={{flexDirection: 'row', justifyContent: 'flex-end'}}>
@@ -186,6 +196,16 @@ export const DetailPresensi: FC<ScreenProps> = ({navigation, route}) => {
                 ? 'Anda absen, tidak dapat untuk hadir'
                 : 'Tutor belum mengisi data hadir'}
             </Paragraph>
+            {data.keterangan != null && (
+              <View>
+                <Paragraph style={{fontSize: dimens.standard}}>
+                  Review tutor :
+                </Paragraph>
+                <Paragraph style={{fontSize: dimens.standard}}>
+                  {data.keterangan}
+                </Paragraph>
+              </View>
+            )}
             {userRole == 'tutor' && hiddenButtonAbsen && (
               <View style={{flexDirection: 'row', justifyContent: 'flex-end'}}>
                 <Button
@@ -214,15 +234,18 @@ export const DetailPresensi: FC<ScreenProps> = ({navigation, route}) => {
                 {/* )} */}
               </View>
             )}
-            <Button
-              disabled={userRole == 'tutor' ? disabledAbsen : disabledAbsenWali}
-              style={{marginTop: dimens.standard}}
-              icon="pencil-outline"
-              onPress={() => {
-                setOpen(true);
-              }}>
-              Edit tanggal pertemuan
-            </Button>
+            {userRole == 'parent' && (
+              <Button
+                disabled={disabledAbsenWali}
+                style={{marginTop: dimens.standard}}
+                icon="pencil-outline"
+                onPress={() => {
+                  setOpen(true);
+                }}>
+                Edit tanggal pertemuan
+              </Button>
+            )}
+
             {Open == true && (
               <DatePicker
                 modal
@@ -306,7 +329,11 @@ export const DetailPresensi: FC<ScreenProps> = ({navigation, route}) => {
                   onChangeText={text => {
                     setKeterangan(text);
                   }}
-                  label={'Kritik dan saran dalam pertemuan ini:'}
+                  label={
+                    userRole == 'parent'
+                      ? 'Kritik dan saran dalam pertemuan ini:'
+                      : 'Review Les hari ini'
+                  }
                   mode="outlined"
                 />
                 <View
@@ -324,7 +351,6 @@ export const DetailPresensi: FC<ScreenProps> = ({navigation, route}) => {
                   </Button>
                   <Button
                     onPress={async () => {
-                      console.log(Keterangan);
                       if (userRole == 'tutor') {
                         const {success} = await apiPost({
                           url: '/les/present/' + data.idabsen,
