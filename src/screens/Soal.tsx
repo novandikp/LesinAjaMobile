@@ -47,6 +47,22 @@ export const Soal: FC<ScreenProps> = ({navigation}) => {
     },
   ];
   const [soalNomer, setSoalNomer] = useState(0);
+  const [jSoal, setJSoal] = useState([
+    {
+      id: 0,
+      data: '',
+    },
+    {
+      id: 1,
+      data: '',
+    },
+  ]);
+
+  const [jawaban0, setJawaban0] = useState(false);
+  const [jawaban1, setJawaban1] = useState(false);
+  const [jawaban2, setJawaban2] = useState(false);
+  const [jawaban3, setJawaban3] = useState(false);
+
   const [modalNomor, setModalNomor] = useState(false);
   // loading
   const [isLoading, setIsLoading] = useState(true);
@@ -91,7 +107,13 @@ export const Soal: FC<ScreenProps> = ({navigation}) => {
               <Checkbox.Item
                 label={soal[soalNomer].pilihan[0].data}
                 position="leading"
-                status="checked"
+                status={jawaban0 ? 'checked' : 'unchecked'}
+                onPress={() => {
+                  setJawaban0(!jawaban0);
+                  setJawaban1(false);
+                  setJawaban2(false);
+                  setJawaban3(false);
+                }}
                 labelStyle={{
                   textAlign: 'left',
                 }}
@@ -99,7 +121,13 @@ export const Soal: FC<ScreenProps> = ({navigation}) => {
               <Checkbox.Item
                 label={soal[soalNomer].pilihan[1].data}
                 position="leading"
-                status="unchecked"
+                status={jawaban1 ? 'checked' : 'unchecked'}
+                onPress={() => {
+                  setJawaban1(!jawaban1);
+                  setJawaban0(false);
+                  setJawaban2(false);
+                  setJawaban3(false);
+                }}
                 labelStyle={{
                   textAlign: 'left',
                 }}
@@ -107,7 +135,13 @@ export const Soal: FC<ScreenProps> = ({navigation}) => {
               <Checkbox.Item
                 label={soal[soalNomer].pilihan[2].data}
                 position="leading"
-                status="unchecked"
+                status={jawaban2 ? 'checked' : 'unchecked'}
+                onPress={() => {
+                  setJawaban2(!jawaban2);
+                  setJawaban0(false);
+                  setJawaban1(false);
+                  setJawaban3(false);
+                }}
                 labelStyle={{
                   textAlign: 'left',
                 }}
@@ -115,7 +149,13 @@ export const Soal: FC<ScreenProps> = ({navigation}) => {
               <Checkbox.Item
                 label={soal[soalNomer].pilihan[3].data}
                 position="leading"
-                status="unchecked"
+                status={jawaban3 ? 'checked' : 'unchecked'}
+                onPress={() => {
+                  setJawaban3(!jawaban3);
+                  setJawaban0(false);
+                  setJawaban1(false);
+                  setJawaban2(false);
+                }}
                 labelStyle={{
                   textAlign: 'left',
                 }}
@@ -125,6 +165,60 @@ export const Soal: FC<ScreenProps> = ({navigation}) => {
               <Button
                 mode="outlined"
                 onPress={() => {
+                  console.log('halaman' + soalNomer);
+                  console.log('back');
+                  console.log(jSoal);
+
+                  jSoal.map((object: any) => {
+                    if (object.id == soalNomer) {
+                      setJSoal(
+                        jSoal.map((item: any) => {
+                          if (soalNomer == item.id) {
+                            if (jawaban0 == true) {
+                              return {...item, data: 'a'};
+                            } else if (jawaban1 == true) {
+                              return {...item, data: 'b'};
+                            } else if (jawaban2 == true) {
+                              return {...item, data: 'c'};
+                            } else if (jawaban3 == true) {
+                              return {...item, data: 'd'};
+                            }
+                            return {...item, data: ''};
+                          } else if (soalNomer != item.id) {
+                            return {...item, data: ''};
+                          }
+                        }),
+                      );
+                    }
+                  }),
+                    setJawaban0(false);
+                  setJawaban1(false);
+                  setJawaban2(false);
+                  setJawaban3(false);
+                  jSoal.map((item: any) => {
+                    if (soalNomer - 1 === item.id) {
+                      if (item.data == 'a') {
+                        setJawaban0(true);
+                      } else if (item.data == 'b') {
+                        setJawaban1(true);
+                      } else if (item.data == 'c') {
+                        setJawaban2(true);
+                      } else if (item.data == 'd') {
+                        setJawaban3(true);
+                      }
+                    }
+                  });
+                  // if (jSoal[soalNomer].data != '') {
+                  //   if (jSoal[soalNomer].data == 'a') {
+                  //     setJawaban0(true);
+                  //   } else if (jSoal[soalNomer].data == 'b') {
+                  //     setJawaban1(true);
+                  //   } else if (jSoal[soalNomer].data == 'c') {
+                  //     setJawaban2(true);
+                  //   } else if (jSoal[soalNomer].data == 'd') {
+                  //     setJawaban3(true);
+                  //   }
+                  // }
                   if (soalNomer != 0) return setSoalNomer(soalNomer - 1);
                 }}>
                 Back
@@ -139,6 +233,50 @@ export const Soal: FC<ScreenProps> = ({navigation}) => {
               <Button
                 mode="outlined"
                 onPress={() => {
+                  let kata = 'soal' + soalNomer;
+                  console.log('next');
+                  console.log(jSoal);
+                  jSoal.map((object: any) => {
+                    if (object.id == soalNomer) {
+                      return setJSoal(
+                        jSoal.map((item: any) => {
+                          if (soalNomer == item.id) {
+                            if (jawaban0 == true) {
+                              return {...item, data: 'a'};
+                            } else if (jawaban1 == true) {
+                              return {...item, data: 'b'};
+                            } else if (jawaban2 == true) {
+                              return {...item, data: 'c'};
+                            } else if (jawaban3 == true) {
+                              return {...item, data: 'd'};
+                            }
+                            return {...item, data: ''};
+                          } else if (soalNomer != item.id) {
+                            return {...item, data: ''};
+                          }
+                        }),
+                      );
+                    }
+                  });
+
+                  setJawaban0(false);
+                  setJawaban1(false);
+                  setJawaban2(false);
+                  setJawaban3(false);
+                  jSoal.map((item: any) => {
+                    if (soalNomer + 1 === item.id) {
+                      if (item.data == 'a') {
+                        setJawaban0(true);
+                      } else if (item.data == 'b') {
+                        setJawaban1(true);
+                      } else if (item.data == 'c') {
+                        setJawaban2(true);
+                      } else if (item.data == 'd') {
+                        setJawaban3(true);
+                      }
+                    }
+                  });
+                  // setSoal0();
                   if (soalNomer + 1 != soal.length)
                     return setSoalNomer(soalNomer + 1);
                 }}>
