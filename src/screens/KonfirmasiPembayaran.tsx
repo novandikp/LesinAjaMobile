@@ -160,34 +160,39 @@ export const KonfirmasiPembayaran: FC<ScreenProps> = ({}) => {
         {modalImage && (
           <Modal
             isVisible={modalImage}
-            style={{
-              // flex: 1,
-              // width: '100%',
-              // height: '100%',
-              // marginTop: dimens.small,
-              margin: dimens.standard,
-            }}
-            onBackdropPress={() => {
-              setModalImage(false);
-              setUriPicture('');
-            }}>
-            {uriPicture && (
-              <Image
-                resizeMode="cover"
-                source={{
-                  uri: 'http://45.76.149.250/bukti/' + uriPicture,
+            // onBackdropPress={() => {
+            //   console.log('test');
+            //   setModalImage(false);
+            //   setUriPicture('');
+            // }}
+          >
+            <View>
+              <Icon
+                name="cancel"
+                onPress={() => {
+                  setModalImage(false);
+                  setUriPicture('');
                 }}
-                style={{
-                  height: '100%',
-                  width: '100%',
-                  alignSelf: 'center',
-                  alignItems: 'center',
-                  resizeMode: 'stretch',
-                  // marginTop: dimens.small,
-                  // marginHorizontal: dimens.standard,
-                }}
+                color={color.red}
+                iconStyle={{alignSelf: 'flex-end'}}
               />
-            )}
+              {uriPicture && (
+                <Image
+                  resizeMode="contain"
+                  source={{
+                    uri: 'http://45.76.149.250/bukti/' + uriPicture,
+                  }}
+                  style={{
+                    height: '100%',
+                    // width: '100%',
+                    // alignSelf: 'center',
+                    // alignItems: 'center',
+                    // resizeMode: 'contain',
+                  }}
+                />
+              )}
+            </View>
+
             {/* <Text>test</Text> */}
             {/* </View> */}
           </Modal>
