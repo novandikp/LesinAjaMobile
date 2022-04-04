@@ -174,13 +174,13 @@ export const EditListLes: FC<ScreenProps> = ({
             render={({field: {onChange, onBlur, value}}) => (
               <InputText
                 autoCapitalize="words"
-                placeholder="Masukkan jumlah biaya"
-                label="Biaya"
+                placeholder="Masukkan jumlah biaya les"
+                label="Biaya les"
                 onBlur={onBlur}
                 onChangeText={onChange}
                 value={value}
                 error={!!errors.biaya}
-                errorMessage="Biaya harus diisi"
+                errorMessage="Biaya les harus diisi"
                 keyboardType="numeric"
               />
             )}
