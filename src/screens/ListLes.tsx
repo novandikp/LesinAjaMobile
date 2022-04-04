@@ -153,7 +153,7 @@ export const ListLes: FC<ScreenProps> = ({navigation}) => {
                   value={item.jumlah_pertemuan}
                 />
                 <CardKeyValue
-                  keyName="Biaya"
+                  keyName="Biaya les"
                   value={item.biaya
                     .toFixed(2)
                     .replace(/\d(?=(\d{3})+\.)/g, '$&,')}
