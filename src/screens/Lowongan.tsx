@@ -47,6 +47,7 @@ type ItemType = {
   kelas: string;
   jeniskelamin: string;
   gaji: number;
+  alamat: string;
 };
 export const Lowongan: FC<ScreenProps> = ({navigation}) => {
   const [lowonganList, setLowonganList] = useState<any>([]);

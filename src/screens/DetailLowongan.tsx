@@ -67,7 +67,7 @@ export const DetailLowongan: FC<ScreenProps> = ({route, navigation}) => {
               <Gap y={dimens.tiny} />
 
               <CardLabelValue label="Siswa" value={item.siswa} />
-              <CardLabelValue label="Alamat" value={item.alamat_wali} />
+              <CardLabelValue label="Alamat" value={item.alamat} />
 
               {/* <CardLabelValue label="Wali Murid" value="Mikasa" /> */}
               <CardLabelValue
