@@ -92,7 +92,7 @@ export const DetailLes: FC<ScreenProps> = ({navigation, route}) => {
   const [detailLes, setDetailLes] = useState<any>([]);
   const [listApplyingTutor, setListApplyingTutor] = useState<any>([]);
   const [coursePresenceList, setCoursePresenceList] = useState<any>([]);
-
+  const [alamat, setAlamat] = useState('-');
   // loading
   const [page, setPage] = useState(1);
   const [buttonLoadMore, setButtonLoadMore] = useState(true);
@@ -214,6 +214,9 @@ export const DetailLes: FC<ScreenProps> = ({navigation, route}) => {
       });
       if (componentMounted.current) {
         setCoursePresenceList(jadwalles.data);
+        if (jadwalles.data.length != 0) {
+          setAlamat(jadwalles.data[0].alamat_wali);
+        }
         setDetailLes(data);
         setListApplyingTutor(applyingTutor.data);
         console.log('component mounted current');
@@ -286,6 +289,7 @@ export const DetailLes: FC<ScreenProps> = ({navigation, route}) => {
                   value={detailLes.paket != null ? detailLes.paket : '-'}
                   keyFlex={8}
                 />
+                <CardKeyValue keyName="Alamat" value={alamat} keyFlex={8} />
                 <CardKeyValue
                   keyName="Tgl Mulai"
                   value={
