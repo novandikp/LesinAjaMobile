@@ -1,5 +1,5 @@
 import React, {FC, useState, useEffect, useRef} from 'react';
-import {CardKeyValue, Gap, Header} from '@components';
+import {CardKeyValue, Gap, Header, SkeletonLoading} from '@components';
 import {color, dimens} from '@constants';
 import {
   SafeAreaView,
@@ -26,6 +26,7 @@ export const KonfirmasiPembayaran: FC<ScreenProps> = ({}) => {
   const [riwayat, setRiwayat] = useState([]);
   const [modalImage, setModalImage] = useState(false);
   const [uriPicture, setUriPicture] = useState('');
+  // load data
   const componentMounted = useRef(true); // (3) component is mounted
   const [isRefreshing, setIsRefreshing] = useState(true);
   const isFocus = useIsFocused();
@@ -65,139 +66,128 @@ export const KonfirmasiPembayaran: FC<ScreenProps> = ({}) => {
       <StatusBar backgroundColor={color.bg_grey} barStyle="dark-content" />
 
       <Header title="Konfirmasi Pembayaran" noBackButton />
-
-      <ScrollView contentContainerStyle={{flexGrow: 1}}>
-        <View style={{flex: 1, padding: dimens.standard}}>
-          {riwayat.map((item: any, key) => {
-            return (
-              <Card key={key} style={{marginBottom: 10}}>
-                <Card.Title title={'Pembayaran pada ananda ' + item.siswa} />
-                <Card.Content>
-                  <CardKeyValue
-                    keyFlex={9}
-                    keyName="Keterangan"
-                    value={item.status}
-                  />
-                  <CardKeyValue
-                    keyFlex={9}
-                    keyName="Nama Wali Murid"
-                    value={item.wali}
-                  />
-                  <CardKeyValue
-                    keyFlex={9}
-                    keyName="Nama Siswa"
-                    value={item.siswa}
-                  />
-                  <CardKeyValue
-                    keyFlex={9}
-                    keyName="Biaya Gaji Tutor"
-                    value={item.biaya
-                      .toFixed(2)
-                      .replace(/\d(?=(\d{3})+\.)/g, '$&,')}
-                  />
-                </Card.Content>
-                <Card.Actions>
-                  <View
-                    style={{
-                      flexDirection: 'row',
-                      justifyContent: 'space-between',
-                      width: '100%',
-                    }}>
-                    <View style={{flexDirection: 'row'}}>
-                      <Button
-                        onPress={async () => {
-                          await apiPost({
-                            url: 'les/konfirmasi/' + item.idles,
-                            payload: {},
-                          });
-                          // if (konfirmasi) {
-                          //   navigation.navigate('HomeAdmin');
-                          // }
-                        }}>
-                        Konfirmasi
-                      </Button>
-                      <Button
-                        onPress={async () => {
-                          await apiPost({
-                            url: '/les/tolak/' + item.idles,
-                            payload: {},
-                          });
-                          // if (tolak) {
-                          //   navigation.navigate('HomeAdmin');
-                          // }
-                        }}>
-                        Tolak
-                      </Button>
+      {isLoading || isRefreshing ? (
+        <SkeletonLoading />
+      ) : (
+        <ScrollView contentContainerStyle={{flexGrow: 1}}>
+          <View style={{flex: 1, padding: dimens.standard}}>
+            {riwayat.map((item: any, key) => {
+              return (
+                <Card key={key} style={{marginBottom: 10}}>
+                  <Card.Title title={'Pembayaran pada ananda ' + item.siswa} />
+                  <Card.Content>
+                    <CardKeyValue
+                      keyFlex={9}
+                      keyName="Keterangan"
+                      value={item.status}
+                    />
+                    <CardKeyValue
+                      keyFlex={9}
+                      keyName="Nama Wali Murid"
+                      value={item.wali}
+                    />
+                    <CardKeyValue
+                      keyFlex={9}
+                      keyName="Nama Siswa"
+                      value={item.siswa}
+                    />
+                    <CardKeyValue
+                      keyFlex={9}
+                      keyName="Biaya Gaji Tutor"
+                      value={item.biaya
+                        .toFixed(2)
+                        .replace(/\d(?=(\d{3})+\.)/g, '$&,')}
+                    />
+                  </Card.Content>
+                  <Card.Actions>
+                    <View
+                      style={{
+                        flexDirection: 'row',
+                        justifyContent: 'space-between',
+                        width: '100%',
+                      }}>
+                      <View style={{flexDirection: 'row'}}>
+                        <Button
+                          onPress={async () => {
+                            await apiPost({
+                              url: 'les/konfirmasi/' + item.idles,
+                              payload: {},
+                            });
+                            // if (konfirmasi) {
+                            //   navigation.navigate('HomeAdmin');
+                            // }
+                          }}>
+                          Konfirmasi
+                        </Button>
+                        <Button
+                          onPress={async () => {
+                            await apiPost({
+                              url: '/les/tolak/' + item.idles,
+                              payload: {},
+                            });
+                            // if (tolak) {
+                            //   navigation.navigate('HomeAdmin');
+                            // }
+                          }}>
+                          Tolak
+                        </Button>
+                      </View>
+                      <View style={{flexDirection: 'row'}}>
+                        <Icon
+                          name="eye"
+                          type="font-awesome"
+                          color={color.green_500}
+                          onPress={() => {
+                            setUriPicture(item.bukti);
+                            setModalImage(true);
+                          }}
+                        />
+                        <Gap x={10} />
+                        <Icon
+                          name="download"
+                          type="font-awesome"
+                          color={color.green_500}
+                          onPress={() => {
+                            if (item.bukti != null) {
+                              checkPersimisson(item.bukti);
+                            }
+                          }}
+                        />
+                      </View>
                     </View>
-                    <View style={{flexDirection: 'row'}}>
-                      <Icon
-                        name="eye"
-                        type="font-awesome"
-                        color={color.green_500}
-                        onPress={() => {
-                          setUriPicture(item.bukti);
-                          setModalImage(true);
-                        }}
-                      />
-                      <Gap x={10} />
-                      <Icon
-                        name="download"
-                        type="font-awesome"
-                        color={color.green_500}
-                        onPress={() => {
-                          if (item.bukti != null) {
-                            checkPersimisson(item.bukti);
-                          }
-                        }}
-                      />
-                    </View>
-                  </View>
-                </Card.Actions>
-              </Card>
-            );
-          })}
-        </View>
-        {modalImage && (
-          <Modal
-            isVisible={modalImage}
-            // onBackdropPress={() => {
-            //   console.log('test');
-            //   setModalImage(false);
-            //   setUriPicture('');
-            // }}
-          >
-            <View>
-              <Icon
-                name="cancel"
-                onPress={() => {
-                  setModalImage(false);
-                  setUriPicture('');
-                }}
-                color={color.red}
-                iconStyle={{alignSelf: 'flex-end'}}
-              />
-              {uriPicture && (
-                <Image
-                  resizeMode="contain"
-                  source={{
-                    uri: 'http://45.76.149.250/bukti/' + uriPicture,
+                  </Card.Actions>
+                </Card>
+              );
+            })}
+          </View>
+          {modalImage && (
+            <Modal isVisible={modalImage}>
+              <View>
+                <Icon
+                  name="cancel"
+                  onPress={() => {
+                    setModalImage(false);
+                    setUriPicture('');
                   }}
-                  style={{
-                    height: '100%',
-                    // width: '100%',
-                    // alignSelf: 'center',
-                    // alignItems: 'center',
-                    // resizeMode: 'contain',
-                  }}
+                  color={color.red}
+                  iconStyle={{alignSelf: 'flex-end'}}
                 />
-              )}
-            </View>
-
-            {/* <Text>test</Text> */}
-            {/* </View> */}
-          </Modal>
-        )}
-      </ScrollView>
+                {uriPicture && (
+                  <Image
+                    resizeMode="contain"
+                    source={{
+                      uri: 'http://45.76.149.250/bukti/' + uriPicture,
+                    }}
+                    style={{
+                      height: '100%',
+                    }}
+                  />
+                )}
+              </View>
+            </Modal>
+          )}
+        </ScrollView>
+      )}
     </SafeAreaView>
   );
 };
