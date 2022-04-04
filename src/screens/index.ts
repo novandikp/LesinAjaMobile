@@ -4,6 +4,7 @@ export * from './LoginGeneral';
 export * from './Home';
 export * from './Account';
 export * from './KonfirmasiPembayaran';
+export * from './PembayaranTutor';
 export * from './AccountTutor';
 export * from './Les';
 export * from './Latihan';

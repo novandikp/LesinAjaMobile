@@ -18,6 +18,7 @@ export type AdminDrawerParamList = {
   ListLes: undefined;
   Laporan: undefined;
   RiwayatPembayaran: undefined;
+  PembayaranTutor: undefined;
   KonfirmasiPembayaran: undefined;
   ListStudentAdmin: undefined;
 };
