@@ -67,6 +67,8 @@ export const DetailLowongan: FC<ScreenProps> = ({route, navigation}) => {
               <Gap y={dimens.tiny} />
 
               <CardLabelValue label="Siswa" value={item.siswa} />
+              <CardLabelValue label="Alamat" value={item.alamat_wali} />
+
               {/* <CardLabelValue label="Wali Murid" value="Mikasa" /> */}
               <CardLabelValue
                 label="Paket"
@@ -82,7 +84,14 @@ export const DetailLowongan: FC<ScreenProps> = ({route, navigation}) => {
                 label="Tanggal mulai les"
                 value={new Date(item.tglles).toLocaleDateString()}
               />
-
+              <CardLabelValue
+                label="Jenis kelamin murid"
+                value={item.jeniskelamin}
+              />
+              <CardLabelValue
+                label="Prefrensi yang diminta"
+                value={item.prefrensi}
+              />
               {/* <CardLabelMultipleValue label="Jadwal Les" value={item.hari} /> */}
 
               {statusapply == 'BELUM DIAMBIL' && (
