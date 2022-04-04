@@ -376,8 +376,9 @@ export const DetailLes: FC<ScreenProps> = ({navigation, route}) => {
                       style={{
                         marginTop: dimens.small,
                         marginHorizontal: dimens.standard,
-                        // height: 500,
-                        // resizeMode: 'contain',
+                        // height: 300,
+                        height: 300,
+                        resizeMode: 'contain',
                       }}
                     />
                   )}
