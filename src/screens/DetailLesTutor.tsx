@@ -11,7 +11,7 @@ import {
   SafeAreaView,
   StatusBar,
   StyleSheet,
-  // ScrollView,
+  ScrollView,
   FlatList,
   ListRenderItemInfo,
   View,
@@ -141,10 +141,10 @@ export const DetailLesTutor: FC<ScreenProps> = ({navigation, route}) => {
       {isLoading || isRefreshing ? (
         <SkeletonLoading />
       ) : (
-        <SafeAreaView
-          style={{flexGrow: 1, padding: dimens.standard}}
-          // contentContainerStyle={{flexGrow: 1, padding: dimens.standard}}
-        >
+        <ScrollView
+          // <SafeAreaView
+          // style={{flexGrow: 1, padding: dimens.standard}}
+          contentContainerStyle={{flexGrow: 1, padding: dimens.standard}}>
           {/* About Les */}
           <Card>
             <Card.Title
@@ -269,7 +269,8 @@ export const DetailLesTutor: FC<ScreenProps> = ({navigation, route}) => {
             </Card.Content>
           </Card>
           <Gap y={dimens.standard} />
-        </SafeAreaView>
+          {/* </SafeAreaView> */}
+        </ScrollView>
       )}
     </SafeAreaView>
   );
