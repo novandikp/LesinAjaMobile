@@ -39,6 +39,8 @@ type ScreenProps = StackScreenProps<AppStackParamList, 'DetailLesTutor'>;
 export const DetailLesTutor: FC<ScreenProps> = ({navigation, route}) => {
   const {data}: any = route.params;
   const [coursePresenceList, setCoursePresenceList] = useState([]);
+  const [alamat, setAlamat] = useState('-');
+
   // loading
   const [page, setPage] = useState(1);
   const [buttonLoadMore, setButtonLoadMore] = useState(true);
@@ -68,6 +70,7 @@ export const DetailLesTutor: FC<ScreenProps> = ({navigation, route}) => {
           setLoadingData(false);
           return setDisplayButton(false);
         }
+        // setAlamat(res.data.)
         setCoursePresenceList(coursePresenceList.concat(res.data));
         if (res.data.length < 10) {
           console.log('its should close buton');
@@ -94,9 +97,10 @@ export const DetailLesTutor: FC<ScreenProps> = ({navigation, route}) => {
           page: '1',
         },
       });
+
       if (componentMounted.current) {
         setCoursePresenceList(jadwalles.data);
-        console.log('component mounted current');
+        setAlamat(jadwalles.data[0].alamat_wali);
       }
       if (isActive) {
         if (isLoadMoreData) {
@@ -119,6 +123,7 @@ export const DetailLesTutor: FC<ScreenProps> = ({navigation, route}) => {
 
     return () => {
       isActive = false;
+      componentMounted.current = false;
     };
   }, [
     coursePresenceList,
@@ -149,6 +154,8 @@ export const DetailLesTutor: FC<ScreenProps> = ({navigation, route}) => {
             <Card.Content>
               <CardKeyValue keyName="Siswa" value={data.siswa} keyFlex={8} />
               <CardKeyValue keyName="Tutor" value="-" keyFlex={8} />
+              <CardKeyValue keyName="Alamat" value={alamat} keyFlex={8} />
+
               <CardKeyValue
                 keyName="Tgl Mulai"
                 value={new Date(data.tglles).toLocaleDateString()}
