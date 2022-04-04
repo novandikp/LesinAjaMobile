@@ -28,7 +28,7 @@ import {
 import {useIsFocused} from '@react-navigation/core';
 import {StackScreenProps} from '@react-navigation/stack';
 import {AppStackParamList} from '@routes/RouteTypes';
-import {getSingleDocument, apiGet, apiPostFile} from '@utils';
+import {getSingleDocument, apiGet, apiPostFile, apiPost} from '@utils';
 import {Picker} from '@react-native-picker/picker';
 
 import {Icon} from 'react-native-elements';
@@ -389,12 +389,12 @@ export const DetailLes: FC<ScreenProps> = ({navigation, route}) => {
                   <Card.Actions>
                     <Button
                       disabled={isLoading}
+                      loading={isLoading}
                       onPress={onPressUploadBuktiBayar}>
                       {buktiBayar.path === ''
                         ? 'Unggah Bukti Pembayaran'
                         : 'Kirim'}
                     </Button>
-                    {isLoading && <ActivityIndicator animating={isLoading} />}
                   </Card.Actions>
                 </Card>
               </>
@@ -459,6 +459,8 @@ export const DetailLes: FC<ScreenProps> = ({navigation, route}) => {
                     style={{
                       marginTop: dimens.small,
                       marginHorizontal: dimens.standard,
+                      height: 300,
+                      resizeMode: 'contain',
                     }}
                   />
                 )}
@@ -491,59 +493,78 @@ export const DetailLes: FC<ScreenProps> = ({navigation, route}) => {
 
             {/* Choose Tutor */}
             {statusles == 0 && (
-              <Card style={{marginTop: dimens.standard}}>
-                <Card.Title
-                  style={{width: '100%'}}
-                  title="Anda Belum Memilih Tutor"
-                  subtitle="Klik item untuk melihat detail tutor "
-                  titleStyle={{color: '#F59E0B'}}
-                  subtitleStyle={{fontSize: dimens.medium_14}}
-                />
-                <Card.Content>
-                  <FlatList
-                    style={{
-                      // minheight: 0,
-                      maxHeight: 200,
-                    }}
-                    // style={listApplyingTutor==null?0:200}
-                    nestedScrollEnabled={true}
-                    contentContainerStyle={{
-                      flexGrow: 1,
-                      padding: dimens.standard,
-                      paddingTop: dimens.small,
-                    }}
-                    data={listApplyingTutor}
-                    keyExtractor={(item: applyTutor) => item.idapplylowongan}
-                    renderItem={({item}: ListRenderItemInfo<applyTutor>) => (
-                      <NestedCard
-                        title={item.guru}
-                        subtitle={item.perguruantinggi}
-                        onPress={() => {
-                          navigation.navigate<any>('DetailTutor', {data: item});
-                        }}
-                        left={
-                          // props
-                          () => (
-                            // <Avatar.Image
-                            //   {...props}
-                            //   size={45}
-                            //   source={{uri: 'http://placekitten.com/100/100'}}
-                            // />
-                            <Icon
-                              // {...props}
-                              name="user"
-                              type="font-awesome"
-                              size={45}
-                            />
-                          )
-                        }
-                      />
-                    )}
-                    onEndReachedThreshold={0.1}
-                    // ListEmptyComponent=
+              <>
+                <Card style={{marginTop: dimens.standard}}>
+                  <Card.Title
+                    style={{width: '100%'}}
+                    title="Anda Belum Memilih Tutor"
+                    subtitle="Klik item untuk melihat detail tutor "
+                    titleStyle={{color: '#F59E0B'}}
+                    subtitleStyle={{fontSize: dimens.medium_14}}
                   />
-                </Card.Content>
-              </Card>
+                  <Card.Content>
+                    <FlatList
+                      style={{
+                        // minheight: 0,
+                        maxHeight: 200,
+                      }}
+                      // style={listApplyingTutor==null?0:200}
+                      nestedScrollEnabled={true}
+                      contentContainerStyle={{
+                        flexGrow: 1,
+                        padding: dimens.standard,
+                        paddingTop: dimens.small,
+                      }}
+                      data={listApplyingTutor}
+                      keyExtractor={(item: applyTutor) => item.idapplylowongan}
+                      renderItem={({item}: ListRenderItemInfo<applyTutor>) => (
+                        <NestedCard
+                          title={item.guru}
+                          subtitle={item.perguruantinggi}
+                          onPress={() => {
+                            navigation.navigate<any>('DetailTutor', {
+                              data: item,
+                            });
+                          }}
+                          left={
+                            // props
+                            () => (
+                              // <Avatar.Image
+                              //   {...props}
+                              //   size={45}
+                              //   source={{uri: 'http://placekitten.com/100/100'}}
+                              // />
+                              <Icon
+                                // {...props}
+                                name="user"
+                                type="font-awesome"
+                                size={45}
+                              />
+                            )
+                          }
+                        />
+                      )}
+                      onEndReachedThreshold={0.1}
+                      // ListEmptyComponent=
+                    />
+                  </Card.Content>
+                </Card>
+                <Button
+                  color={color.red}
+                  onPress={async () => {
+                    const {success} = await apiPost({
+                      url: '/les/batal',
+                      payload: {
+                        idles: data.idles,
+                      },
+                    });
+                    if (success) {
+                      navigation.navigate<any>('MainTabs');
+                    }
+                  }}>
+                  batalkan les
+                </Button>
+              </>
             )}
 
             {/* Presence */}
