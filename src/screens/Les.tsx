@@ -43,14 +43,17 @@ type ScreenProps = CompositeScreenProps<
 >;
 
 export const Les: FC<ScreenProps> = ({navigation}) => {
+  // data
   const [listData, setListData] = useState<any>([]);
+  const [page, setPage] = useState(1);
+  // loading
   const [isLoading, setIsLoading] = useState(true);
   const [isRefreshing, setIsRefreshing] = useState(false);
-  const [page, setPage] = useState(1);
   const isFocus = useIsFocused();
+  const componentMounted = useRef(true); // (3) component is mounted
+  // paging
   const [buttonLoadMore, setButtonLoadMore] = useState(true);
   const [displayButton, setDiplayButton] = useState(false);
-  const componentMounted = useRef(true); // (3) component is mounted
   const [loadingData, setLoadingData] = useState(false);
   const [isLoadMoreData, setLoadMoreData] = useState(false);
   const loadMoreData = async () => {
@@ -204,25 +207,19 @@ const StudentItem: FC<{item: LesType; onPress: () => void}> = ({
   const jmlhPertemuanSelesai = item.pertemuanSelesai
     ? `${item.pertemuanSelesai}/`
     : '';
-
   const statusData = () => {
     if (item.statusles == 0) {
       return {text: 'Menunggu ada tutor', bgColor: '#93C5FD'};
-    }
-    // if (item.statusles === 1) {
-    //   return {text: 'Belum pilih tutor', bgColor: '#FBBF24'};
-    // }
-    if (item.statusles === 2) {
+    } else if (item.statusles === 2) {
       return {text: 'Belum bayar les', bgColor: '#F87171'};
-    }
-    if (item.statusles === 3) {
+    } else if (item.statusles === 3) {
       return {text: 'Menunggu konfirmasi les', bgColor: color.bg_grey};
-    }
-    if (item.statusles === 4) {
+    } else if (item.statusles === 4) {
       return {text: 'Les telah berjalan', bgColor: color.green_500};
-    }
-    if (item.statusles === 5) {
+    } else if (item.statusles === 5) {
       return {text: 'Pembayaran ditolak', bgColor: color.red};
+    } else if (item.statusles === 8) {
+      return {text: 'Les dibatalkan', bgColor: color.red};
     }
     return null;
   };
@@ -236,7 +233,6 @@ const StudentItem: FC<{item: LesType; onPress: () => void}> = ({
 
       <Card.Content>
         <CardKeyValue keyName="Siswa" value={item.siswa} />
-        {/* {item.tutor && <CardKeyValue keyName="Tutor" value={item.tutor} />} */}
         {tglMulai && tglSelesai && (
           <>
             <CardKeyValue keyName="Tgl Mulai" value={tglMulai} />
