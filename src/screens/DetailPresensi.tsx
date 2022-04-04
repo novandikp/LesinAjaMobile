@@ -157,7 +157,7 @@ export const DetailPresensi: FC<ScreenProps> = ({navigation, route}) => {
                   }}>
                   hadir
                 </Button>
-                <Button
+                {/* <Button
                   disabled={disabledAbsenWali}
                   style={{marginTop: dimens.standard}}
                   onPress={async () => {
@@ -171,7 +171,7 @@ export const DetailPresensi: FC<ScreenProps> = ({navigation, route}) => {
                     }
                   }}>
                   Absen
-                </Button>
+                </Button> */}
                 {/* )} */}
               </View>
             )}
@@ -217,7 +217,7 @@ export const DetailPresensi: FC<ScreenProps> = ({navigation, route}) => {
                   }}>
                   hadir
                 </Button>
-                <Button
+                {/* <Button
                   disabled={disabledAbsen}
                   style={{marginTop: dimens.standard}}
                   onPress={async () => {
@@ -230,7 +230,7 @@ export const DetailPresensi: FC<ScreenProps> = ({navigation, route}) => {
                     }
                   }}>
                   Absen
-                </Button>
+                </Button> */}
                 {/* )} */}
               </View>
             )}
