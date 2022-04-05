@@ -692,10 +692,9 @@ export const DetailLes: FC<ScreenProps> = ({navigation, route}) => {
                 <Card.Title
                   title="Les dibatalkan"
                   titleStyle={{color: '#EF4444'}}
+                  subtitle="Wali membatalkan les"
+                  subtitleStyle={{fontSize: dimens.medium_14}}
                 />
-                <Card.Content>
-                  <Subheading>Wali membatalkan les</Subheading>
-                </Card.Content>
               </Card>
             )}
             {/* Konfirmasi tutor */}
@@ -716,12 +715,9 @@ export const DetailLes: FC<ScreenProps> = ({navigation, route}) => {
                 <Card.Title
                   title="Permintaan ditolak"
                   titleStyle={{color: '#EF4444'}}
+                  subtitleStyle={{fontSize: dimens.medium_14}}
+                  subtitle="Tutor menolak permintaan perpanjangan les."
                 />
-                <Card.Content>
-                  <Subheading>
-                    Tutor menolak permintaan perpanjangan les.
-                  </Subheading>
-                </Card.Content>
               </Card>
             )}
             <Gap y={dimens.standard} />
