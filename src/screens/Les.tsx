@@ -215,11 +215,15 @@ const StudentItem: FC<{item: LesType; onPress: () => void}> = ({
     } else if (item.statusles === 3) {
       return {text: 'Menunggu konfirmasi les', bgColor: color.bg_grey};
     } else if (item.statusles === 4) {
-      return {text: 'Les telah berjalan', bgColor: color.green_500};
+      return {text: 'Les telah berjalan', bgColor: color.green2};
     } else if (item.statusles === 5) {
       return {text: 'Pembayaran ditolak', bgColor: color.red};
-    } else if (item.statusles === 8) {
+    } else if (item.statusles === 6) {
+      return {text: 'Les telah selesai', bgColor: color.green_500};
+    } else if (item.statusles === 8 || item.statusles === 10) {
       return {text: 'Les dibatalkan', bgColor: color.red};
+    } else if (item.statusles === 9) {
+      return {text: 'Menunggu konfirmasi tutor', bgColor: color.bg_grey};
     }
     return null;
   };
