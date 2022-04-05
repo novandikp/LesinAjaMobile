@@ -93,7 +93,7 @@ export const KonfirmasiPembayaran: FC<ScreenProps> = ({}) => {
                     />
                     <CardKeyValue
                       keyFlex={9}
-                      keyName="Biaya Gaji Tutor"
+                      keyName="Biaya Les"
                       value={item.biaya
                         .toFixed(2)
                         .replace(/\d(?=(\d{3})+\.)/g, '$&,')}
