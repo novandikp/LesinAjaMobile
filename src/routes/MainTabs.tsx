@@ -1,5 +1,13 @@
 import React, {FC, useContext} from 'react';
-import {Home, Latihan, Les, LesTutor, Lowongan, Settings} from '@screens';
+import {
+  Home,
+  InfoPerpanjang,
+  Latihan,
+  Les,
+  LesTutor,
+  Lowongan,
+  Settings,
+} from '@screens';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {MainTabParamList} from './RouteTypes';
 import {createMaterialBottomTabNavigator} from '@react-navigation/material-bottom-tabs';
@@ -34,6 +42,20 @@ export const MainTabs: FC = () => {
             tabBarIcon: ({color}) => (
               <MaterialCommunityIcons
                 name="book-open-variant"
+                color={color}
+                size={26}
+              />
+            ),
+          }}
+        />
+        <MainTab.Screen
+          name="InfoPerpanjang"
+          component={InfoPerpanjang}
+          options={{
+            tabBarLabel: 'Informasi',
+            tabBarIcon: ({color}) => (
+              <MaterialCommunityIcons
+                name="information"
                 color={color}
                 size={26}
               />

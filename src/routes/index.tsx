@@ -20,6 +20,7 @@ import {
   EditListLes,
   AccountTutor,
   InputLaporan,
+  InfoPerpanjang,
 } from '@screens';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
@@ -102,6 +103,7 @@ const AppRouter: FC = () => {
         {userRole === 'tutor' && (
           <>
             <AppStack.Screen name="MainTabs" component={MainTabs} />
+            <AppStack.Screen name="InfoPerpanjang" component={InfoPerpanjang} />
             <AppStack.Screen name="DetailLesTutor" component={DetailLesTutor} />
             <AppStack.Screen name="DetailLowongan" component={DetailLowongan} />
             <AppStack.Screen name="DetailPresensi" component={DetailPresensi} />
