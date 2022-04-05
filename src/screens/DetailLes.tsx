@@ -84,6 +84,7 @@ export const DetailLes: FC<ScreenProps> = ({navigation, route}) => {
   let id = data.idles;
   const bayar = data.biaya;
   const statusles = data.statusles;
+  // console.log(statusles);
   const [buktiBayar, setBuktiBayar] = useState({
     path: '',
   });
@@ -93,6 +94,7 @@ export const DetailLes: FC<ScreenProps> = ({navigation, route}) => {
   const [listApplyingTutor, setListApplyingTutor] = useState<any>([]);
   const [coursePresenceList, setCoursePresenceList] = useState<any>([]);
   const [alamat, setAlamat] = useState('-');
+
   // loading
   const [page, setPage] = useState(1);
   const [buttonLoadMore, setButtonLoadMore] = useState(true);
@@ -217,6 +219,7 @@ export const DetailLes: FC<ScreenProps> = ({navigation, route}) => {
         if (jadwalles.data.length != 0) {
           setAlamat(jadwalles.data[0].alamat_wali);
         }
+
         setDetailLes(data);
         setListApplyingTutor(applyingTutor.data);
         console.log('component mounted current');
@@ -309,173 +312,6 @@ export const DetailLes: FC<ScreenProps> = ({navigation, route}) => {
               </Card.Content>
             </Card>
 
-            {/* Pay Les */}
-            {statusles == 3 && (
-              <Card style={{marginTop: dimens.standard}}>
-                <Card.Title
-                  title="Proses Konfirmasi Pembayaran"
-                  subtitle="Menunggu admin konfirmasi pembayaran"
-                  titleStyle={{color: '#EF4444'}}
-                  subtitleStyle={{fontSize: dimens.medium_14}}
-                />
-              </Card>
-            )}
-            {statusles == 2 && (
-              <>
-                <Card style={{marginTop: dimens.standard}}>
-                  <Card.Title
-                    title="Anda Belum Membayar Biaya Les"
-                    subtitle="Biaya Les: Rp 200.000 (Ukuran maks.2mb)"
-                    titleStyle={{color: '#EF4444'}}
-                    subtitleStyle={{fontSize: dimens.medium_14}}
-                  />
-                  <Picker
-                    style={{flex: 2}}
-                    mode="dropdown"
-                    selectedValue={bank}
-                    itemStyle={{height: 10, backgroundColor: 'white'}}
-                    onValueChange={itemValue => setBank(itemValue)}>
-                    <Picker.Item
-                      key={'-'}
-                      label="Pilih bank yang akan ditransfer"
-                      value={null}
-                    />
-                    {listRekening.map((item: any, index: number) => {
-                      return (
-                        <Picker.Item
-                          key={index}
-                          label={item.Bank}
-                          value={item.Bank}
-                        />
-                      );
-                    })}
-                  </Picker>
-                  {bank != null &&
-                    listRekening.map((i: any, index: number) => {
-                      if (i.Bank == bank) {
-                        return (
-                          <Card.Content key={index}>
-                            <CardKeyValue
-                              keyName="Nama"
-                              value={i.name}
-                              keyFlex={8}
-                            />
-                            <CardKeyValue
-                              keyName="Bank"
-                              value={i.Bank}
-                              keyFlex={8}
-                            />
-                            <CardKeyValue
-                              keyName="No rekening"
-                              value={i.norek}
-                              keyFlex={8}
-                            />
-                          </Card.Content>
-                        );
-                      }
-                    })}
-                  {buktiBayar.path !== '' && (
-                    <Card.Cover
-                      source={{uri: buktiBayar.path}}
-                      style={{
-                        marginTop: dimens.small,
-                        marginHorizontal: dimens.standard,
-                        // height: 300,
-                        height: 300,
-                        resizeMode: 'contain',
-                      }}
-                    />
-                  )}
-                  <Card.Actions>
-                    <Button
-                      disabled={isLoading}
-                      loading={isLoading}
-                      onPress={onPressUploadBuktiBayar}>
-                      {buktiBayar.path === ''
-                        ? 'Unggah Bukti Pembayaran'
-                        : 'Kirim'}
-                    </Button>
-                  </Card.Actions>
-                </Card>
-              </>
-            )}
-            {statusles == 5 && (
-              <Card style={{marginTop: dimens.standard}}>
-                <Card.Title
-                  title="Anda Belum Membayar Biaya Les"
-                  subtitle="Biaya Les: Rp 200.000 (Ukuran maks.2mb)"
-                  titleStyle={{color: '#EF4444'}}
-                  subtitleStyle={{fontSize: dimens.medium_14}}
-                />
-                <Picker
-                  style={{flex: 2}}
-                  mode="dropdown"
-                  selectedValue={bank}
-                  itemStyle={{height: 10, backgroundColor: 'white'}}
-                  onValueChange={itemValue => setBank(itemValue)}>
-                  <Picker.Item
-                    key={'-'}
-                    label="Pilih bank yang akan ditransfer"
-                    value={null}
-                  />
-                  {listRekening.map((item: any, index: number) => {
-                    return (
-                      <Picker.Item
-                        key={index}
-                        label={item.Bank}
-                        value={item.Bank}
-                      />
-                    );
-                  })}
-                </Picker>
-                {bank != null &&
-                  listRekening.map((i: any, index: number) => {
-                    if (i.Bank == bank) {
-                      return (
-                        <Card.Content key={index}>
-                          <CardKeyValue
-                            keyName="Nama"
-                            value={i.name}
-                            keyFlex={8}
-                          />
-                          <CardKeyValue
-                            keyName="Bank"
-                            value={i.Bank}
-                            keyFlex={8}
-                          />
-                          <CardKeyValue
-                            keyName="No rekening"
-                            value={i.norek}
-                            keyFlex={8}
-                          />
-                        </Card.Content>
-                      );
-                    }
-                  })}
-                {/* <Card.Content></Card.Content> */}
-                {buktiBayar.path !== '' && (
-                  <Card.Cover
-                    source={{uri: buktiBayar.path}}
-                    style={{
-                      marginTop: dimens.small,
-                      marginHorizontal: dimens.standard,
-                      height: 300,
-                      resizeMode: 'contain',
-                    }}
-                  />
-                )}
-                <Card.Actions>
-                  <Button
-                    disabled={isLoading}
-                    onPress={onPressUploadBuktiBayar}>
-                    {buktiBayar.path === ''
-                      ? 'Unggah Bukti Pembayaran'
-                      : 'Kirim'}
-                  </Button>
-                  {isLoading && <ActivityIndicator animating={isLoading} />}
-                </Card.Actions>
-              </Card>
-            )}
             {/* There is no applying tutor */}
             {statusles == 0 && (
               <Card style={{marginTop: dimens.standard}}>
@@ -566,6 +402,101 @@ export const DetailLes: FC<ScreenProps> = ({navigation, route}) => {
                 </Button>
               </>
             )}
+            {/* Pembayaran */}
+            {statusles == 2 && (
+              <>
+                <Card style={{marginTop: dimens.standard}}>
+                  <Card.Title
+                    title="Anda Belum Membayar Biaya Les"
+                    subtitle={
+                      'Biaya Les: Rp ' +
+                      bayar.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') +
+                      ' (Ukuran maks.2mb)'
+                    }
+                    titleStyle={{color: '#EF4444'}}
+                    subtitleStyle={{fontSize: dimens.medium_14}}
+                  />
+                  <Picker
+                    style={{flex: 2}}
+                    mode="dropdown"
+                    selectedValue={bank}
+                    itemStyle={{height: 10, backgroundColor: 'white'}}
+                    onValueChange={itemValue => setBank(itemValue)}>
+                    <Picker.Item
+                      key={'-'}
+                      label="Pilih bank yang akan ditransfer"
+                      value={null}
+                    />
+                    {listRekening.map((item: any, index: number) => {
+                      return (
+                        <Picker.Item
+                          key={index}
+                          label={item.Bank}
+                          value={item.Bank}
+                        />
+                      );
+                    })}
+                  </Picker>
+                  {bank != null &&
+                    listRekening.map((i: any, index: number) => {
+                      if (i.Bank == bank) {
+                        return (
+                          <Card.Content key={index}>
+                            <CardKeyValue
+                              keyName="Nama"
+                              value={i.name}
+                              keyFlex={8}
+                            />
+                            <CardKeyValue
+                              keyName="Bank"
+                              value={i.Bank}
+                              keyFlex={8}
+                            />
+                            <CardKeyValue
+                              keyName="No rekening"
+                              value={i.norek}
+                              keyFlex={8}
+                            />
+                          </Card.Content>
+                        );
+                      }
+                    })}
+                  {buktiBayar.path !== '' && (
+                    <Card.Cover
+                      source={{uri: buktiBayar.path}}
+                      style={{
+                        marginTop: dimens.small,
+                        marginHorizontal: dimens.standard,
+                        // height: 300,
+                        height: 300,
+                        resizeMode: 'contain',
+                      }}
+                    />
+                  )}
+                  <Card.Actions>
+                    <Button
+                      disabled={isLoading}
+                      loading={isLoading}
+                      onPress={onPressUploadBuktiBayar}>
+                      {buktiBayar.path === ''
+                        ? 'Unggah Bukti Pembayaran'
+                        : 'Kirim'}
+                    </Button>
+                  </Card.Actions>
+                </Card>
+              </>
+            )}
+            {/* Konfirmasi pembayaran Les */}
+            {statusles == 3 && (
+              <Card style={{marginTop: dimens.standard}}>
+                <Card.Title
+                  title="Proses Konfirmasi Pembayaran"
+                  subtitle="Menunggu admin konfirmasi pembayaran"
+                  titleStyle={{color: '#EF4444'}}
+                  subtitleStyle={{fontSize: dimens.medium_14}}
+                />
+              </Card>
+            )}
 
             {/* Presence */}
             {statusles == 4 && (
@@ -575,8 +506,8 @@ export const DetailLes: FC<ScreenProps> = ({navigation, route}) => {
                 }}>
                 <Card.Title
                   title="Presensi Les"
-                  titleStyle={{color: '#2563EB'}}
                   subtitle="Klik item untuk melihat detail presensi"
+                  titleStyle={{color: '#2563EB'}}
                   subtitleStyle={{fontSize: dimens.medium_14}}
                 />
                 <Card.Content>
@@ -639,27 +570,157 @@ export const DetailLes: FC<ScreenProps> = ({navigation, route}) => {
                       </View>
                     }
                   />
-
-                  {/* {coursePresenceList.map((item: any, index: number) => {
-                return (
-                  <NestedCard
-                    key={index}
-                    title={new Date(item.tglabsen).toLocaleDateString()}
-                    // subtitle={}
-                    subtitle="-"
-                    additionalText={
-                      item.flagabsenwali == 1
-                        ? 'Wali sudah mengisi absen'
-                        : item.flagabsenwali == 2
-                        ? 'Wali tidak hadir'
-                        : 'Wali belum mengisi absen'
+                </Card.Content>
+              </Card>
+            )}
+            {/* Pembayaran ditolak */}
+            {statusles == 5 && (
+              <Card style={{marginTop: dimens.standard}}>
+                <Card.Title
+                  title="Pembayaran ditolak"
+                  subtitle={
+                    'Biaya Les: Rp ' +
+                    bayar.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') +
+                    ' (Ukuran maks.2mb)'
+                  }
+                  titleStyle={{color: '#EF4444'}}
+                  subtitleStyle={{fontSize: dimens.medium_14}}
+                />
+                <Picker
+                  style={{flex: 2}}
+                  mode="dropdown"
+                  selectedValue={bank}
+                  itemStyle={{height: 10, backgroundColor: 'white'}}
+                  onValueChange={itemValue => setBank(itemValue)}>
+                  <Picker.Item
+                    key={'-'}
+                    label="Pilih bank yang akan ditransfer"
+                    value={null}
+                  />
+                  {listRekening.map((item: any, index: number) => {
+                    return (
+                      <Picker.Item
+                        key={index}
+                        label={item.Bank}
+                        value={item.Bank}
+                      />
+                    );
+                  })}
+                </Picker>
+                {bank != null &&
+                  listRekening.map((i: any, index: number) => {
+                    if (i.Bank == bank) {
+                      return (
+                        <Card.Content key={index}>
+                          <CardKeyValue
+                            keyName="Nama"
+                            value={i.name}
+                            keyFlex={8}
+                          />
+                          <CardKeyValue
+                            keyName="Bank"
+                            value={i.Bank}
+                            keyFlex={8}
+                          />
+                          <CardKeyValue
+                            keyName="No rekening"
+                            value={i.norek}
+                            keyFlex={8}
+                          />
+                        </Card.Content>
+                      );
                     }
-                    onPress={() => {
-                      navigation.navigate<any>('DetailPresensi', {data: item});
+                  })}
+                {/* <Card.Content></Card.Content> */}
+                {buktiBayar.path !== '' && (
+                  <Card.Cover
+                    source={{uri: buktiBayar.path}}
+                    style={{
+                      marginTop: dimens.small,
+                      marginHorizontal: dimens.standard,
+                      height: 300,
+                      resizeMode: 'contain',
                     }}
                   />
-                );
-              })} */}
+                )}
+                <Card.Actions>
+                  <Button
+                    disabled={isLoading}
+                    onPress={onPressUploadBuktiBayar}>
+                    {buktiBayar.path === ''
+                      ? 'Unggah Bukti Pembayaran'
+                      : 'Kirim'}
+                  </Button>
+                  {isLoading && <ActivityIndicator animating={isLoading} />}
+                </Card.Actions>
+              </Card>
+            )}
+            {/* Les Selesai dan button perpanjang */}
+            {statusles == 6 && (
+              <Card style={{marginTop: dimens.standard}}>
+                <Card.Title
+                  title="Les Telah Selesai"
+                  titleStyle={{color: '#2563EB'}}
+                  subtitleStyle={{fontSize: dimens.medium_14}}
+                  subtitle="Klik perpanjang les untuk memperbarui les"
+                />
+                <Card.Actions>
+                  <Button
+                    onPress={async () => {
+                      const newData = new FormData();
+                      newData.append('idLes', data.idles);
+                      newData.append(
+                        'tglperpanjang',
+                        new Date().toISOString().slice(0, 10),
+                      );
+                      const {success} = await apiPost({
+                        url: '/les/perpanjang',
+                        payload: newData,
+                      });
+                      if (success) {
+                        navigation.navigate('Les');
+                      }
+                    }}>
+                    Perpanjang Les
+                  </Button>
+                </Card.Actions>
+              </Card>
+            )}
+            {/* lES DIBATALKAN */}
+            {statusles == 8 && (
+              <Card style={{marginTop: dimens.standard}}>
+                <Card.Title
+                  title="Les dibatalkan"
+                  titleStyle={{color: '#EF4444'}}
+                />
+                <Card.Content>
+                  <Subheading>Wali membatalkan les</Subheading>
+                </Card.Content>
+              </Card>
+            )}
+            {/* Konfirmasi tutor */}
+            {statusles == 9 && (
+              <Card style={{marginTop: dimens.standard}}>
+                <Card.Title
+                  title="Menunggu Konfirmasi Tutor"
+                  titleStyle={{color: '#2563EB'}}
+                />
+                <Card.Content>
+                  <Subheading>Menunggu Konfirmasi Tutor</Subheading>
+                </Card.Content>
+              </Card>
+            )}
+            {/* tolak perpanjangan les */}
+            {statusles == 10 && (
+              <Card style={{marginTop: dimens.standard}}>
+                <Card.Title
+                  title="Permintaan ditolak"
+                  titleStyle={{color: '#EF4444'}}
+                />
+                <Card.Content>
+                  <Subheading>
+                    Tutor menolak permintaan perpanjangan les.
+                  </Subheading>
                 </Card.Content>
               </Card>
             )}
