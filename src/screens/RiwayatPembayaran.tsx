@@ -1,5 +1,5 @@
 import React, {FC, useState, useEffect, useRef} from 'react';
-import {CardKeyValue, Header, SkeletonLoading} from '@components';
+import {CardKeyValue, Header, SkeletonLoading, Gap} from '@components';
 import {color, dimens} from '@constants';
 import {
   SafeAreaView,
@@ -10,13 +10,15 @@ import {
   ListRenderItemInfo,
 } from 'react-native';
 import {Button, Card} from 'react-native-paper';
+import {Icon, Image} from 'react-native-elements';
 import {StackScreenProps} from '@react-navigation/stack';
 import {AdminDrawerParamList, AppStackParamList} from '@routes/RouteTypes';
 import {CompositeScreenProps} from '@react-navigation/core';
 import {DrawerScreenProps} from '@react-navigation/drawer';
 import {useIsFocused} from '@react-navigation/core';
+import Modal from 'react-native-modal';
 
-import {apiGet} from '@utils';
+import {apiGet, checkPersimisson} from '@utils';
 type ScreenProps = CompositeScreenProps<
   DrawerScreenProps<AdminDrawerParamList, 'RiwayatPembayaran'>,
   StackScreenProps<AppStackParamList>
@@ -40,6 +42,8 @@ type riwayatItem = {
 };
 export const RiwayatPembayaran: FC<ScreenProps> = ({}) => {
   const [riwayat, setRiwayat] = useState([]);
+  const [modalImage, setModalImage] = useState(false);
+  const [uriPicture, setUriPicture] = useState('');
   // load more data
   const [buttonLoadMore, setButtonLoadMore] = useState(true);
   const [displayButton, setDiplayButton] = useState(false);
@@ -121,17 +125,18 @@ export const RiwayatPembayaran: FC<ScreenProps> = ({}) => {
 
       <Header title="Riwayat Pembayaran" noBackButton />
 
-      {/* <ScrollView contentContainerStyle={{flexGrow: 1}}> */}
       {isLoading || isRefreshing ? (
         <SkeletonLoading />
       ) : (
-        <>
+        <SafeAreaView style={{marginBottom: 20}}>
           <FlatList
             contentContainerStyle={styles.scrollContainer}
             data={riwayat}
-            keyExtractor={(item: riwayatItem) => item.idbayartutor}
+            keyExtractor={(item: riwayatItem, index: number) =>
+              index.toString()
+            }
             renderItem={({item}: ListRenderItemInfo<riwayatItem>) => (
-              <Card key={item.idbayartutor} style={{marginBottom: 10}}>
+              <Card style={{marginBottom: 10}}>
                 <Card.Title title={'Pembayaran tutor'} />
                 <Card.Content>
                   <CardKeyValue
@@ -169,6 +174,29 @@ export const RiwayatPembayaran: FC<ScreenProps> = ({}) => {
                     value={new Date(item.tanggalbayar).toLocaleDateString()}
                   />
                 </Card.Content>
+                <Card.Actions style={{alignSelf: 'flex-end'}}>
+                  <Icon
+                    name="eye"
+                    type="font-awesome"
+                    color={color.green_500}
+                    onPress={() => {
+                      setUriPicture(item.bukti);
+                      setModalImage(true);
+                    }}
+                  />
+                  <Gap x={10} />
+                  <Icon
+                    name="download"
+                    type="font-awesome"
+                    color={color.green_500}
+                    onPress={() => {
+                      if (item.bukti != null) {
+                        checkPersimisson(item.bukti, 'buktibayar');
+                      }
+                    }}
+                  />
+                  <Gap x={10} />
+                </Card.Actions>
               </Card>
             )}
             extraData={riwayat}
@@ -200,19 +228,37 @@ export const RiwayatPembayaran: FC<ScreenProps> = ({}) => {
               </View>
             }
           />
-        </>
+          {modalImage && (
+            <Modal isVisible={modalImage}>
+              <View>
+                <Icon
+                  name="cancel"
+                  onPress={() => {
+                    setModalImage(false);
+                    setUriPicture('');
+                  }}
+                  color={color.red}
+                  iconStyle={{alignSelf: 'flex-end'}}
+                />
+                {uriPicture && (
+                  <Image
+                    resizeMode="contain"
+                    source={{
+                      uri: 'http://45.76.149.250/buktibayar/' + uriPicture,
+                    }}
+                    style={{
+                      height: '100%',
+                    }}
+                  />
+                )}
+              </View>
+            </Modal>
+          )}
+        </SafeAreaView>
       )}
-      {/* <View style={{flex: 1, padding: dimens.standard}}>
-        {riwayat.map((item: any, key) => {
-          return (
-            
-          );
-        })}
-      </View> */}
     </SafeAreaView>
   );
 };
-
 const styles = StyleSheet.create({
   container: {
     backgroundColor: color.bg_grey,
