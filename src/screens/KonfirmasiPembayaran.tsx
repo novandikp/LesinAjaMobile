@@ -113,9 +113,6 @@ export const KonfirmasiPembayaran: FC<ScreenProps> = ({}) => {
                               url: 'les/konfirmasi/' + item.idles,
                               payload: {},
                             });
-                            // if (konfirmasi) {
-                            //   navigation.navigate('HomeAdmin');
-                            // }
                           }}>
                           Konfirmasi
                         </Button>
@@ -149,7 +146,7 @@ export const KonfirmasiPembayaran: FC<ScreenProps> = ({}) => {
                           color={color.green_500}
                           onPress={() => {
                             if (item.bukti != null) {
-                              checkPersimisson(item.bukti);
+                              checkPersimisson(item.bukti, 'bukti');
                             }
                           }}
                         />
