@@ -632,7 +632,7 @@ export const AccountTutor: FC<ScreenProps> = () => {
                           name="download"
                           onPress={async () => {
                             const url = oldData.file_cv;
-                            await checkPersimisson(url);
+                            await checkPersimisson(url, 'cv');
                           }}
                         />
                       )
