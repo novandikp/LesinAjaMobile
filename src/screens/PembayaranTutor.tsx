@@ -1,5 +1,5 @@
 import React, {FC, useState, useEffect, useRef} from 'react';
-import {CardKeyValue, Header} from '@components';
+import {CardKeyValue, Header, SkeletonLoading} from '@components';
 import {color, dimens} from '@constants';
 import {
   SafeAreaView,
@@ -8,6 +8,8 @@ import {
   View,
   Platform,
   ScrollView,
+  FlatList,
+  ListRenderItemInfo,
 } from 'react-native';
 import {Button, Card} from 'react-native-paper';
 import {StackScreenProps} from '@react-navigation/stack';
@@ -23,6 +25,23 @@ type ScreenProps = CompositeScreenProps<
   DrawerScreenProps<AdminDrawerParamList, 'PembayaranTutor'>,
   StackScreenProps<AppStackParamList>
 >;
+type rekaptutor = {
+  idles: string;
+  idguru: string;
+  guru: string;
+  idsiswa: string;
+  siswa: string;
+  tglles: string;
+  jeniskelamin: string;
+  jumlah_pertemuan: string;
+  jumlah_mengajar: string;
+  gaji: number;
+  statusles: string;
+  rekening: string;
+  bank: string;
+  status: string;
+};
+
 export const PembayaranTutor: FC<ScreenProps> = ({}) => {
   const [riwayat, setRiwayat] = useState([]);
   // paembayaran
@@ -32,10 +51,16 @@ export const PembayaranTutor: FC<ScreenProps> = ({}) => {
   });
   const [idles, setIdles] = useState('');
   const [idguru, setIdguru] = useState('');
-  const [gaji, setGaji] = useState('');
+  const [gaji, setGaji] = useState(0);
 
   const [modalImage, setModalImage] = useState(false);
   const [loading, setLoading] = useState(false);
+  // load more data
+  const [buttonLoadMore, setButtonLoadMore] = useState(true);
+  const [displayButton, setDiplayButton] = useState(false);
+  const [loadingData, setLoadingData] = useState(false);
+  const [isLoadMoreData, setLoadMoreData] = useState(false);
+  const [page, setPage] = useState(1);
   // load data
   const componentMounted = useRef(true); // (3) component is mounted
   const [isRefreshing, setIsRefreshing] = useState(true);
@@ -56,7 +81,17 @@ export const PembayaranTutor: FC<ScreenProps> = ({}) => {
       });
       if (componentMounted.current) {
         setRiwayat(data.data);
-      } else if (Active) {
+      }
+      if (Active) {
+        if (isLoadMoreData) {
+          setRiwayat(riwayat);
+        } else {
+          if (data.data.length == 10) {
+            setDiplayButton(true);
+            setButtonLoadMore(false);
+          }
+          setRiwayat(data.data);
+        }
         setIsLoading(false);
         setIsRefreshing(false);
       }
@@ -68,20 +103,49 @@ export const PembayaranTutor: FC<ScreenProps> = ({}) => {
       componentMounted.current = false;
       Active = false;
     };
-  }, [isFocus, isLoading, isRefreshing]);
-  // const onPressUploadBuktiBayar =
+  }, [isFocus, isLoadMoreData, isLoading, isRefreshing, riwayat]);
+  const loadMoreData = async () => {
+    let NextPage = page + 1;
+    await apiGet({
+      url: '/admin/guru/rekap',
+      params: {
+        // cari: '',
+        orderBy: 'guru',
+        guru: '',
+        sort: 'desc',
+        page: NextPage,
+      },
+    }).then(res => {
+      if (res.data == null) {
+        setLoadingData(false);
+        return setDiplayButton(false);
+      }
+      setRiwayat(riwayat.concat(res.data));
+      if (res.data.length < 10) {
+        setDiplayButton(false);
+      } else if (res.data.length == 10) {
+        setLoadingData(false);
+        setPage(NextPage);
+      }
+      setLoadingData(false);
+    });
+  };
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar backgroundColor={color.bg_grey} barStyle="dark-content" />
 
-      <Header title="Pembayaran Tutor" noBackButton />
-
-      <ScrollView contentContainerStyle={{flexGrow: 1}}>
-        <View style={{flex: 1, padding: dimens.standard}}>
-          {riwayat.map((item: any, key) => {
-            return (
-              <Card key={key} style={{marginBottom: 10}}>
-                <Card.Title title={'Pembayaran tutor'} />
+      <Header title="Rekap Mengajar Tutor" noBackButton />
+      {isLoading || isRefreshing ? (
+        <SkeletonLoading />
+      ) : (
+        <View style={{flex: 1}}>
+          <FlatList
+            contentContainerStyle={styles.scrollContainer}
+            data={riwayat}
+            keyExtractor={(item: rekaptutor, index: number) => index.toString()}
+            renderItem={({item}: ListRenderItemInfo<rekaptutor>) => (
+              <Card style={{marginBottom: 10}}>
+                <Card.Title title={'Rekap tutor ' + item.guru} />
                 <Card.Content>
                   <CardKeyValue
                     keyFlex={9}
@@ -118,29 +182,53 @@ export const PembayaranTutor: FC<ScreenProps> = ({}) => {
                     value={item.rekening}
                   />
                 </Card.Content>
-
                 <Card.Actions>
-                  {/* <Button>Lihat Bukti Pembayaran</Button> */}
-                  <Button
-                    onPress={async () => {
-                      if (buktiBayar.path === '') {
-                        const res = await getSingleDocument();
-                        if (res) {
-                          setBuktiBayar(prev => ({...prev, path: res.uri}));
-                          setImages(res);
-                          setGaji(item.gaji);
-                          setIdles(item.idles);
-                          setIdguru(item.idguru);
-                          setModalImage(true);
+                  {item.status && (
+                    <Button
+                      onPress={async () => {
+                        if (buktiBayar.path === '') {
+                          const res = await getSingleDocument();
+                          if (res) {
+                            setBuktiBayar(prev => ({...prev, path: res.uri}));
+                            setImages(res);
+                            setGaji(item.gaji);
+                            setIdles(item.idles);
+                            setIdguru(item.idguru);
+                            setModalImage(true);
+                          }
                         }
-                      }
-                    }}>
-                    Bayar
-                  </Button>
+                      }}>
+                      Bayar
+                    </Button>
+                  )}
                 </Card.Actions>
               </Card>
-            );
-          })}
+            )}
+            extraData={riwayat}
+            onEndReachedThreshold={0.1}
+            ListFooterComponent={
+              <View>
+                {displayButton && (
+                  <Button
+                    loading={loadingData}
+                    onPress={() => {
+                      setLoadMoreData(true);
+                      setLoadingData(true);
+                      loadMoreData();
+                    }}
+                    mode="contained"
+                    disabled={buttonLoadMore}
+                    style={{
+                      marginTop: 10,
+                      alignSelf: 'center',
+                      marginHorizontal: 10,
+                    }}>
+                    Load More Data
+                  </Button>
+                )}
+              </View>
+            }
+          />
           {modalImage && (
             <Modal isVisible={modalImage}>
               <View>
@@ -203,7 +291,7 @@ export const PembayaranTutor: FC<ScreenProps> = ({}) => {
             </Modal>
           )}
         </View>
-      </ScrollView>
+      )}
     </SafeAreaView>
   );
 };
@@ -212,5 +300,10 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: color.bg_grey,
     flex: 1,
+  },
+  scrollContainer: {
+    flexGrow: 1,
+    padding: dimens.standard,
+    paddingTop: dimens.small,
   },
 });
