@@ -53,9 +53,9 @@ export const getSingleDocumentPDF = async () => {
     }
   }
 };
-export const checkPersimisson = async (Uri: string) => {
+export const checkPersimisson = async (Uri: string, path: string) => {
   if (Platform.OS === 'ios') {
-    getDownload(Uri);
+    getDownload(Uri, path);
     // return true;
   } else {
     try {
@@ -66,7 +66,7 @@ export const checkPersimisson = async (Uri: string) => {
       if (granted['android.permission.READ_EXTERNAL_STORAGE'] == 'granted') {
         //   // Once user grant the permission start downloading
         console.log('Storage Permission Granted.');
-        getDownload(Uri);
+        getDownload(Uri, path);
         // return true;
       } else {
         //   // If permission denied then show alert
@@ -80,16 +80,16 @@ export const checkPersimisson = async (Uri: string) => {
     }
   }
 };
-const getDownload = async (Uri: string) => {
+const getDownload = async (Uri: string, path: string) => {
   // if (result === true) {
   let url;
   let dir = '';
   let baseURL = 'http://45.76.149.250/';
+  url = baseURL + '/' + path + '/' + Uri;
+
   if (Uri.includes('.pdf')) {
-    url = baseURL + 'cv/' + Uri;
     dir = ExternalStorageDirectoryPath + '/Documents/' + Uri;
   } else {
-    url = baseURL + 'bukti/' + Uri;
     dir = PicturesDirectoryPath + '/' + Uri;
   }
   await downloadFile({
