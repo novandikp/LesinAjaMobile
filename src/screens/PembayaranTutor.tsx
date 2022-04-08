@@ -208,24 +208,24 @@ export const PembayaranTutor: FC<ScreenProps> = ({}) => {
             onEndReachedThreshold={0.1}
             ListFooterComponent={
               <View>
-                {displayButton && (
-                  <Button
-                    loading={loadingData}
-                    onPress={() => {
-                      setLoadMoreData(true);
-                      setLoadingData(true);
-                      loadMoreData();
-                    }}
-                    mode="contained"
-                    disabled={buttonLoadMore}
-                    style={{
-                      marginTop: 10,
-                      alignSelf: 'center',
-                      marginHorizontal: 10,
-                    }}>
-                    Load More Data
-                  </Button>
-                )}
+                {/* {displayButton && ( */}
+                <Button
+                  loading={loadingData}
+                  onPress={() => {
+                    setLoadMoreData(true);
+                    setLoadingData(true);
+                    loadMoreData();
+                  }}
+                  mode="contained"
+                  disabled={buttonLoadMore}
+                  style={{
+                    marginTop: 10,
+                    alignSelf: 'center',
+                    marginHorizontal: 10,
+                  }}>
+                  Load More Data
+                </Button>
+                {/* )} */}
               </View>
             }
           />
