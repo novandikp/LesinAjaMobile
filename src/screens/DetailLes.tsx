@@ -668,14 +668,19 @@ export const DetailLes: FC<ScreenProps> = ({navigation, route}) => {
                   <Button
                     onPress={async () => {
                       const newData = new FormData();
-                      newData.append('idLes', data.idles);
+                      newData.append('idles', data.idles);
                       newData.append(
                         'tglperpanjang',
                         new Date().toISOString().slice(0, 10),
                       );
+                      // console.log(newData._parts);
+
                       const {success} = await apiPost({
                         url: '/les/perpanjang',
-                        payload: newData,
+                        payload: {
+                          idles: data.idles,
+                          tglperpanjang: new Date().toISOString().slice(0, 10),
+                        },
                       });
                       if (success) {
                         navigation.navigate('Les');
