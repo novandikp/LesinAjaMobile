@@ -105,7 +105,7 @@ export const RiwayatPembayaran: FC<ScreenProps> = ({}) => {
         sort: 'desc',
       },
     }).then(res => {
-      if (res.data == null) {
+      if (res.data.length == 0) {
         setLoadingData(false);
         return setDiplayButton(false);
       }
@@ -128,7 +128,7 @@ export const RiwayatPembayaran: FC<ScreenProps> = ({}) => {
       {isLoading || isRefreshing ? (
         <SkeletonLoading />
       ) : (
-        <SafeAreaView style={{marginBottom: 20}}>
+        <SafeAreaView style={{flex: 1}}>
           <FlatList
             contentContainerStyle={styles.scrollContainer}
             data={riwayat}
@@ -199,14 +199,11 @@ export const RiwayatPembayaran: FC<ScreenProps> = ({}) => {
                 </Card.Actions>
               </Card>
             )}
+            initialNumToRender={10}
             extraData={riwayat}
             onEndReachedThreshold={0.1}
             ListFooterComponent={
-              <View
-                style={{
-                  // padding: dimens.standard,
-                  paddingVertical: dimens.small,
-                }}>
+              <View>
                 {displayButton && (
                   <Button
                     loading={loadingData}
