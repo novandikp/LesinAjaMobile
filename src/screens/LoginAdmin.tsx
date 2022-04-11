@@ -1,5 +1,12 @@
 import React, {FC, useContext} from 'react';
-import {SafeAreaView, StatusBar, StyleSheet, View} from 'react-native';
+import {
+  SafeAreaView,
+  StatusBar,
+  StyleSheet,
+  View,
+  KeyboardAvoidingView,
+  Platform,
+} from 'react-native';
 import {Controller, SubmitHandler, useForm} from 'react-hook-form';
 import {dimens} from '@constants';
 import {apiPost} from '@utils';
@@ -43,45 +50,51 @@ export const LoginAdmin: FC = () => {
 
         <Gap y={80} />
 
-        {/* Email */}
-        <Controller
-          control={control}
-          rules={{required: true}}
-          render={({field: {onChange, onBlur, value}}) => (
-            <InputText
-              keyboardType="email-address"
-              placeholder="Masukkan email Admin"
-              label="Email"
-              onBlur={onBlur}
-              onChangeText={onChange}
-              value={value}
-              error={!!errors.email}
-              errorMessage="Email harus diisi"
-            />
-          )}
-          name="email"
-          defaultValue={'admin@lesinaja.com'}
-        />
-        {/* Password */}
-        <Controller
-          control={control}
-          rules={{required: true}}
-          render={({field: {onChange, onBlur, value}}) => (
-            <InputText
-              passwordMode
-              placeholder="Masukkan kata sandi"
-              label="Kata sandi"
-              onBlur={onBlur}
-              onChangeText={onChange}
-              value={value}
-              error={!!errors.password}
-              errorMessage="Kata sandi harus diisi"
-            />
-          )}
-          name="password"
-          defaultValue={'adminlesinajajayaluarbiasa'}
-        />
+        {/*  */}
+        <KeyboardAvoidingView
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+          style={styles.container}>
+          {/* Email */}
+          <Controller
+            control={control}
+            rules={{required: true}}
+            render={({field: {onChange, onBlur, value}}) => (
+              <InputText
+                keyboardType="email-address"
+                placeholder="Masukkan email Admin"
+                label="Email"
+                onBlur={onBlur}
+                onChangeText={onChange}
+                value={value}
+                error={!!errors.email}
+                errorMessage="Email harus diisi"
+              />
+            )}
+            name="email"
+            defaultValue={'admin@lesinaja.com'}
+          />
+          {/* Password */}
+          <Controller
+            control={control}
+            rules={{required: true}}
+            render={({field: {onChange, onBlur, value}}) => (
+              <InputText
+                passwordMode
+                placeholder="Masukkan kata sandi"
+                label="Kata sandi"
+                onBlur={onBlur}
+                onChangeText={onChange}
+                value={value}
+                error={!!errors.password}
+                errorMessage="Kata sandi harus diisi"
+              />
+            )}
+            name="password"
+            defaultValue={'adminlesinajajayaluarbiasa'}
+          />
+        </KeyboardAvoidingView>
       </View>
+
       {/* Submit button */}
       <ButtonFormSubmit
         isLoading={isSubmitting}
