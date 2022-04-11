@@ -84,9 +84,10 @@ export const PembayaranTutor: FC<ScreenProps> = ({}) => {
       }
       if (Active) {
         if (isLoadMoreData) {
+          console.log(riwayat.length);
           setRiwayat(riwayat);
         } else {
-          if (data.data.length == 10) {
+          if (data.data.length % 10 == 0) {
             setDiplayButton(true);
             setButtonLoadMore(false);
           }
@@ -116,18 +117,19 @@ export const PembayaranTutor: FC<ScreenProps> = ({}) => {
         page: NextPage,
       },
     }).then(res => {
-      if (res.data == null) {
+      if (res.data.length == 0) {
         setLoadingData(false);
         return setDiplayButton(false);
       }
-      setRiwayat(riwayat.concat(res.data));
+      let newRiwayat = riwayat.concat(res.data);
+      setRiwayat(newRiwayat);
       if (res.data.length < 10) {
         setDiplayButton(false);
-      } else if (res.data.length == 10) {
+      } else if (res.data.length % 10 == 0) {
+        console.log('ini');
         setLoadingData(false);
         setPage(NextPage);
       }
-      setLoadingData(false);
     });
   };
   return (
@@ -208,24 +210,24 @@ export const PembayaranTutor: FC<ScreenProps> = ({}) => {
             onEndReachedThreshold={0.1}
             ListFooterComponent={
               <View>
-                {/* {displayButton && ( */}
-                <Button
-                  loading={loadingData}
-                  onPress={() => {
-                    setLoadMoreData(true);
-                    setLoadingData(true);
-                    loadMoreData();
-                  }}
-                  mode="contained"
-                  disabled={buttonLoadMore}
-                  style={{
-                    marginTop: 10,
-                    alignSelf: 'center',
-                    marginHorizontal: 10,
-                  }}>
-                  Load More Data
-                </Button>
-                {/* )} */}
+                {displayButton && (
+                  <Button
+                    loading={loadingData}
+                    onPress={() => {
+                      setLoadMoreData(true);
+                      setLoadingData(true);
+                      loadMoreData();
+                    }}
+                    mode="contained"
+                    disabled={buttonLoadMore}
+                    style={{
+                      marginTop: 10,
+                      alignSelf: 'center',
+                      marginHorizontal: 10,
+                    }}>
+                    Load More Data
+                  </Button>
+                )}
               </View>
             }
           />
