@@ -62,7 +62,7 @@ export const ListLes: FC<ScreenProps> = ({navigation}) => {
       },
     })
       .then(res => {
-        if (res.data == null) {
+        if (res.data.length == 0) {
           setLoadingData(false);
           return setDisplayButton(false);
         }

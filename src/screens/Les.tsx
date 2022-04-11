@@ -69,7 +69,7 @@ export const Les: FC<ScreenProps> = ({navigation}) => {
       },
     }).then(res => {
       // console.log(res.data.length);
-      if (res.data == null) {
+      if (res.data.length == 0) {
         setLoadingData(false);
         return setDiplayButton(false);
       }
