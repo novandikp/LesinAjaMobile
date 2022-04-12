@@ -42,7 +42,7 @@ type rekaptutor = {
   status: string;
 };
 
-export const PembayaranTutor: FC<ScreenProps> = ({}) => {
+export const PembayaranTutor: FC<ScreenProps> = ({navigation}) => {
   const [riwayat, setRiwayat] = useState([]);
   // paembayaran
   const [images, setImages] = useState<any>([]);
@@ -136,7 +136,14 @@ export const PembayaranTutor: FC<ScreenProps> = ({}) => {
     <SafeAreaView style={styles.container}>
       <StatusBar backgroundColor={color.bg_grey} barStyle="dark-content" />
 
-      <Header title="Rekap Mengajar Tutor" noBackButton />
+      <Header
+        title="Rekap Mengajar Tutor"
+        noBackButton
+        withHistory
+        onPressFilter={() => {
+          navigation.navigate('RiwayatPembayaran');
+        }}
+      />
       {isLoading || isRefreshing ? (
         <SkeletonLoading />
       ) : (
