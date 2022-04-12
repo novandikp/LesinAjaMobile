@@ -8,7 +8,14 @@ import {
   InputRadio,
 } from '@components';
 import {color, dimens} from '@constants';
-import {TextInput, Text, Button, Card, Checkbox} from 'react-native-paper';
+import {
+  TextInput,
+  Text,
+  Button,
+  Card,
+  Checkbox,
+  Paragraph,
+} from 'react-native-paper';
 import {Controller, useForm, SubmitHandler} from 'react-hook-form';
 import {
   SafeAreaView,
@@ -50,6 +57,7 @@ export const AddLes: FC<ScreenProps> = ({navigation}) => {
   const [currentPaket, setCurrentPaket] = useState(null);
   const [filterJenjang, setFilterJenjang] = useState('');
   const [disableNloading, setDisablenLoading] = useState(false);
+  const [temp, setTemp] = useState(0);
   const [Days, setDays] = useState([
     {id: '00', name: 'MINGGU', status: false},
     {id: '01', name: 'SENIN', status: false},
@@ -354,6 +362,9 @@ export const AddLes: FC<ScreenProps> = ({navigation}) => {
                       }}>
                       Pilih Hari
                     </Text>
+                    <Paragraph style={{textAlign: 'center'}}>
+                      Maksimal pilih 3 hari
+                    </Paragraph>
                     {Days.map((item: any, index: number) => {
                       return (
                         <Checkbox.Item
@@ -364,7 +375,26 @@ export const AddLes: FC<ScreenProps> = ({navigation}) => {
                             setDays(
                               Days.map((object: any) => {
                                 if (object.id == item.id) {
-                                  return {...object, status: !item.status};
+                                  if (item.status == false) {
+                                    // var jmlh: number = 0;
+                                    if (temp < 3) {
+                                      console.log(
+                                        `temp bertambah 1 : ${temp + 1}`,
+                                      );
+                                      setTemp(temp + 1);
+                                    }
+                                    if (temp > 2) {
+                                      return {...object, status: item.status};
+                                    } else {
+                                      return {...object, status: !item.status};
+                                    }
+                                  } else if (item.status == true) {
+                                    setTemp(temp - 1);
+                                    console.log(
+                                      'temp berkurang -1 :' + (temp - 1),
+                                    );
+                                    return {...object, status: !item.status};
+                                  }
                                 } else {
                                   return object;
                                 }
