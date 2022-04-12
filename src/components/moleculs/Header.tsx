@@ -9,6 +9,7 @@ type Props = {
   title: string;
   noBackButton?: boolean;
   withFilter?: boolean;
+  withHistory?: boolean;
   drawerButton?: boolean;
   onPressFilter?: () => void;
 };
@@ -17,6 +18,7 @@ export const Header: FC<Props> = ({
   title,
   noBackButton,
   withFilter,
+  withHistory,
   onPressFilter,
 }) => {
   const navigation: any = useNavigation();
@@ -40,6 +42,7 @@ export const Header: FC<Props> = ({
       {withFilter && (
         <Appbar.Action icon="filter-outline" onPress={onPressFilter} />
       )}
+      {withHistory && <Appbar.Action icon="history" onPress={onPressFilter} />}
     </Appbar.Header>
   );
 };
