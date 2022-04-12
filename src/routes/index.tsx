@@ -21,6 +21,8 @@ import {
   AccountTutor,
   InputLaporan,
   InfoPerpanjang,
+  RiwayatPembayaran,
+  HistoryPembayaran,
 } from '@screens';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
@@ -79,6 +81,14 @@ const AppRouter: FC = () => {
               component={DetailListMaster}
             />
             <AppStack.Screen name="EditListMaster" component={EditListMaster} />
+            <AppStack.Screen
+              name="RiwayatPembayaran"
+              component={RiwayatPembayaran}
+            />
+            <AppStack.Screen
+              name="HistoryPembayaran"
+              component={HistoryPembayaran}
+            />
             <AppStack.Screen name="EditListLes" component={EditListLes} />
             <AppStack.Screen name="InputLaporan" component={InputLaporan} />
           </>

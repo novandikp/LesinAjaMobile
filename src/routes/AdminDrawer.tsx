@@ -97,14 +97,14 @@ export const AdminDrawer = () => {
           drawerLabel: 'Konfirmasi Pembayaran',
         }}
       />
-      <DrawerContainer.Screen
+      {/* <DrawerContainer.Screen
         name="RiwayatPembayaran"
         component={RiwayatPembayaran}
         options={{
           drawerIcon: () => <MaterialCommunityIcons name="book" size={26} />,
           drawerLabel: 'Riwayat Pembayaran',
         }}
-      />
+      /> */}
       <DrawerContainer.Screen
         name="PembayaranTutor"
         component={PembayaranTutor}

@@ -18,7 +18,6 @@ export type AdminDrawerParamList = {
   ListMaster: undefined;
   ListLes: undefined;
   Laporan: undefined;
-  RiwayatPembayaran: undefined;
   PembayaranTutor: undefined;
   KonfirmasiPembayaran: undefined;
   ListStudentAdmin: undefined;
@@ -29,6 +28,8 @@ export type AppStackParamList = {
   AdminDrawer: NavigatorScreenParams<AdminDrawerParamList>;
   Account: undefined;
   AccountTutor: undefined;
+  HistoryPembayaran: undefined;
+  RiwayatPembayaran: undefined;
   Les: undefined;
   InputLaporan: undefined;
   LoginAdmin: undefined;

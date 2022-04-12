@@ -7,6 +7,8 @@ export * from './KonfirmasiPembayaran';
 export * from './PembayaranTutor';
 export * from './InfoPerpanjang';
 export * from './AccountTutor';
+export * from './HistoryPembayaran';
+
 export * from './Les';
 export * from './Latihan';
 export * from './Soal';
