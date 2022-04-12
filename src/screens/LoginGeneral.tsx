@@ -9,25 +9,30 @@ import {
 } from 'react-native';
 import {dimens} from '@constants';
 import {Icon} from 'react-native-elements';
-import {Card} from 'react-native-paper';
+import {Card, Dialog, Paragraph, Portal} from 'react-native-paper';
 import {AuthContext} from '@context/AuthContext';
 import {Button, Subheading, Text, Title} from 'react-native-paper';
 import {StackScreenProps} from '@react-navigation/stack';
 import {AppStackParamList} from '@routes/RouteTypes';
 import {LogoLesinAja} from '@assets';
+import {Picker} from '@react-native-picker/picker';
+
 import {
   GoogleSigninButton,
   GoogleSignin,
   statusCodes,
 } from '@react-native-google-signin/google-signin';
 import {Gap, StandardDialog} from '@components';
-import {apiGet} from '@utils';
 import Modal from 'react-native-modal';
 
 type ScreenProps = StackScreenProps<AppStackParamList, 'LoginGeneral'>;
 // Login screen for Parent and Tutor
 export const LoginGeneral: FC<ScreenProps> = ({navigation: {navigate}}) => {
   const [showChooseRole, setShowChooseRole] = useState(false);
+  // refrensi
+  const [showRefrensi, setShowRefrensi] = useState(false);
+  const [refrensi, setRefrensi] = useState<string>('-');
+
   const {login, register, setUserRole, logout} = useContext(AuthContext);
   const [isModalVisible, setModalVisible] = useState(false);
   // When user presses sign in with google
@@ -39,7 +44,7 @@ export const LoginGeneral: FC<ScreenProps> = ({navigation: {navigate}}) => {
       // Try to login
       const {isRegistered} = await login(userInfo);
       if (!isRegistered) {
-        setShowChooseRole(true);
+        setShowRefrensi(true);
       }
     } catch (error: any) {
       if (error.code === statusCodes.SIGN_IN_CANCELLED) {
@@ -59,19 +64,12 @@ export const LoginGeneral: FC<ScreenProps> = ({navigation: {navigate}}) => {
   };
 
   // If user is not registerd, choose role
-  const onChooseRole = async (role: 1 | 2) => {
+  const onChooseRole = async (role: 1 | 2, chooseRefrensi: string) => {
     setShowChooseRole(false);
-    const {isRegistered} = await register(role);
+    const {isRegistered} = await register(role, chooseRefrensi);
     if (isRegistered) {
       setUserRole(role === 1 ? 'tutor' : 'parent', true);
     }
-    // const {success} = await apiGet({url: '/access'});
-    // console.log(success);
-    // if (!success) {
-    //   setModalVisible(true);
-    //   logout();
-    // }
-    // }
   };
 
   return (
@@ -85,14 +83,50 @@ export const LoginGeneral: FC<ScreenProps> = ({navigation: {navigate}}) => {
         description="Apakah Anda seorang wali murid atau tutor?"
         action1Text="Wali Murid"
         onPressAction1={() => {
-          onChooseRole(2);
+          onChooseRole(2, refrensi);
         }}
         action2Text="Tutor"
         onPressAction2={() => {
-          onChooseRole(1);
+          onChooseRole(1, refrensi);
         }}
       />
+      <Portal>
+        <Dialog visible={showRefrensi}>
+          <Dialog.Title>
+            Mohon isi Formulir Pendaftaran terlebih dahaulu
+          </Dialog.Title>
+          <Dialog.Content>
+            <Paragraph>Tahu LesinAja Darimana? </Paragraph>
+            <Picker
+              style={{flex: 2}}
+              mode="dropdown"
+              selectedValue={refrensi}
+              dropdownIconColor={'grey'}
+              dropdownIconRippleColor={'grey'}
+              itemStyle={{height: 10, backgroundColor: 'white'}}
+              onValueChange={itemValue => setRefrensi(itemValue)}>
+              <Picker.Item label="Silahkan pilih" value="-" />
 
+              <Picker.Item label="Google" value="Google" />
+              <Picker.Item label="Tiktok" value="Tiktok" />
+              <Picker.Item label="Instagram" value="Instagram" />
+              <Picker.Item label="Youtube" value="Youtube" />
+              <Picker.Item label="Teman" value="Teman" />
+            </Picker>
+          </Dialog.Content>
+          <Dialog.Actions>
+            <Button
+              onPress={() => {
+                if (refrensi != '-') {
+                  setShowRefrensi(false);
+                  setShowChooseRole(true);
+                }
+              }}>
+              Kirim
+            </Button>
+          </Dialog.Actions>
+        </Dialog>
+      </Portal>
       <ScrollView
         contentContainerStyle={{flexGrow: 1, padding: dimens.standard}}>
         <View style={{flex: 1, alignItems: 'center'}}>

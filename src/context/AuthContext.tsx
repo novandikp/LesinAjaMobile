@@ -10,7 +10,10 @@ type ContextType = {
     userInfo: any;
   };
   login: (userInfo: any) => Promise<{isRegistered: boolean}>;
-  register: (posisi: number) => Promise<{isRegistered: boolean}>;
+  register: (
+    posisi: number,
+    refrensi: string,
+  ) => Promise<{isRegistered: boolean}>;
   setUserRole: (value: string, setLs?: boolean) => Promise<void>;
   logout: () => Promise<void>;
 };
@@ -75,13 +78,17 @@ export const AuthProvider: FC = ({children}) => {
     return {isRegistered: false};
   };
 
-  const register = async (posisi: number) => {
+  const register = async (posisi: number, refrensi: string) => {
     const {success, data} = await apiPost({
       url: 'auth/register',
       payload: {email: state.userInfo.user.email, posisi},
     });
     if (success) {
       setLocalStorage(lsKey.userToken, data.token);
+      apiPost({
+        url: 'wali/refrensi',
+        payload: {refrensi: refrensi},
+      });
       return {isRegistered: true, data: data};
     }
 
