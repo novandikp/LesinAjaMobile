@@ -19,10 +19,10 @@ import {apiGet, apiPost, checkPersimisson} from '@utils';
 import {useIsFocused} from '@react-navigation/core';
 
 type ScreenProps = CompositeScreenProps<
-  DrawerScreenProps<AdminDrawerParamList, 'RiwayatPembayaran'>,
+  DrawerScreenProps<AdminDrawerParamList, 'KonfirmasiPembayaran'>,
   StackScreenProps<AppStackParamList>
 >;
-export const KonfirmasiPembayaran: FC<ScreenProps> = ({}) => {
+export const KonfirmasiPembayaran: FC<ScreenProps> = ({navigation}) => {
   const [riwayat, setRiwayat] = useState([]);
   const [modalImage, setModalImage] = useState(false);
   const [uriPicture, setUriPicture] = useState('');
@@ -65,7 +65,14 @@ export const KonfirmasiPembayaran: FC<ScreenProps> = ({}) => {
     <SafeAreaView style={styles.container}>
       <StatusBar backgroundColor={color.bg_grey} barStyle="dark-content" />
 
-      <Header title="Konfirmasi Pembayaran" noBackButton />
+      <Header
+        title="Konfirmasi Pembayaran"
+        noBackButton
+        withHistory
+        onPressFilter={() => {
+          navigation.navigate('HistoryPembayaran');
+        }}
+      />
       {isLoading || isRefreshing ? (
         <SkeletonLoading />
       ) : (
