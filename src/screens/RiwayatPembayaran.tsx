@@ -13,16 +13,17 @@ import {Button, Card} from 'react-native-paper';
 import {Icon, Image} from 'react-native-elements';
 import {StackScreenProps} from '@react-navigation/stack';
 import {AdminDrawerParamList, AppStackParamList} from '@routes/RouteTypes';
-import {CompositeScreenProps} from '@react-navigation/core';
-import {DrawerScreenProps} from '@react-navigation/drawer';
+// import {CompositeScreenProps} from '@react-navigation/core';
+// import {DrawerScreenProps} from '@react-navigation/drawer';
 import {useIsFocused} from '@react-navigation/core';
 import Modal from 'react-native-modal';
 
 import {apiGet, checkPersimisson} from '@utils';
-type ScreenProps = CompositeScreenProps<
-  DrawerScreenProps<AdminDrawerParamList, 'RiwayatPembayaran'>,
-  StackScreenProps<AppStackParamList>
->;
+// type ScreenProps = CompositeScreenProps<
+//   DrawerScreenProps<AdminDrawerParamList, 'RiwayatPembayaran'>,
+//   StackScreenProps<AppStackParamList>
+// >;
+type ScreenProps = StackScreenProps<AppStackParamList, 'RiwayatPembayaran'>;
 type riwayatItem = {
   tanggalbayar: string;
   jumlah_gaji: string;
@@ -123,7 +124,7 @@ export const RiwayatPembayaran: FC<ScreenProps> = ({}) => {
     <SafeAreaView style={styles.container}>
       <StatusBar backgroundColor={color.bg_grey} barStyle="dark-content" />
 
-      <Header title="Riwayat Pembayaran" noBackButton />
+      <Header title="Riwayat Pembayaran Tutor" />
 
       {isLoading || isRefreshing ? (
         <SkeletonLoading />
