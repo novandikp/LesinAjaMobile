@@ -12,17 +12,11 @@ import {
 import {Button, Card} from 'react-native-paper';
 import {Icon, Image} from 'react-native-elements';
 import {StackScreenProps} from '@react-navigation/stack';
-import {AdminDrawerParamList, AppStackParamList} from '@routes/RouteTypes';
-// import {CompositeScreenProps} from '@react-navigation/core';
-// import {DrawerScreenProps} from '@react-navigation/drawer';
+import {AppStackParamList} from '@routes/RouteTypes';
 import {useIsFocused} from '@react-navigation/core';
 import Modal from 'react-native-modal';
 
 import {apiGet, checkPersimisson} from '@utils';
-// type ScreenProps = CompositeScreenProps<
-//   DrawerScreenProps<AdminDrawerParamList, 'RiwayatPembayaran'>,
-//   StackScreenProps<AppStackParamList>
-// >;
 type ScreenProps = StackScreenProps<AppStackParamList, 'HistoryPembayaran'>;
 type riwayatItem = {
   idles: string;
@@ -46,6 +40,7 @@ type riwayatItem = {
   wali: string;
   alamat: string;
   bukti: string;
+  paket: string;
 };
 export const HistoryPembayaran: FC<ScreenProps> = ({}) => {
   const [riwayat, setRiwayat] = useState([]);
@@ -138,9 +133,7 @@ export const HistoryPembayaran: FC<ScreenProps> = ({}) => {
           <FlatList
             contentContainerStyle={styles.scrollContainer}
             data={riwayat}
-            keyExtractor={(item: riwayatItem, index: number) =>
-              index.toString()
-            }
+            keyExtractor={(item: riwayatItem) => item.idles}
             renderItem={({item}: ListRenderItemInfo<riwayatItem>) => (
               <Card style={{marginBottom: 10}}>
                 <Card.Title title={'Pembayaran Les'} />
