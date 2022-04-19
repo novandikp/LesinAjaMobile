@@ -84,7 +84,6 @@ export const DetailLes: FC<ScreenProps> = ({navigation, route}) => {
   let id = data.idles;
   const bayar = data.biaya;
   const statusles = data.statusles;
-  // console.log(statusles);
   const [buktiBayar, setBuktiBayar] = useState({
     path: '',
   });
@@ -571,6 +570,20 @@ export const DetailLes: FC<ScreenProps> = ({navigation, route}) => {
                     }
                   />
                 </Card.Content>
+                <Card.Actions style={{alignSelf: 'center'}}>
+                  <Button
+                    onPress={async () => {
+                      const {success} = await apiPost({
+                        url: '/les/ulang',
+                        payload: {idles: id},
+                      });
+                      if (success) {
+                        navigation.navigate<any>('MainTabs');
+                      }
+                    }}>
+                    Ganti Tutor
+                  </Button>
+                </Card.Actions>
               </Card>
             )}
             {/* Pembayaran ditolak */}
@@ -689,6 +702,78 @@ export const DetailLes: FC<ScreenProps> = ({navigation, route}) => {
                     Perpanjang Les
                   </Button>
                 </Card.Actions>
+              </Card>
+            )}
+            {statusles == 7 && (
+              <Card style={{marginTop: dimens.standard}}>
+                <Card.Title
+                  title="Menunggu Ada Tutor"
+                  titleStyle={{color: '#2563EB'}}
+                />
+                <Card.Content>
+                  <Subheading>
+                    Belum ada tutor yang mengambil les ini
+                  </Subheading>
+                </Card.Content>
+              </Card>
+            )}
+
+            {/* Choose Tutor */}
+            {statusles == 7 && (
+              <Card style={{marginTop: dimens.standard}}>
+                <Card.Title
+                  style={{width: '100%'}}
+                  title="Anda Belum Memilih Tutor"
+                  subtitle="Klik item untuk melihat detail tutor "
+                  titleStyle={{color: '#F59E0B'}}
+                  subtitleStyle={{fontSize: dimens.medium_14}}
+                />
+                <Card.Content>
+                  <FlatList
+                    style={{
+                      // minheight: 0,
+                      maxHeight: 200,
+                    }}
+                    // style={listApplyingTutor==null?0:200}
+                    nestedScrollEnabled={true}
+                    contentContainerStyle={{
+                      flexGrow: 1,
+                      padding: dimens.standard,
+                      paddingTop: dimens.small,
+                    }}
+                    data={listApplyingTutor}
+                    keyExtractor={(item: applyTutor) => item.idapplylowongan}
+                    renderItem={({item}: ListRenderItemInfo<applyTutor>) => (
+                      <NestedCard
+                        title={item.guru}
+                        subtitle={item.perguruantinggi}
+                        onPress={() => {
+                          navigation.navigate<any>('DetailTutor', {
+                            data: item,
+                          });
+                        }}
+                        left={
+                          // props
+                          () => (
+                            // <Avatar.Image
+                            //   {...props}
+                            //   size={45}
+                            //   source={{uri: 'http://placekitten.com/100/100'}}
+                            // />
+                            <Icon
+                              // {...props}
+                              name="user"
+                              type="font-awesome"
+                              size={45}
+                            />
+                          )
+                        }
+                      />
+                    )}
+                    onEndReachedThreshold={0.1}
+                    // ListEmptyComponent=
+                  />
+                </Card.Content>
               </Card>
             )}
             {/* lES DIBATALKAN */}
