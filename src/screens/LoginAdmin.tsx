@@ -1,5 +1,13 @@
 import React, {FC, useContext} from 'react';
-import {SafeAreaView, StatusBar, StyleSheet, View} from 'react-native';
+import {
+  SafeAreaView,
+  StatusBar,
+  StyleSheet,
+  View,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+} from 'react-native';
 import {Controller, SubmitHandler, useForm} from 'react-hook-form';
 import {dimens} from '@constants';
 import {apiPost} from '@utils';
@@ -44,53 +52,61 @@ export const LoginAdmin: FC = () => {
         <Gap y={80} />
 
         {/*  */}
-
-        {/* Email */}
-        <Controller
-          control={control}
-          rules={{required: true}}
-          render={({field: {onChange, onBlur, value}}) => (
-            <InputText
-              keyboardType="email-address"
-              placeholder="Masukkan email Admin"
-              label="Email"
-              onBlur={onBlur}
-              onChangeText={onChange}
-              value={value}
-              error={!!errors.email}
-              errorMessage="Email harus diisi"
+        <KeyboardAvoidingView
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+          style={{marginBottom: 16, flex: 3}}>
+          {/* Email */}
+          <Controller
+            control={control}
+            rules={{required: true}}
+            render={({field: {onChange, onBlur, value}}) => (
+              <InputText
+                keyboardType="email-address"
+                placeholder="Masukkan email Admin"
+                label="Email"
+                onBlur={onBlur}
+                onChangeText={onChange}
+                value={value}
+                error={!!errors.email}
+                errorMessage="Email harus diisi"
+              />
+            )}
+            name="email"
+            defaultValue={'admin@lesinaja.com'}
+          />
+          {/* Password */}
+          <Controller
+            control={control}
+            rules={{required: true}}
+            render={({field: {onChange, onBlur, value}}) => (
+              <InputText
+                passwordMode
+                placeholder="Masukkan kata sandi"
+                label="Kata sandi"
+                onBlur={onBlur}
+                onChangeText={onChange}
+                value={value}
+                error={!!errors.password}
+                errorMessage="Kata sandi harus diisi"
+              />
+            )}
+            name="password"
+            defaultValue={'adminlesinajajayaluarbiasa'}
+          />
+          <View
+            style={{
+              flex: 2,
+              justifyContent: 'flex-end',
+            }}>
+            <ButtonFormSubmit
+              isLoading={isSubmitting}
+              text="Masuk"
+              onPress={handleSubmit(onSubmit)}
             />
-          )}
-          name="email"
-          defaultValue={'admin@lesinaja.com'}
-        />
-        {/* Password */}
-        <Controller
-          control={control}
-          rules={{required: true}}
-          render={({field: {onChange, onBlur, value}}) => (
-            <InputText
-              passwordMode
-              placeholder="Masukkan kata sandi"
-              label="Kata sandi"
-              onBlur={onBlur}
-              onChangeText={onChange}
-              value={value}
-              error={!!errors.password}
-              errorMessage="Kata sandi harus diisi"
-            />
-          )}
-          name="password"
-          defaultValue={'adminlesinajajayaluarbiasa'}
-        />
+          </View>
+        </KeyboardAvoidingView>
+        {/* Submit button */}
       </View>
-
-      {/* Submit button */}
-      <ButtonFormSubmit
-        isLoading={isSubmitting}
-        text="Masuk"
-        onPress={handleSubmit(onSubmit)}
-      />
     </SafeAreaView>
   );
 };
