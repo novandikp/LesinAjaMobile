@@ -220,7 +220,7 @@ const StudentItem: FC<{item: LesType; onPress: () => void}> = ({
       return {text: 'Pembayaran ditolak', bgColor: color.red};
     } else if (item.statusles === 6) {
       return {text: 'Les telah selesai', bgColor: color.green_500};
-    }else if (item.statusles === 7) {
+    } else if (item.statusles === 7) {
       return {text: 'Menunggu pengganti tutor', bgColor: color.bg_grey};
     } else if (item.statusles === 8 || item.statusles === 10) {
       return {text: 'Les dibatalkan', bgColor: color.red};
