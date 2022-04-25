@@ -114,7 +114,7 @@ export const MainTabs: FC = () => {
           ),
         }}
       />
-      <MainTab.Screen
+      {/* <MainTab.Screen
         name="Latihan"
         component={Latihan}
         options={{
@@ -123,7 +123,7 @@ export const MainTabs: FC = () => {
             <MaterialCommunityIcons name="pencil-box" color={color} size={26} />
           ),
         }}
-      />
+      /> */}
       <MainTab.Screen
         name="Settings"
         component={Settings}
