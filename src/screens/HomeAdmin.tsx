@@ -41,6 +41,11 @@ export const HomeAdmin: FC<ScreenProps> = ({navigation}) => {
       keterangan: '5',
     },
     {
+      nama: 'Facebook',
+      efektivitas: '10%',
+      keterangan: '5',
+    },
+    {
       nama: 'YouTube',
       efektivitas: '10%',
       keterangan: '5',

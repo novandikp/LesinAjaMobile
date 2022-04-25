@@ -110,6 +110,7 @@ export const LoginGeneral: FC<ScreenProps> = ({navigation: {navigate}}) => {
               <Picker.Item label="Google" value="Google" />
               <Picker.Item label="Tiktok" value="Tiktok" />
               <Picker.Item label="Instagram" value="Instagram" />
+              <Picker.Item label="Facebook" value="Facebook" />
               <Picker.Item label="Youtube" value="Youtube" />
               <Picker.Item label="Teman" value="Teman" />
             </Picker>
