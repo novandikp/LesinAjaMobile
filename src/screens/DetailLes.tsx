@@ -24,6 +24,7 @@ import {
   Card,
   Subheading,
   ActivityIndicator,
+  TextInput,
 } from 'react-native-paper';
 import {useIsFocused} from '@react-navigation/core';
 import {StackScreenProps} from '@react-navigation/stack';
@@ -93,6 +94,11 @@ export const DetailLes: FC<ScreenProps> = ({navigation, route}) => {
   const [listApplyingTutor, setListApplyingTutor] = useState<any>([]);
   const [coursePresenceList, setCoursePresenceList] = useState<any>([]);
   const [alamat, setAlamat] = useState('-');
+  // Ganti tutor
+  const [inputKeterangan, setInputKeterangan] = useState(false);
+  const [hiddenButtonGtutor, setHiddenButtonGtutor] = useState(true);
+  const [Keterangan, setKeterangan] = useState('');
+  const [gTutor, setGTutor] = useState(false);
 
   // loading
   const [page, setPage] = useState(1);
@@ -218,7 +224,21 @@ export const DetailLes: FC<ScreenProps> = ({navigation, route}) => {
         if (jadwalles.data.length != 0) {
           setAlamat(jadwalles.data[0].alamat_wali);
         }
-
+        const Hbutton = jadwalles.data.filter((item: any) => {
+          return item.flagabsenwali != 0;
+        });
+        // button Ganti tutor hilang ketika semua sudah diabsen
+        if (Hbutton.length == jadwalles.data.length) {
+          setGTutor(false);
+        }
+        // Button Ganti tutor muncul jika sudah pernah absen
+        else if (Hbutton.length < jadwalles.data.length) {
+          setGTutor(true);
+        }
+        // Button tidak muncul ketika belum pernah absen/presensi
+        else if (Hbutton.length == 0) {
+          setGTutor(false);
+        }
         setDetailLes(data);
         setListApplyingTutor(applyingTutor.data);
         console.log('component mounted current');
@@ -570,20 +590,58 @@ export const DetailLes: FC<ScreenProps> = ({navigation, route}) => {
                     }
                   />
                 </Card.Content>
-                <Card.Actions style={{alignSelf: 'center'}}>
-                  <Button
-                    onPress={async () => {
-                      const {success} = await apiPost({
-                        url: '/les/ulang',
-                        payload: {idles: id},
-                      });
-                      if (success) {
-                        navigation.navigate<any>('MainTabs');
-                      }
-                    }}>
-                    Ganti Tutor
-                  </Button>
-                </Card.Actions>
+
+                {gTutor && (
+                  <Card.Actions style={{alignSelf: 'center'}}>
+                    {hiddenButtonGtutor && (
+                      <Button
+                        onPress={async () => {
+                          setInputKeterangan(true);
+                          setHiddenButtonGtutor(false);
+                        }}>
+                        Ganti Tutor
+                      </Button>
+                    )}
+                    {inputKeterangan && (
+                      <View>
+                        <TextInput
+                          value={Keterangan}
+                          onChangeText={text => {
+                            setKeterangan(text);
+                          }}
+                          label={'Alasan untuk ganti tutor ?'}
+                          mode="outlined"
+                        />
+                        <View
+                          style={{
+                            flexDirection: 'row',
+                            justifyContent: 'flex-end',
+                            width: '100%',
+                          }}>
+                          <Button
+                            onPress={async () => {
+                              setHiddenButtonGtutor(true);
+                              setInputKeterangan(false);
+                            }}>
+                            Cancel
+                          </Button>
+                          <Button
+                            onPress={async () => {
+                              const {success} = await apiPost({
+                                url: '/les/ulang',
+                                payload: {idles: id, alasan: Keterangan},
+                              });
+                              if (success) {
+                                navigation.navigate<any>('MainTabs');
+                              }
+                            }}>
+                            Kirim
+                          </Button>
+                        </View>
+                      </View>
+                    )}
+                  </Card.Actions>
+                )}
               </Card>
             )}
             {/* Pembayaran ditolak */}
