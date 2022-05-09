@@ -1,4 +1,4 @@
-import React, {FC, useState} from 'react';
+import React, {FC, useState, useEffect} from 'react';
 import {Header} from '@components';
 import {color, dimens} from '@constants';
 import {
@@ -13,49 +13,78 @@ import {StackScreenProps} from '@react-navigation/stack';
 import {AdminDrawerParamList, AppStackParamList} from '@routes/RouteTypes';
 import {CompositeScreenProps} from '@react-navigation/core';
 import {DrawerScreenProps} from '@react-navigation/drawer';
+import {useIsFocused} from '@react-navigation/core';
+import {apiGet} from '@utils';
 
 type SocialMediaType = {
-  nama: string;
-  efektivitas?: string;
-  keterangan?: string;
+  refrensi: string;
+  persentase?: string;
+  jumlah_wali?: string;
 };
 type ScreenProps = CompositeScreenProps<
   DrawerScreenProps<AdminDrawerParamList, 'HomeAdmin'>,
   StackScreenProps<AppStackParamList>
 >;
-export const HomeAdmin: FC<ScreenProps> = ({navigation}) => {
-  const [socialMedia, setSocialMedia] = useState<SocialMediaType[]>([
-    {
-      nama: 'Google',
-      efektivitas: '10%',
-      keterangan: '5',
-    },
-    {
-      nama: 'Tiktok',
-      efektivitas: '10%',
-      keterangan: '5',
-    },
-    {
-      nama: 'Instagram',
-      efektivitas: '10%',
-      keterangan: '5',
-    },
-    {
-      nama: 'Facebook',
-      efektivitas: '10%',
-      keterangan: '5',
-    },
-    {
-      nama: 'YouTube',
-      efektivitas: '10%',
-      keterangan: '5',
-    },
-    {
-      nama: 'Teman',
-      efektivitas: '10%',
-      keterangan: '5',
-    },
-  ]);
+export const HomeAdmin: FC<ScreenProps> = ({}) => {
+  const [socialMedia, setSocialMedia] = useState<SocialMediaType[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isRefreshing, setIsRefreshing] = useState(false);
+  const isFocus = useIsFocused();
+
+  useEffect(() => {
+    let isActive = true;
+
+    const getInitialData = async () => {
+      const {data}: {data: SocialMediaType[]} = await apiGet({
+        url: '/admin/wali/refrensi',
+      });
+      if (isActive) {
+        setSocialMedia(data);
+        setIsLoading(false);
+        setIsRefreshing(false);
+      }
+    };
+
+    if (isRefreshing || isLoading || isFocus) {
+      getInitialData();
+    }
+
+    return () => {
+      isActive = false;
+    };
+  }, [isFocus, isLoading, isRefreshing]);
+  // ([
+  //   {
+  //     nama: 'Google',
+  //     efektivitas: '10%',
+  //     keterangan: '5',
+  //   },
+  //   {
+  //     nama: 'Tiktok',
+  //     efektivitas: '10%',
+  //     keterangan: '5',
+  //   },
+  //   {
+  //     nama: 'Instagram',
+  //     efektivitas: '10%',
+  //     keterangan: '5',
+  //   },
+  //   {
+  //     nama: 'Facebook',
+  //     efektivitas: '10%',
+  //     keterangan: '5',
+  //   },
+  //   {
+  //     nama: 'YouTube',
+  //     efektivitas: '10%',
+  //     keterangan: '5',
+  //   },
+  //   {
+  //     nama: 'Teman',
+  //     efektivitas: '10%',
+  //     keterangan: '5',
+  //   },
+  // ]);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -80,7 +109,7 @@ export const HomeAdmin: FC<ScreenProps> = ({navigation}) => {
                   </DataTable.Title>
                 </DataTable.Header>
                 {socialMedia.map(item => {
-                  return <SocialMediaRow key={item.nama} item={item} />;
+                  return <SocialMediaRow key={item.refrensi} item={item} />;
                 })}
               </DataTable>
             </ScrollView>
@@ -94,11 +123,11 @@ export const HomeAdmin: FC<ScreenProps> = ({navigation}) => {
 const SocialMediaRow: FC<{item: SocialMediaType}> = ({item}) => {
   return (
     <DataTable.Row>
-      <DataTable.Cell style={styles.dataCell}>{item.nama}</DataTable.Cell>
+      <DataTable.Cell style={styles.dataCell}>{item.refrensi}</DataTable.Cell>
+      <DataTable.Cell style={styles.dataCell}>{item.persentase}</DataTable.Cell>
       <DataTable.Cell style={styles.dataCell}>
-        {item.efektivitas}
+        {item.jumlah_wali}
       </DataTable.Cell>
-      <DataTable.Cell style={styles.dataCell}>{item.keterangan}</DataTable.Cell>
     </DataTable.Row>
   );
 };
