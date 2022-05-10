@@ -39,6 +39,7 @@ type rekaptutor = {
   statusles: string;
   rekening: string;
   bank: string;
+  // alasan: string;
   status: string;
 };
 
@@ -190,26 +191,29 @@ export const PembayaranTutor: FC<ScreenProps> = ({navigation}) => {
                     keyName="No.rekening"
                     value={item.rekening}
                   />
+                  {/* <CardKeyValue
+                    keyFlex={9}
+                    keyName="Alasan"
+                    value={item.alasan}
+                  /> */}
                 </Card.Content>
                 <Card.Actions>
-                  {item.status && (
-                    <Button
-                      onPress={async () => {
-                        if (buktiBayar.path === '') {
-                          const res = await getSingleDocument();
-                          if (res) {
-                            setBuktiBayar(prev => ({...prev, path: res.uri}));
-                            setImages(res);
-                            setGaji(item.gaji);
-                            setIdles(item.idles);
-                            setIdguru(item.idguru);
-                            setModalImage(true);
-                          }
+                  <Button
+                    onPress={async () => {
+                      if (buktiBayar.path === '') {
+                        const res = await getSingleDocument();
+                        if (res) {
+                          setBuktiBayar(prev => ({...prev, path: res.uri}));
+                          setImages(res);
+                          setGaji(item.gaji);
+                          setIdles(item.idles);
+                          setIdguru(item.idguru);
+                          setModalImage(true);
                         }
-                      }}>
-                      Bayar
-                    </Button>
-                  )}
+                      }
+                    }}>
+                    Bayar
+                  </Button>
                 </Card.Actions>
               </Card>
             )}
