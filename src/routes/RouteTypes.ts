@@ -21,6 +21,7 @@ export type AdminDrawerParamList = {
   PembayaranTutor: undefined;
   KonfirmasiPembayaran: undefined;
   ListStudentAdmin: undefined;
+  KonfirmasiGTutor: undefined;
 };
 
 export type AppStackParamList = {

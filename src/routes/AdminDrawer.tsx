@@ -14,7 +14,7 @@ import {
   ListStudentAdmin,
   ListWalmur,
   Laporan,
-  RiwayatPembayaran,
+  KonfirmasiGTutor,
   KonfirmasiPembayaran,
   PembayaranTutor,
 } from '@screens';
@@ -97,14 +97,14 @@ export const AdminDrawer = () => {
           drawerLabel: 'Konfirmasi Pembayaran',
         }}
       />
-      {/* <DrawerContainer.Screen
-        name="RiwayatPembayaran"
-        component={RiwayatPembayaran}
+      <DrawerContainer.Screen
+        name="KonfirmasiGTutor"
+        component={KonfirmasiGTutor}
         options={{
-          drawerIcon: () => <MaterialCommunityIcons name="book" size={26} />,
-          drawerLabel: 'Riwayat Pembayaran',
+          drawerIcon: () => <MaterialCommunityIcons name="check" size={26} />,
+          drawerLabel: 'Konfirmasi Ganti Tutor',
         }}
-      /> */}
+      />
       <DrawerContainer.Screen
         name="PembayaranTutor"
         component={PembayaranTutor}
