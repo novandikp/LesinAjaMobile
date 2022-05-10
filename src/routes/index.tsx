@@ -23,6 +23,7 @@ import {
   InfoPerpanjang,
   RiwayatPembayaran,
   HistoryPembayaran,
+  HistoryGTutor,
 } from '@screens';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
@@ -89,6 +90,7 @@ const AppRouter: FC = () => {
               name="HistoryPembayaran"
               component={HistoryPembayaran}
             />
+            <AppStack.Screen name="HistoryGTutor" component={HistoryGTutor} />
             <AppStack.Screen name="EditListLes" component={EditListLes} />
             <AppStack.Screen name="InputLaporan" component={InputLaporan} />
           </>

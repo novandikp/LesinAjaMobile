@@ -31,6 +31,7 @@ export type AppStackParamList = {
   AccountTutor: undefined;
   HistoryPembayaran: undefined;
   RiwayatPembayaran: undefined;
+  HistoryGTutor: undefined;
   Les: undefined;
   InputLaporan: undefined;
   LoginAdmin: undefined;
