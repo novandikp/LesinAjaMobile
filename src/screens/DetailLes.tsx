@@ -225,14 +225,14 @@ export const DetailLes: FC<ScreenProps> = ({navigation, route}) => {
           setAlamat(jadwalles.data[0].alamat_wali);
         }
         const Hbutton = jadwalles.data.filter((item: any) => {
-          return item.flagabsenwali != 0;
+          return item.flagabsen != 0 && item.flagabsenwali != 0;
         });
         // button Ganti tutor hilang ketika semua sudah diabsen
         if (Hbutton.length == jadwalles.data.length) {
           setGTutor(false);
         }
         // Button Ganti tutor muncul jika sudah pernah absen
-        else if (Hbutton.length < jadwalles.data.length) {
+        else if (Hbutton.length >= 1) {
           setGTutor(true);
         }
         // Button tidak muncul ketika belum pernah absen/presensi
@@ -633,6 +633,9 @@ export const DetailLes: FC<ScreenProps> = ({navigation, route}) => {
                               });
                               if (success) {
                                 navigation.navigate<any>('MainTabs');
+                              } else {
+                                setHiddenButtonGtutor(true);
+                                setInputKeterangan(false);
                               }
                             }}>
                             Kirim
