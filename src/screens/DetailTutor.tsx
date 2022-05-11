@@ -15,6 +15,7 @@ export const DetailTutor: FC<ScreenProps> = ({navigation, route}) => {
     state: {userRole},
   } = useContext(AuthContext);
   const [item, setItem] = useState<any>([]);
+  const [disabledForm, setDisabledForm] = useState(false);
   const {data}: any = route.params;
   useEffect(() => {
     const getInitialData = async () => {
@@ -95,7 +96,9 @@ export const DetailTutor: FC<ScreenProps> = ({navigation, route}) => {
       {userRole == 'parent' && (
         <ButtonFormSubmit
           text="Pilih Tutor"
+          isDisable={disabledForm}
           onPress={async () => {
+            setDisabledForm(true);
             const newdata = {
               idapplylowongan: item.idapplylowongan.toString(),
               idles: item.idles.toString(),
