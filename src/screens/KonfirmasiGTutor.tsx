@@ -42,7 +42,8 @@ export const KonfirmasiGTutor: FC<ScreenProps> = ({navigation}) => {
       });
       if (componentMounted.current) {
         setListData(data.data);
-      } else if (Active) {
+      }
+      if (Active) {
         setListData(data.data);
         setIsLoading(false);
         setIsRefreshing(false);
@@ -136,7 +137,7 @@ export const KonfirmasiGTutor: FC<ScreenProps> = ({navigation}) => {
                       onPress={async () => {
                         await apiPost({
                           url: '/les/ulang/tolak',
-                          payload: {},
+                          payload: {idpenggantian: item.idpenggantian},
                         });
                       }}>
                       Tolak
