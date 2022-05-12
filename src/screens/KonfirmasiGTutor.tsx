@@ -27,6 +27,7 @@ export const KonfirmasiGTutor: FC<ScreenProps> = ({navigation}) => {
   const [isRefreshing, setIsRefreshing] = useState(true);
   const isFocus = useIsFocused();
   const [isLoading, setIsLoading] = useState(true);
+  const [reset, setReset] = useState(false);
   useEffect(() => {
     let Active = true;
     const getInitialData = async () => {
@@ -49,14 +50,15 @@ export const KonfirmasiGTutor: FC<ScreenProps> = ({navigation}) => {
         setIsRefreshing(false);
       }
     };
-    if (isRefreshing || isLoading || isFocus) {
+    if (isRefreshing || isLoading || isFocus || reset) {
       getInitialData();
     }
     return () => {
       componentMounted.current = false;
       Active = false;
+      setReset(false);
     };
-  }, [isRefreshing, isLoading, isFocus]);
+  }, [isRefreshing, isLoading, isFocus, reset]);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -130,6 +132,7 @@ export const KonfirmasiGTutor: FC<ScreenProps> = ({navigation}) => {
                           url: '/les/ulang/terima',
                           payload: {idpenggantian: item.idpenggantian},
                         });
+                        setReset(true);
                       }}>
                       Konfirmasi
                     </Button>
@@ -139,6 +142,7 @@ export const KonfirmasiGTutor: FC<ScreenProps> = ({navigation}) => {
                           url: '/les/ulang/tolak',
                           payload: {idpenggantian: item.idpenggantian},
                         });
+                        setReset(true);
                       }}>
                       Tolak
                     </Button>
