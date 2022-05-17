@@ -3,17 +3,30 @@ import {MaterialBottomTabScreenProps} from '@react-navigation/material-bottom-ta
 import {CompositeScreenProps} from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';
 import {AppStackParamList, MainTabParamList} from '@routes/RouteTypes';
-import React, {FC} from 'react';
+import React, {FC, useEffect, useState} from 'react';
 import {SafeAreaView, StatusBar, StyleSheet, View, Image} from 'react-native';
 import {ScrollView} from 'react-native-gesture-handler';
 import {Divider, Text, Title} from 'react-native-paper';
 import {LogoLesinAja} from '@assets';
+import { apiGet } from '@utils';
+import NotificationManager from '@utils/notificationManager';
 
 type ScreenProps = CompositeScreenProps<
   MaterialBottomTabScreenProps<MainTabParamList, 'Settings'>,
   StackScreenProps<AppStackParamList>
 >;
 export const Home: FC<ScreenProps> = () => {
+  // useEffect(()=>{
+  //   apiGet({
+  //     url:"access"
+  //   }).then(({data,success})=>{
+  //     if(success){
+  //       if(data.posisi == 'Guru'){
+  //         NotificationManager.getInstance().setTags(data.prefrensi,data.topicID)
+  //       }
+  //     }
+  //   })
+  // },[])
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar backgroundColor="white" barStyle="dark-content" />

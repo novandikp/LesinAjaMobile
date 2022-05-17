@@ -1,8 +1,9 @@
 import {lsKey} from '@constants';
-import {apiPost, clearLocalStorage, setLocalStorage} from '@utils';
+import {apiGet, apiPost, clearLocalStorage, setLocalStorage} from '@utils';
 import React, {createContext, useCallback, useReducer} from 'react';
 import {FC} from 'react';
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
+import NotificationManager from '@utils/notificationManager';
 // Types
 type ContextType = {
   state: {
@@ -51,10 +52,11 @@ const reducer = (state: any, action: Actions) => {
 export const AuthContext = createContext<ContextType>(initialValue);
 export const AuthProvider: FC = ({children}) => {
   const [state, dispatch] = useReducer(reducer, initialValue.state);
-
+  const notificationManager = NotificationManager.getInstance();
   const setUserRole = useCallback(async (value: string, setLs?: boolean) => {
     if (setLs) {
       await setLocalStorage(lsKey.userRole, value);
+    
     }
     dispatch({type: 'SET_USER_ROLE', userRole: value});
   }, []);
@@ -70,6 +72,11 @@ export const AuthProvider: FC = ({children}) => {
     if (success) {
       if (data.posisi) {
         setUserRole(data.posisi == 'Wali' ? 'parent' : 'tutor', true);
+        // set tags
+        if(data.posisi == 'Guru'){
+          notificationManager.setTags(data.prefrensi,data.topicID)
+        }
+
         return {isRegistered: true};
       }
       dispatch({type: 'SET_USER_INFO', userInfo});
@@ -101,6 +108,7 @@ export const AuthProvider: FC = ({children}) => {
       await GoogleSignin.signOut();
     }
     await clearLocalStorage();
+    notificationManager.destroyTags();
     setUserRole('', false);
   };
 

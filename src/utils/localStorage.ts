@@ -32,6 +32,15 @@ export const getLocalStorage = async (keyName: string) => {
   return finalResult;
 };
 
+// remove one key local storage
+export const removeLocalStorage = async (keyName: string) => {
+  try {
+    await AsyncStorage.removeItem(keyName);
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 // Clear all keys dan values in local storage
 export const clearLocalStorage = async () => {
   try {

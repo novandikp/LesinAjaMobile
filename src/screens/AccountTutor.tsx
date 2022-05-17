@@ -31,6 +31,7 @@ import {
   getSingleDocumentPDF,
 } from '@utils';
 import {getListDaerah} from '@utils/getListData';
+import NotificationManager from '@utils/notificationManager';
 
 type FormDataType = {
   idprovinsi: string;
@@ -55,6 +56,7 @@ type FormDataType = {
 type ScreenProps = StackScreenProps<AppStackParamList, 'Account'>;
 
 export const AccountTutor: FC<ScreenProps> = () => {
+  const notificationManager = NotificationManager.getInstance();
   const listJenis = [
     {id: '00', name: 'Wanita'},
     {id: '01', name: 'Pria'},
@@ -155,6 +157,7 @@ export const AccountTutor: FC<ScreenProps> = () => {
           setIsFile(true);
         }
         setOldData(OldData.data);
+        notificationManager.setTags(OldData.data.jeniskelaminguru,OldData.data.idkecamatan)
       }
       setIsLoading(false);
     };
@@ -206,15 +209,17 @@ export const AccountTutor: FC<ScreenProps> = () => {
     newCV.append('rekening', data.rekening);
     newCV.append('telp', data.telp);
     newCV.append('jeniskelaminguru', data.jeniskelaminguru);
-    console.log(data);
+    
     const {success} = await apiPostFile({
       url: '/guru/profile/',
       payload: newCV,
     });
     if (success) {
+      notificationManager.setTags(data.jeniskelaminguru,data.idkecamatan)
       setDisabled(false);
       setLoadingSubmit(false);
       setModalVisible(true);
+      
     }
   };
   return (

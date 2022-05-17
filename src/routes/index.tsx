@@ -47,6 +47,7 @@ const AppRouter: FC = () => {
   useEffect(() => {
     // Check data
     getLocalStorage(lsKey.userRole).then(res => {
+      console.log("loading");
       if (res) {
         setUserRole(res);
       }
